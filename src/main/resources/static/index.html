@@ -62,16 +62,30 @@
 	</nav>
 
 	<div class="container-fluid">
-	<div class="col-md-12">
-		<ul>
-			<li>Hello, World!</li>
-		</ul>
+	<div class="col-md-offset-4 col-md-4">
+		<table class="table">
+			<tr><th></th><th>Haka-id</th><th>OAuth-id</th></tr>
+			<tr><th>Id</th><td id="hakaId"></td><td id="oauthId"></td>
+			<tr><th>Nimi</th><td id="hakaName"></td><td id="oauthName"></td>
+			</tr>
+		</table>
 	</div>
 	</div>
 	
 <script>
 
-
+	$(function () {
+		
+		$.getJSON('isAuthenticated', function (jsonReply) {
+			if (jsonReply.isAuthenticated) {
+				$.getJSON('auth', function (jsonReply) {
+					$('#oauthId').append(jsonReply.id);
+					$('#oauthName').append(jsonReply.name);
+				});
+			}
+		});
+		
+	});
 
 </script>
 

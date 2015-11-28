@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +25,12 @@ public class OrcidconnectApplication {
 		return principal;
   	}
 
+    @RequestMapping("/isAuthenticated")
+    public Map<String, String> hasAuth(Authentication a) {
+    	HashMap<String, String> m = new HashMap<String, String>();
+    	m.put("isAuthenticated", String.valueOf(a.isAuthenticated()));
+    	return m;
+    }
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/auth")
