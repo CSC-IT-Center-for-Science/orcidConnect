@@ -62,17 +62,30 @@
 	</nav>
 
 	<div class="container-fluid">
-	<div class="col-md-12">
-		<ul>
-			<li>Hello, my World!</li>
-			<li><a href="https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=40182585572-h880b61pu4ugr7vchso5of46oo73kg2l.apps.googleusercontent.com&redirect_uri=http://localhost:8080/callback/&scope=profile&access_type=offline">auth</a>
-		</ul>
+	<div class="col-md-offset-4 col-md-4">
+		<table class="table">
+			<tr><th></th><th>Haka-id</th><th>OAuth-id</th></tr>
+			<tr><th>Id</th><td id="hakaId"></td><td id="oauthId"></td>
+			<tr><th>Nimi</th><td id="hakaName"></td><td id="oauthName"></td>
+			</tr>
+		</table>
 	</div>
 	</div>
 	
 <script>
 
-
+	$(function () {
+		
+		$.getJSON('isAuthenticated', function (jsonReply) {
+			if (jsonReply.isAuthenticated) {
+				$.getJSON('auth', function (jsonReply) {
+					$('#oauthId').append(jsonReply.id);
+					$('#oauthName').append(jsonReply.name);
+				});
+			}
+		});
+		
+	});
 
 </script>
 
