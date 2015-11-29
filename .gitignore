@@ -13,3 +13,9 @@ target/
 # Java
 .class
 .jar
+
+# Properties
+private.properties
+
+#Miscelenious
+*~

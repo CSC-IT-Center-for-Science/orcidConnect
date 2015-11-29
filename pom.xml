@@ -74,6 +74,9 @@
         		<filtering>true</filtering>
       		</resource>
     	</resources>
+   		<filters>
+   			<filter>src/main/resources/private.properties</filter>
+   		</filters>
 	</build>
 	
 
