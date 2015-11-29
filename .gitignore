@@ -17,5 +17,8 @@ target/
 # Properties
 private.properties
 
+# Vagrant
+.vagrant/
+
 #Miscelenious
 *~
