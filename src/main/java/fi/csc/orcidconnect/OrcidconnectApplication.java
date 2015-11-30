@@ -23,21 +23,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class OrcidconnectApplication {
 
-    @RequestMapping
+    @RequestMapping("/principal")
 	public Principal principal(Principal principal) {
 		System.out.println("principal: " + principal.getClass().getName());
 		return principal;
   	}
 
-    @RequestMapping
-    public Map<String, String> isAuthenticated(Authentication a) {
+    @RequestMapping("/isAuthenticated")
+    public Map<String, String> hasAuth(Authentication a) {
     	HashMap<String, String> m = new HashMap<String, String>();
     	m.put("isAuthenticated", String.valueOf(a.isAuthenticated()));
     	return m;
     }
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping
+	@RequestMapping("/auth")
 	public Map<String, String> auth(OAuth2Authentication a) {
 		HashMap<String, String> m = new HashMap<String, String>();
 		try {
@@ -57,7 +57,7 @@ public class OrcidconnectApplication {
 		return m;
 	}
 	
-	@RequestMapping
+	@RequestMapping("/headers")
 	public Map<String, String> headers(HttpServletRequest req) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		for (Enumeration<String> e = req.getHeaderNames(); e.hasMoreElements();) {
@@ -67,7 +67,7 @@ public class OrcidconnectApplication {
 		return map;
 	}
 
-	@RequestMapping
+	@RequestMapping("/attrs")
 	public Map<String, String> attrs(HttpServletRequest req) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		for (Enumeration<String> e = req.getAttributeNames(); e.hasMoreElements();) {
@@ -77,7 +77,7 @@ public class OrcidconnectApplication {
 		return map;
 	}
 	
-	@RequestMapping
+	@RequestMapping("getenv")
 	public Map<String, String> env(HttpServletRequest req) {
 		return System.getenv();
 	}
