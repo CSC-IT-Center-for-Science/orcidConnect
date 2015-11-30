@@ -7,6 +7,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -79,10 +80,21 @@ public class OrcidconnectApplication {
 	}
 	
 	@RequestMapping(value = { "getenv", "/shib/env" })
-	public Map<String, String> env(HttpServletRequest req) {
+	public Map<String, String> env() {
 		return System.getenv();
 	}
 	
+	@RequestMapping(value = { "props", "/shib/props" })
+	public Map<String, String> props() {
+		HashMap<String, String> map = new HashMap<String, String>();
+		Properties p = System.getProperties();
+		for (Enumeration<?> e = p.propertyNames(); e.hasMoreElements();) {
+			String key = String.valueOf(e.nextElement());
+			map.put(key, p.getProperty(key));
+		}
+		return map;
+	}
+
 	public static void main(String[] args) {
 		SpringApplication.run(OrcidconnectApplication.class, args);
 	}
