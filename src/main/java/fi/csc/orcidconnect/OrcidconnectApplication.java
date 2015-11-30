@@ -57,7 +57,7 @@ public class OrcidconnectApplication {
 		return m;
 	}
 	
-	@RequestMapping("/headers")
+	@RequestMapping(value = {"/headers", "/shib/headers" })
 	public Map<String, String> headers(HttpServletRequest req) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		for (Enumeration<String> e = req.getHeaderNames(); e.hasMoreElements();) {
@@ -67,21 +67,32 @@ public class OrcidconnectApplication {
 		return map;
 	}
 
-	@RequestMapping("/attrs")
+	@RequestMapping(value = { "/attrs", "/shib/attrs" })
 	public Map<String, String> attrs(HttpServletRequest req) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		for (Enumeration<String> e = req.getAttributeNames(); e.hasMoreElements();) {
 			String key = e.nextElement();
 			map.put(key, String.valueOf(req.getAttribute(key)));
 		}
+		map.put("getRemoteUser", req.getRemoteUser());
 		return map;
 	}
 	
-	@RequestMapping("getenv")
+	@RequestMapping(value = { "getenv", "/shib/env" })
 	public Map<String, String> env(HttpServletRequest req) {
 		return System.getenv();
 	}
 	
+	@RequestMapping(value = { "/servVars", "/shib/servVars" })
+	public Map<String, String> servVars(HttpServletRequest req) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		for (Enumeration<String> e = req.get; e.hasMoreElements();) {
+			String key = e.nextElement();
+			map.put(key, String.valueOf(req.getAttribute(key)));
+		}
+		return map;
+	}
+
 	public static void main(String[] args) {
 		SpringApplication.run(OrcidconnectApplication.class, args);
 	}

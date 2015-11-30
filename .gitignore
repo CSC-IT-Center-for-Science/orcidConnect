@@ -22,3 +22,5 @@ private.properties
 
 #Miscelenious
 *~
+*saml.key
+*saml.pem
