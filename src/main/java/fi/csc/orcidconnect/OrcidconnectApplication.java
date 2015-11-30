@@ -66,6 +66,16 @@ public class OrcidconnectApplication {
 		}
 		return map;
 	}
+
+	@RequestMapping("/attributes")
+	public Map<String, String> attrs(HttpServletRequest req) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		for (Enumeration<String> e = req.getAttributeNames(); e.hasMoreElements();) {
+			String key = e.nextElement();
+			map.put(key, String.valueOf(req.getAttribute(key)));
+		}
+		return map;
+	}
 	
 	public static void main(String[] args) {
 		SpringApplication.run(OrcidconnectApplication.class, args);
