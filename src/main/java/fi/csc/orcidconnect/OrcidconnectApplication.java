@@ -2,9 +2,13 @@ package fi.csc.orcidconnect;
 
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -51,6 +55,16 @@ public class OrcidconnectApplication {
 	  		m.put("error", "cast error");
 	  	}
 		return m;
+	}
+	
+	@RequestMapping("/headers")
+	public Map<String, String> headers(HttpServletRequest req) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		for (Enumeration<String> e = req.getHeaderNames(); e.hasMoreElements();) {
+			String key = e.nextElement();
+			map.put(key, req.getHeader(key));
+		}
+		return map;
 	}
 	
 	public static void main(String[] args) {

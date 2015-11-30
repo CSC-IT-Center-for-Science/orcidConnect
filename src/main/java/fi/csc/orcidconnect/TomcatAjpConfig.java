@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 public class TomcatAjpConfig {
 
 	@Bean
-	@SuppressWarnings("static-method")
 	public EmbeddedServletContainerFactory servletContainer() {
 	    TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory();
 	    tomcat.addAdditionalTomcatConnectors(createConnector());
