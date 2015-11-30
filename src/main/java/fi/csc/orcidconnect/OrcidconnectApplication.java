@@ -2,7 +2,6 @@ package fi.csc.orcidconnect;
 
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -23,6 +22,27 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableOAuth2Sso
 @RestController
 public class OrcidconnectApplication {
+	
+	private final String[] keys = { 
+			"Shib-Identity-Provider",
+			"Shib-Application-ID",
+			"eppn",
+			"persistent-id",
+			"Shib-Session-ID",
+			"Shib-AuthnContext-Decl",
+			"Shib-Authentication-Instant",
+			"entitlement",
+			"Shib-Assertion-Count",
+			"Shib-Session-Index",
+			"targeted-id",
+			"Shib-AuthnContext-Class",
+			"Shib-Cookie-Name",
+			"affiliation",
+			"REMOTE_USER",
+			"Shib-Authentication-Method",
+			"unscoped-affiliation"
+			};
+
 
     @RequestMapping("/principal")
 	public Principal principal(Principal principal) {
@@ -91,6 +111,15 @@ public class OrcidconnectApplication {
 		for (Enumeration<?> e = p.propertyNames(); e.hasMoreElements();) {
 			String key = String.valueOf(e.nextElement());
 			map.put(key, p.getProperty(key));
+		}
+		return map;
+	}
+
+	@RequestMapping(value = { "/shib/extra" })
+	public Map<String, String> extra(HttpServletRequest req) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		for (String key: this.keys) {
+			map.put(key, String.valueOf(req.getAttribute(key)));
 		}
 		return map;
 	}
