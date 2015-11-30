@@ -14,6 +14,10 @@ cp /home/vagrant/sync/orcid-saml.key /etc/pki/tls/private
 chgrp shibd /etc/pki/tls/private/orcid-saml.key
 cp /home/vagrant/sync/orcid-saml.pem /etc/pki/tls/certs
 
+cp /home/vagrant/sync/shibboleth2.xml /etc/shibboleth/
+cp /home/vagrant/sync/shib.conf /etc/httpd/conf.d/
+cp /home/vagrant/sync/ssl.conf /etc/httpd/conf.d/
+
 curl -O https://confluence.csc.fi/download/attachments/31195585/haka_testi_2015_sha2.crt
 mv haka_testi_2015_sha2.crt /etc/pki/tls/certs/
 
