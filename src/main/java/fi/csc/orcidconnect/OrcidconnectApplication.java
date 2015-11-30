@@ -83,16 +83,6 @@ public class OrcidconnectApplication {
 		return System.getenv();
 	}
 	
-	@RequestMapping(value = { "/servVars", "/shib/servVars" })
-	public Map<String, String> servVars(HttpServletRequest req) {
-		HashMap<String, String> map = new HashMap<String, String>();
-		for (Enumeration<String> e = req.get; e.hasMoreElements();) {
-			String key = e.nextElement();
-			map.put(key, String.valueOf(req.getAttribute(key)));
-		}
-		return map;
-	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(OrcidconnectApplication.class, args);
 	}
