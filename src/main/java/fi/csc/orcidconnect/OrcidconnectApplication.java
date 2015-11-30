@@ -2,14 +2,17 @@ package fi.csc.orcidconnect;
 
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
@@ -17,6 +20,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 @SpringBootApplication
 @EnableOAuth2Sso
@@ -42,6 +48,21 @@ public class OrcidconnectApplication {
 			"Shib-Authentication-Method",
 			"unscoped-affiliation"
 			};
+	
+	@Autowired
+	RequestMappingHandlerMapping handlerMapping;
+	
+	@RequestMapping("/mappings")
+	public List<String> listMappings() {
+		ArrayList<String> lis = new ArrayList<String>();
+		Map<RequestMappingInfo, HandlerMethod> map = handlerMapping.getHandlerMethods();
+		for (RequestMappingInfo i: map.keySet()) {
+			for (String pat: i.getPatternsCondition().getPatterns()) {
+				lis.add(pat);
+			}
+		}
+		return lis;
+	}
 
 
     @RequestMapping("/principal")
@@ -123,7 +144,7 @@ public class OrcidconnectApplication {
 		}
 		return map;
 	}
-
+	
 	public static void main(String[] args) {
 		SpringApplication.run(OrcidconnectApplication.class, args);
 	}

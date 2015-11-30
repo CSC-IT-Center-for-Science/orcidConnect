@@ -62,7 +62,10 @@
 	</nav>
 
 	<div class="container-fluid">
-	<div class="col-md-offset-4 col-md-4">
+	<div class="col-md-2">
+		<ul id="mappings"></ul>
+	</div>
+	<div class="col-md-offset-2 col-md-4">
 		<table class="table">
 			<tr><th></th><th>Haka-id</th><th>OAuth-id</th></tr>
 			<tr><th>Id</th><td id="hakaId"></td><td id="oauthId"></td>
@@ -83,6 +86,15 @@
 					$('#oauthName').append(jsonReply.name);
 				});
 			}
+		});
+		$.getJSON('mappings', function (jsonReply) {
+			var items = [];
+			$.each(jsonReply, function(key, val) {
+				var str = val.substring(1, val.length);
+				items.push( "<li id='" + key + "'><a href='" + str +
+						"'>" + str + "</a></li>");
+			});
+			$('#mappings').append( items.join( "" ));
 		});
 		
 	});
