@@ -1,0 +1,11 @@
+[Unit]
+Description=spring
+After=syslog.target
+
+[Service]
+User=vagrant
+ExecStart=/home/vagrant/orcidconnect/target/orcidconnect-0.0.1-SNAPSHOT.jar
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target
