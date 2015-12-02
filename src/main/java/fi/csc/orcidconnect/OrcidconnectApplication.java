@@ -1,4 +1,4 @@
-package fi.csc.orcidconnect;
+/*package fi.csc.orcidconnect;
 
 
 import java.security.Principal;
@@ -27,7 +27,9 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 @SpringBootApplication
 @EnableOAuth2Sso
 @RestController
+@RequestMapping("/orcid")
 public class OrcidconnectApplication {
+	
 	
 	private final String[] keys = { 
 			"Shib-Identity-Provider",
@@ -65,12 +67,6 @@ public class OrcidconnectApplication {
 	}
 
 
-    @RequestMapping("/principal")
-	public Principal principal(Principal principal) {
-		System.out.println("principal: " + principal.getClass().getName());
-		return principal;
-  	}
-
     @RequestMapping("/isAuthenticated")
     public Map<String, String> hasAuth(Authentication a) {
     	HashMap<String, String> m = new HashMap<String, String>();
@@ -86,11 +82,6 @@ public class OrcidconnectApplication {
 			HashMap<String, ?> map = (HashMap<String, ?>) a.getUserAuthentication().getDetails();
 			for (String k: map.keySet()) {
 				m.put(k, String.valueOf(map.get(k)));
-				/*if (Boolean.class.isInstance(map.get(k))) {
-					m.put(k, (boolean) map.get(k) ? "true" : "false");
-				} else {
-					m.put(k, (String) map.get(k));
-				}*/
 			}
 	  	} catch (ClassCastException e) {
 	  		m = new LinkedHashMap<String, String>();
@@ -108,6 +99,13 @@ public class OrcidconnectApplication {
 		}
 		return map;
 	}
+	
+    @RequestMapping("/principal")
+	public Principal principal(Principal principal) {
+		System.out.println("principal: " + principal.getClass().getName());
+		return principal;
+  	}
+	
 
 	@RequestMapping(value = { "/attrs", "/shib/attrs" })
 	public Map<String, String> attrs(HttpServletRequest req) {
@@ -146,8 +144,10 @@ public class OrcidconnectApplication {
 	}
 	
 	public static void main(String[] args) {
-		SpringApplication.run(OrcidconnectApplication.class, args);
+		SpringApplication app = new SpringApplication(OrcidconnectApplication.class);
+		app.run(args);
 	}
-	  
-}
+	
+		  
+}*/
 
