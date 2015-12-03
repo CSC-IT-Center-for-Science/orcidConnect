@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 //@EnableOAuth2Sso
-//@RequestMapping("/bigg")
+//@RequestMapping(value = {"/bigg", "/app"})
 public class Controller {
 
 	@SuppressWarnings("unchecked")
