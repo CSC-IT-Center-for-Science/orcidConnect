@@ -32,7 +32,7 @@ the project description (*pom.xml*).
 ## Building and usage
 
 ~~~~
-git clone https://klaalo@bitbucket.org/klaalo/orcidconnect.git
+git clone https://bitbucket.org/klaalo/orcidconnect.git
 # pom.xml is set to use Java 8, so in Centos7 install
 # necessary packages and set correct JAVA_HOME
 # In vagrantBox preliminaries should be handled
