@@ -2,6 +2,8 @@ package fi.csc.orcidconnect;
 
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.security.core.Authentication;
@@ -15,10 +17,16 @@ public class Controller {
 	@RequestMapping(value = {"/{path}/user"})
 	public Map<String, String> auth(Authentication a) {
 		HashMap<String, String> m = new HashMap<String, String>();
+		List<String> dontShow = Arrays.asList(
+						      "access_token",
+						      "scope"
+						      );
 		try {
 			HashMap<String, ?> map = (HashMap<String, ?>) a.getDetails();
 			for (String k: map.keySet()) {
+			    if (!dontShow.contains(k)) {
 				m.put(k, String.valueOf(map.get(k)));
+			    }
 			}
 	  	} catch (ClassCastException e) {
 	  		m = new HashMap<String, String>();

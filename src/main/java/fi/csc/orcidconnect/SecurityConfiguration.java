@@ -38,7 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         		.authenticationEntryPoint(authEntryPoint())
         	.and()
         	.authorizeRequests()
-	    .antMatchers("/", "/isAuthenticated", "/**/favicon.ico", "/*login", "/login").permitAll()
+	    .antMatchers("/", "/isAuthenticated", "/**/favicon.ico", "/*login").permitAll()
             .and().authorizeRequests()
                 .antMatchers("/*/user", "/auth").authenticated()
                 .anyRequest().denyAll()
