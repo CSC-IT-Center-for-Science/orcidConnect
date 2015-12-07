@@ -19,7 +19,9 @@ public class Controller {
 		HashMap<String, String> m = new HashMap<String, String>();
 		List<String> dontShow = Arrays.asList(
 						      "access_token",
-						      "scope"
+						      "scope",
+						      "token_type",
+						      "expires_in"
 						      );
 		try {
 			HashMap<String, ?> map = (HashMap<String, ?>) a.getDetails();
