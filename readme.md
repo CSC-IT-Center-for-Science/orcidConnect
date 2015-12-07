@@ -7,6 +7,26 @@ attribute that is commonly known identifier in Haka-
 federation and other higher education user federations
 across modern civilization.
 
+OAuth2Client is derived from native implementation on Spring
+framework because it lacks a support for multiple
+authentication providers. On connect service we like to
+have a possibility to link to both production API and to
+sandbox for demonstration purposes.
+
+As a side effect, this makes it possible to use this same
+implementation to connect identities from other OAuth2
+authentication providers as well.
+
+## Leaning on the shjoulders of giants
+
+* [ Spring Framework ](https://spring.io)
+* [ Spring Boot ](http://start.spring.io)
+* [ Vagrant ](https://www.vagrantup.com)
+* [ Maven ](http://maven.apache.org)
+
+This list is not exhaustive. Please, see details from
+the project description (*pom.xml*). 
+
 ## Building and usage
 
 ~~~~
