@@ -23,13 +23,18 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import com.github.vbauer.herald.annotation.Log;
+
 
 @Component
 public class AuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
 	@Autowired
 	OAuth2ClientConfiguration conf;
-
+	
+	@Log
+	private Logger logger;
+	
 	public AuthenticationProcessingFilter() {
 		super (new AntPathRequestMatcher("/*login"));
 		setAuthenticationManager(new NoopAuthenticationManager());
@@ -41,6 +46,9 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 			IOException, ServletException {
 		String provider = providerSelector(req);
 		if (redirectCheck(req)) {
+			if (provider.isEmpty()) { 
+				provider = conf.getSpecialCase();
+			}
 			response.sendRedirect(OAuth2Client.authorizationRequest(conf, provider).toString());
 			return null;
 		}
@@ -74,17 +82,20 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 	
 	private String providerSelector(HttpServletRequest req) {
 		String reqUri = req.getRequestURI();
-		String pattern = "/(\\w*)login";
+		
+		String ctxPath = req.getContextPath();
+		String pattern = ctxPath + "/(\\w*)login";
 		Pattern p = Pattern.compile(pattern);
 		Matcher m = p.matcher(reqUri);
-		m.matches();
+		logger.debug("uri: " + reqUri);
+		logger.debug("matches: " + String.valueOf(m.matches()));
+		logger.debug("context: " + ctxPath);
 		String provider;
 		try {
 			provider = m.group(1);
 		} catch (IllegalStateException e) {
 			provider = conf.getDefaultProvider();
-			Logger.getLogger(this.getClass())
-				.info(e.getMessage() + ". Using default provider.");
+			logger.debug(e.getMessage() + ". Using default provider.");
 		}
 		return provider;
 	}

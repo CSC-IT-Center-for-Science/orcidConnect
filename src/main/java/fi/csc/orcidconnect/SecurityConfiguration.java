@@ -3,6 +3,7 @@ package fi.csc.orcidconnect;
 import java.util.LinkedHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,7 +27,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	OAuth2ClientConfiguration oauthConf;
 
-    @Override
+	@Value("${my.oauth2client.specialCase}")
+	private String specialCase;
+
+	@Override
     protected void configure(HttpSecurity security) throws Exception {
         security
         	.authenticationProvider(oAuth2AuthenticationProvider)
@@ -64,8 +68,26 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
     
     private LoginUrlAuthenticationEntryPoint getEntrypoint(String path) {
-    	return new LoginUrlAuthenticationEntryPoint("/" + path + "login");
+    	return new LoginUrlAuthenticationEntryPoint("/" + 
+    			specialCase(path)
+    			+ "login");
     }
 
+    
+    /**
+     * Special case only for Orcid Sandbox api which doesn't
+     * have pattern /*login specified for callback URI.
+     * This would need email cofrrespondence so easier to
+     * do it in code for now.
+     * @param provider Providerpath resolved by AuthenticationProcessinfilter
+     * @return empty string for special case, otherwise regular provider selection path
+     */
+	private String specialCase(String provider) {
+		if (provider.equals(specialCase)) {
+			return "";
+		} else {
+			return provider;
+		}
+	}
 
 }
