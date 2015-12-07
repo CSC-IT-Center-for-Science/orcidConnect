@@ -3,8 +3,12 @@ package fi.csc.orcidconnect.oauth2client;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.springframework.boot.json.JacksonJsonParser;
+import java.util.Map;
+
+
+import org.apache.log4j.Logger;
 
 import org.springframework.security.authentication.AuthenticationServiceException;
 
@@ -31,6 +35,10 @@ import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.RefreshToken;
 
 public class OAuth2Client {
+
+
+        private static Logger logger = Logger.getLogger(OAuth2Client.class);
+
 
 	public static URI authorizationRequest(OAuth2ClientConfiguration conf, String provider) {
     	// The authorisation endpoint of the server
@@ -119,6 +127,12 @@ public class OAuth2Client {
 			req.setAccept("application/json");
 
 			HTTPResponse httpResponse = req.send();
+
+			if (provider.equals(conf.getSpecialCase())) {
+			    logger.debug("response: " + httpResponse.getContent());
+			    return getToken(httpResponse, true);
+			}
+
 			return getToken(httpResponse);
 			
 		} catch (URISyntaxException | SerializeException | IOException e) {
@@ -145,13 +159,34 @@ public class OAuth2Client {
 			return new OAuth2Token(accessToken, refreshToken);
 
 		} catch (ParseException | ClassCastException e) {
-			Logger log = 
-					Logger.getLogger(OAuth2ClientConfiguration.class.getName());
-			log.log(Level.SEVERE, httpResponse.getContent());
+			logger.error(httpResponse.getContent());
 			throw new AuthenticationServiceException(e.getMessage());
 		} 
 		
 	}
 	
-	
+    private static OAuth2Token getToken (HTTPResponse httpResponse, boolean detailCase) {
+	try {
+	    TokenResponse tokenResponse = TokenResponse.parse(httpResponse);
+	    if (! tokenResponse.indicatesSuccess()) {
+		// We got an error response...
+		@SuppressWarnings("unused")
+		    TokenErrorResponse errorResponse = (TokenErrorResponse) tokenResponse;
+	    }
+
+	    AccessTokenResponse successResponse = (AccessTokenResponse) tokenResponse;
+	    // Get the access token, the server may also return a refresh token
+	    AccessToken accessToken = successResponse.getAccessToken();
+	    RefreshToken refreshToken = successResponse.getRefreshToken();
+	    
+	    JacksonJsonParser parser = new JacksonJsonParser();
+	    Map<String, Object> map = parser.parseMap(httpResponse.getContent());
+	    
+	    return new OAuth2Token(accessToken, refreshToken, map);
+
+	} catch (ParseException | ClassCastException e) {
+	    logger.error(httpResponse.getContent());
+	    throw new AuthenticationServiceException(e.getMessage());
+	} 
+    }
 }

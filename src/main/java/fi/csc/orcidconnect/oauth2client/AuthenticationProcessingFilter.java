@@ -110,15 +110,23 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 
 	private Authentication auth(HttpServletRequest req) {
 		String provider = providerSelector(req);
+		if (provider.isEmpty()) { 
+		    provider = conf.getSpecialCase();
+		}
 		OAuth2Token token = OAuth2Client.tokenRequest(conf, provider, req.getParameter("code"));
 		if (token != null) {
+		    Map<String, Object> map;
+		    if (token.hasDetails()) {
+			map = token.getDetails(); 
+		    } else {
 			RestTemplate restTemplate = new RestTemplate();
 			String result = restTemplate.getForObject(
 					conf.getUserInfoUriStr(provider) +
 					"?access_token=" 
 					+ token.getAt(), String.class);
 			JacksonJsonParser parser = new JacksonJsonParser();
-			Map<String, Object> map = parser.parseMap(result);
+			map = parser.parseMap(result);
+		    }
 			OAuth2AuthenticationToken auth = new OAuth2AuthenticationToken(
 					Arrays.asList(
 					new SimpleGrantedAuthority("ROLE_USER")),
