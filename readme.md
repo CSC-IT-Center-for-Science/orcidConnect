@@ -3,7 +3,7 @@
 This is an implementation for Orcid Connect Service, which
 will be used to connect Orcid identifier to local federated
 identity. In Finland, this is eduPersonPrincipalName-
-attribute that is commonly known identifier in Haka-
+attribute which is commonly known identifier in Haka-
 federation and other higher education user federations
 across modern civilization.
 
