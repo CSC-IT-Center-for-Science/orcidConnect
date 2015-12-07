@@ -17,7 +17,9 @@ As a side effect, this makes it possible to use this same
 implementation to connect identities from other OAuth2
 authentication providers as well.
 
-## Leaning on the shoulders of giants
+## Standing on the shoulders of giants
+
+[ *nanos gigantum humeris insidentes* ](https://en.wikipedia.org/wiki/Standing_on_the_shoulders_of_giants)
 
 * [ Spring Framework ](https://spring.io)
 * [ Spring Boot ](http://start.spring.io)
