@@ -17,7 +17,7 @@ As a side effect, this makes it possible to use this same
 implementation to connect identities from other OAuth2
 authentication providers as well.
 
-## Leaning on the shjoulders of giants
+## Leaning on the shoulders of giants
 
 * [ Spring Framework ](https://spring.io)
 * [ Spring Boot ](http://start.spring.io)
