@@ -25,3 +25,9 @@ git clone https://klaalo@bitbucket.org/klaalo/orcidconnect.git
 cd orcidconnect
 mvn spring-boot:run
 ~~~~  
+
+## Say again, what's that?
+
+* [ Orcid ](http://orcid.org)
+* [ Haka federation ](https://confluence.csc.fi/x/JoIUAg)
+* [ Researcher identification in Finland ](https://confluence.csc.fi/x/SqW0Ag)
