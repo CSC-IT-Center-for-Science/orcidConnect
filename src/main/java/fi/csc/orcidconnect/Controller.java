@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 
 @RestController
 public class Controller {
@@ -36,7 +38,7 @@ public class Controller {
     };
     
         @SuppressWarnings("unchecked")
-	@RequestMapping(value = {"/{pathVar:(git|google|orcidSandbox)}/user"})
+	@RequestMapping(value = {"/{pathVar:git|google|orcidSandbox}/user"}, method = RequestMethod.GET)
 	public Map<String, String> auth(Authentication a) {
 		HashMap<String, String> m = new HashMap<String, String>();
 		List<String> dontShow = Arrays.asList(
@@ -59,37 +61,13 @@ public class Controller {
 		return m;
 	}
 	
-        @SuppressWarnings("unchecked")
-	@RequestMapping(value = {"/google/user"})
-	public Map<String, String> gauth(Authentication a) {
-		HashMap<String, String> m = new HashMap<String, String>();
-		List<String> dontShow = Arrays.asList(
-						      "access_token",
-						      "scope",
-						      "token_type",
-						      "expires_in"
-						      );
-		try {
-			HashMap<String, ?> map = (HashMap<String, ?>) a.getDetails();
-			for (String k: map.keySet()) {
-			    if (!dontShow.contains(k)) {
-				m.put(k, String.valueOf(map.get(k)));
-			    }
-			}
-	  	} catch (ClassCastException e) {
-	  		m = new HashMap<String, String>();
-	  		m.put("error", "cast error");
-	  	}
-		return m;
-	}
-	
-    @RequestMapping("/auth")
+    @RequestMapping(value = "/auth", method = RequestMethod.GET)
 	public Principal getUser(Principal principal) {
 		return principal;
   	}
     
     @SuppressWarnings("serial")
-    @RequestMapping("/isAuthenticated")
+    @RequestMapping(value = "/isAuthenticated", method = RequestMethod.GET)
     public HashMap<String, String> isAuthenticated(Authentication auth) {
     	if (auth != null) {
 	    	boolean isAuth = auth.isAuthenticated();
@@ -104,7 +82,7 @@ public class Controller {
     	}
     }
 
-    @RequestMapping("/shib/user")
+    @RequestMapping(value = "/shib/user", method = RequestMethod.GET)
     public HashMap<String, String> shibUser(HttpServletRequest req) {
 	HashMap<String, String> attrs = new HashMap<String, String>();
 	for(String k: shibAttrKeys) {

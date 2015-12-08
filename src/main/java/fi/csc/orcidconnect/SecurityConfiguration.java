@@ -33,7 +33,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
     protected void configure(HttpSecurity security) throws Exception {
         security
-        	.authenticationProvider(oAuth2AuthenticationProvider)
+	    .logout()
+	        .logoutUrl("/logout")
+	        .logoutSuccessUrl("/")
+	        .invalidateHttpSession(true)
+	    .and()
+	    .authenticationProvider(oAuth2AuthenticationProvider)
         	.exceptionHandling()
         		.authenticationEntryPoint(authEntryPoint())
         	.and()
