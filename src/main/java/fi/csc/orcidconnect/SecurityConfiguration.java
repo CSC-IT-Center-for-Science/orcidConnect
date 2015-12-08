@@ -38,9 +38,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         		.authenticationEntryPoint(authEntryPoint())
         	.and()
         	.authorizeRequests()
-	    .antMatchers("/", "/isAuthenticated", "/**/favicon.ico", "/*login").permitAll()
+	    .antMatchers("/", "/isAuthenticated", "/**/favicon.ico", "/*login", "/logout", "/shib/user").permitAll()
+	    .regexMatchers("/(git|google|orcidSandbox)/user").authenticated()
             .and().authorizeRequests()
-                .antMatchers("/*/user", "/auth").authenticated()
+                .antMatchers("/auth").authenticated()
                 .anyRequest().denyAll()
     	;
         
