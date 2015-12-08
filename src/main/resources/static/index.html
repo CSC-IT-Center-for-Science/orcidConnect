@@ -65,17 +65,26 @@
 	</nav>
 
 	<div class="container-fluid">
-	<div class="col-md-2">
-		<ul id="mappings"></ul>
-	</div>
-	<div class="col-md-offset-2 col-md-4">
-		<table class="table">
-			<tr><th></th><th>Haka-id</th><th>OAuth-id</th></tr>
-			<tr><th>Id</th><td id="hakaId"></td><td id="oauthId"></td>
-			<tr><th>Nimi</th><td id="hakaName"></td><td id="oauthName"></td>
-			</tr>
-		</table>
-	</div>
+		<div class='row'>
+			<div class="col-md-2">
+				<ul id="mappings"></ul>
+			</div>
+			<div class="col-md-offset-2 col-md-4">
+				<table class="table">
+					<tr><th></th><th>ORCID iD</th><th>Haka eppn</th></tr>
+					<tr><th>Id</th>
+						<td id="oauthId"><a href='/app/google/signin' class='btn btn-success btn-signin' style='display: none;' id='btnOrcid'>ORCID Sandbox</a></td>
+						<td id="hakaId"><a href='/app/shib/signin' class='btn btn-success btn-signin' id='btnHaka' style='display: none;'>Haka-test</a></td>
+					<tr style='display: none;'><th>Nimi</th><td id="oauthName"></td><td id="hakaName"></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class='row'>
+			<div class='col-md-offset-4 col-md-4'>
+				
+			</div>
+		</div>
 	</div>
 	
 <script>
@@ -87,6 +96,7 @@
 				$.getJSON('user', function (jsonReply) {
 					$('#oauthId').append(jsonReply.id);
 					$('#oauthName').append(jsonReply.name);
+					$('#btnHaka').toggle();
 				});
 				$.getJSON('mappings', function (jsonReply) {
 					var items = [];
@@ -98,6 +108,8 @@
 					$('#mappings').append( items.join( "" ));
 					$('#logout').toggle();
 				});
+			} else {
+				$('#btnOrcid').toggle();
 			}
 		});
 		

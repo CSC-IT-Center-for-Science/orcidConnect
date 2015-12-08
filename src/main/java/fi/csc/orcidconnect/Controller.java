@@ -1,5 +1,6 @@
 package fi.csc.orcidconnect;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -110,6 +112,16 @@ public class Controller {
 	    attrs.put(k, String.valueOf(req.getAttribute(k)));
 	}
 	return attrs;
+    }
+    
+    @RequestMapping(value= "/{pathVar:git|google|orcidSandbox|shib}/signin")
+    public void redirectSigned(HttpServletResponse resp) {
+    	try {
+			resp.sendRedirect("/app/");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 	
 }
