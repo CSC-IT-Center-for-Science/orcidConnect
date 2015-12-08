@@ -33,6 +33,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
     protected void configure(HttpSecurity security) throws Exception {
         security
+        .csrf().disable()
 	    .logout()
 	        .logoutUrl("/logout")
 	        .logoutSuccessUrl("/")
@@ -44,9 +45,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         	.and()
         	.authorizeRequests()
 	    .antMatchers("/", "/isAuthenticated", "/**/favicon.ico", "/*login", "/logout", "/shib/user").permitAll()
-	    .regexMatchers("/(git|google|orcidSandbox)/user").authenticated()
+	    .regexMatchers("/((git|google|orcidSandbox)/){0,1}user").authenticated()
             .and().authorizeRequests()
-                .antMatchers("/auth").authenticated()
+                .antMatchers("/auth", "/mappings").authenticated()
                 .anyRequest().denyAll()
     	;
         

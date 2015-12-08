@@ -2,15 +2,20 @@ package fi.csc.orcidconnect;
 
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 
@@ -18,27 +23,43 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class Controller {
 
     private final String[] shibAttrKeys = { 
-	"Shib-Identity-Provider",
-	"Shib-Application-ID",
-	"eppn",
-	"persistent-id",
-	"Shib-Session-ID",
-	"Shib-AuthnContext-Decl",
-	"Shib-Authentication-Instant",
-	"entitlement",
-	"Shib-Assertion-Count",
-	"Shib-Session-Index",
-	"targeted-id",
-	"Shib-AuthnContext-Class",
-	"Shib-Cookie-Name",
-	"affiliation",
-	"REMOTE_USER",
-	"Shib-Authentication-Method",
-	"unscoped-affiliation"
+    		"Shib-Identity-Provider",
+    		"Shib-Application-ID",
+    		"eppn",
+    		"persistent-id",
+    		"Shib-Session-ID",
+    		"Shib-AuthnContext-Decl",
+    		"Shib-Authentication-Instant",
+    		"entitlement",
+    		"Shib-Assertion-Count",
+    		"Shib-Session-Index",
+    		"targeted-id",
+    		"Shib-AuthnContext-Class",
+    		"Shib-Cookie-Name",
+    		"affiliation",
+    		"REMOTE_USER",
+    		"Shib-Authentication-Method",
+    		"unscoped-affiliation"
     };
     
-        @SuppressWarnings("unchecked")
-	@RequestMapping(value = {"/{pathVar:git|google|orcidSandbox}/user"}, method = RequestMethod.GET)
+	@Autowired
+	RequestMappingHandlerMapping handlerMapping;
+	
+	@RequestMapping("/mappings")
+	public List<String> listMappings() {
+		ArrayList<String> lis = new ArrayList<String>();
+		Map<RequestMappingInfo, HandlerMethod> map = handlerMapping.getHandlerMethods();
+		for (RequestMappingInfo i: map.keySet()) {
+			for (String pat: i.getPatternsCondition().getPatterns()) {
+				lis.add(pat);
+			}
+		}
+		return lis;
+	}
+    
+    
+    @SuppressWarnings("unchecked")
+	@RequestMapping(value = {"/{pathVar:git|google|orcidSandbox}/user", "/user"}, method = RequestMethod.GET)
 	public Map<String, String> auth(Authentication a) {
 		HashMap<String, String> m = new HashMap<String, String>();
 		List<String> dontShow = Arrays.asList(

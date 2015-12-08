@@ -57,6 +57,9 @@
 	      <ul class="nav navbar-nav">
 	        <li><a href="/">Link Template</a></li>
 	      </ul>
+	      <ul class='nav navbar-nav pull-right'>
+	    	<li id='logout' style='display: none;'><a href="logout">Logout</a></li>
+	    </ul>
 	    </div>
 	  </div>
 	</nav>
@@ -77,27 +80,28 @@
 	
 <script>
 
-	/*$(function () {
+	$(function () {
 		
 		$.getJSON('isAuthenticated', function (jsonReply) {
-			if (jsonReply.isAuthenticated) {
-				$.getJSON('auth', function (jsonReply) {
+			if (jsonReply.isAuthenticated == "true") {
+				$.getJSON('user', function (jsonReply) {
 					$('#oauthId').append(jsonReply.id);
 					$('#oauthName').append(jsonReply.name);
 				});
+				$.getJSON('mappings', function (jsonReply) {
+					var items = [];
+					$.each(jsonReply, function(key, val) {
+						var str = val.substring(1, val.length);
+						items.push( "<li id='" + key + "'><a href='" + str +
+								"'>" + str + "</a></li>");
+					});
+					$('#mappings').append( items.join( "" ));
+					$('#logout').toggle();
+				});
 			}
 		});
-		$.getJSON('mappings', function (jsonReply) {
-			var items = [];
-			$.each(jsonReply, function(key, val) {
-				var str = val.substring(1, val.length);
-				items.push( "<li id='" + key + "'><a href='" + str +
-						"'>" + str + "</a></li>");
-			});
-			$('#mappings').append( items.join( "" ));
-		});
 		
-	});*/
+	});
 
 </script>
 
