@@ -5,6 +5,10 @@ cd /etc/yum.repos.d/
 curl -O http://download.opensuse.org/repositories/security://shibboleth/CentOS_7/security:shibboleth.repo
 cd
 yum -y install emacs-nox java-1.7.0-openjdk java-1.8.0-openjdk java-1.8.0-openjdk-devel httpd shibboleth git maven mod_proxy_html policycoreutils-python mod_ssl
+# epel repo and virtualbox guest additions
+# vagrant guest additions plugin wasn't perfect
+yum -y install epel-release
+yum -y install dkms
 systemctl enable shibd
 systemctl enable httpd
 su vagrant -c "/home/vagrant/sync/gitstrap.sh"

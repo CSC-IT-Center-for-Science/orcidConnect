@@ -104,6 +104,21 @@ public class Controller {
     		};
     	}
     }
+    
+    @SuppressWarnings("serial")
+    @RequestMapping(value= "/shib/isAuthenticated", method = RequestMethod.GET)
+    public HashMap<String, String> isShibAuthenticated(HttpServletRequest req) {
+    	if (req.getAttribute("eppn") == null || 
+    			((String) req.getAttribute("eppn")).isEmpty()) {
+		return new HashMap<String, String>() {
+			{ put("isAuthenticated", "false"); }
+			};
+    	} else {
+    		return new HashMap<String, String>() {
+    			{ put("isAuthenticated", "true"); }
+    		};
+    	}
+    }
 
     @RequestMapping(value = "/shib/user", method = RequestMethod.GET)
     public HashMap<String, String> shibUser(HttpServletRequest req) {
