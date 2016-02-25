@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<IdentitiesDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="https://confluence.csc.fi/x/d4p5Aw xml_example.xsd"
+ xmlns="https://confluence.csc.fi/x/d4p5Aw">
+    <IdentityDescriptor>
+        <Identifier><Name>urn:oid:1.3.6.1.4.1.5923.1.1.1.16</Name>
+            <NameFormat>
+            urn:oasis:names:tc:SAML:2.0:attrname-format:uri</NameFormat>
+            <FriendlyName>eduPersonOrcid</FriendlyName>
+            <Issuer>http://api.sandbox.orcid.org/</Issuer>
+            <IssueInstant>2015-04-23T13:32:43Z</IssueInstant>
+            <Mediator>https://orcid-connect01.csc.fi/</Mediator>
+            <MediationInstant>2016-02-23T08:23:05Z</MediationInstant>
+            <IdentifierValue> http://sandbox.orcid.org/0000-0003-0833-4032</IdentifierValue>
+        </Identifier>
+        <Identifier>
+            <Name>urn:oid:1.3.6.1.4.1.5923.1.1.1.6</Name>
+            <NameFormat>urn:oasis:names:tc:SAML:2.0:attrname-format:uri</NameFormat>
+            <FriendlyName>eduPersonPrincipalName</FriendlyName>
+            <Issuer>https://testidp.funet.fi/idp/shibboleth</Issuer>
+            <!--<IssueInstant></IssueInstant>-->
+            <Mediator>https://orcid-connect01.csc.fi/</Mediator>
+            <MediationInstant>2016-02-23T08:23:05Z</MediationInstant>
+            <IdentifierValue>teppo@yliopisto.fi</IdentifierValue>
+        </Identifier>
+    </IdentityDescriptor>
+</IdentitiesDescriptor>
