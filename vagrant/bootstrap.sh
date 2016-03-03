@@ -25,7 +25,7 @@ cp /home/vagrant/sync/ssl.conf /etc/httpd/conf.d/
 curl -O https://confluence.csc.fi/download/attachments/31195585/haka_testi_2015_sha2.crt
 mv haka_testi_2015_sha2.crt /etc/pki/tls/certs/
 
-cs /var/www/html
+cd /var/www/html
 curl -kO https://orcid-connect01.csc.fi/favicon.ico
 mkdir img
 cd img
