@@ -110,6 +110,13 @@
 
 			</div>
 		</div>
+		
+		<div class='row'>
+			<div class='col-md-offset-4 col-md-6'>
+				<button id='trigSoap' type='submit' class='btn btn-primary'>TrigSoap</button>
+			</div>
+		</div>
+		
 	</div>
 	
 <script>
@@ -218,7 +225,14 @@ $('#saveData').on('click', function(event) {
 		alert("Jos tämä demo olisi tuotantokäytössä, tietojen tallentaminen pitäisi hyväksyä.")
 	}
 });
-	
+
+$('#trigSoap').on('click', function(event) {
+	event.preventDefault();
+	$.getJSON('/app/trigsoap', function (jsonReply) {
+		console.out(jsonReply);
+	});
+});
+
 </script>
 
 </body>

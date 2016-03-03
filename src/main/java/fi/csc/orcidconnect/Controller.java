@@ -20,6 +20,8 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import fi.csc.orcidconnect.push.soap.SoapClient;
+
 
 @RestController
 public class Controller {
@@ -47,6 +49,13 @@ public class Controller {
 	@Autowired
 	RequestMappingHandlerMapping handlerMapping;
 	
+	@RequestMapping("/trigsoap")
+	public List<String> trigSoap() {
+		SoapClient sc = new SoapClient();
+		sc.customSendAndReceive();
+		return Arrays.asList("test");
+	}
+
 	@RequestMapping("/mappings")
 	public List<String> listMappings() {
 		ArrayList<String> lis = new ArrayList<String>();
