@@ -103,6 +103,31 @@
 					</delimiters>
 				</configuration>
 			</plugin>
+
+	        <plugin>
+	            <groupId>org.jvnet.jaxb2.maven2</groupId>
+	            <artifactId>maven-jaxb2-plugin</artifactId>
+	            <executions>
+	                <execution>
+	                    <goals>
+	                        <goal>generate</goal>
+	                    </goals>
+	                </execution>
+	                
+	            </executions>
+
+			    <configuration>
+			        <schemaLanguage>WSDL</schemaLanguage>
+			        <generatePackage>fi.csc.orcidconnect.push.soap.schema</generatePackage>
+			        <schemas>
+			            <schema>
+			                <url>http://wsf.cdyne.com/WeatherWS/Weather.asmx?wsdl</url>
+			            </schema>
+			        </schemas>
+			    </configuration>
+
+	        </plugin>
+
 		</plugins>
    		<filters>
    			<filter>src/main/resources/private.properties</filter>
