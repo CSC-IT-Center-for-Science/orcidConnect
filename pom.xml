@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.3.0.RELEASE</version>
+		<version>1.3.3.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -53,7 +53,7 @@
     	<dependency>
         	<groupId>org.springframework.boot</groupId>
         	<artifactId>spring-boot-devtools</artifactId>
-        	<!-- <optional>true</optional> -->
+        	<optional>true</optional>
     	</dependency>
 
 		<dependency>
@@ -82,6 +82,10 @@
 			<groupId>org.springframework.ws</groupId>
 			<artifactId>spring-ws-core</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+		</dependency>
 	</dependencies>
 	
 	<build>
@@ -91,12 +95,12 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<executable>true</executable>
+					<fork>true</fork>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.7</version>
 				<configuration>
 					<delimiters>
 					  <delimiter>${*}</delimiter>
@@ -119,9 +123,18 @@
 			    <configuration>
 			        <schemaLanguage>WSDL</schemaLanguage>
 			        <generatePackage>fi.csc.orcidconnect.push.soap.schema</generatePackage>
+			        
+			        <schemaIncludes>
+			        	<include>csc_idm_service_wsdl.xml</include>
+			        </schemaIncludes>
+			        <schemaExcludes>
+			        	<exclude>*.xsd</exclude>
+			        </schemaExcludes>
 			        <schemas>
 			            <schema>
-			                <url>http://wsf.cdyne.com/WeatherWS/Weather.asmx?wsdl</url>
+			            	<url>http://wsf.cdyne.com/WeatherWS/Weather.asmx?wsdl</url>
+			                <!-- <url>http://klaalo-air13:8088/mockWeatherSoap?WSDL</url> -->
+			                <!-- <url>http://klaalo-air13:8088/mockProvisioningBinding?WSDL</url> -->
 			            </schema>
 			        </schemas>
 			    </configuration>
