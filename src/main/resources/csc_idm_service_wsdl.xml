@@ -1,0 +1,2924 @@
+<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns0="http://www.novell.com/soa/af/impl/soap" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.novell.com/provisioning/service" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="ProvisioningService" targetNamespace="http://www.novell.com/provisioning/service">
+  <types>
+    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.novell.com/provisioning/service">
+
+<!-- note: version of wsdl is really api version and is independent of rbpm version -->
+
+<!-- version 4.0 - added ability to get inflight process xml -->
+<!-- version 4.1 - added ability to get tasks for a prov admin by passing in 'self' for addressee -->
+<!-- version 4.2 - added ability for a current approver to obtain the details of a process -->
+<!-- version 4.3 - added ability to pass in type for getProvisioningRequests -->
+  <xsd:complexType name="t_version">
+    <xsd:attribute fixed="4" name="major" type="xsd:int" use="required"/>
+    <xsd:attribute fixed="3" name="minor" type="xsd:int" use="required"/>
+    <xsd:attribute fixed="$Rev: 42055 $" name="revision" type="xsd:string" use="required"/>
+  </xsd:complexType>
+
+  <xsd:element name="Version" type="tns:t_version"/>
+
+  <xsd:simpleType name="t_terminationType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="RETRACT"/>
+      <xsd:enumeration value="ERROR"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:element name="TerminationType" type="tns:t_terminationType"/>
+
+  <xsd:simpleType name="t_commentType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="User"/>
+      <xsd:enumeration value="System"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:element name="CommentType" type="tns:t_commentType"/>
+
+  <xsd:simpleType name="t_entitlementState">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Unknown"/>
+      <xsd:enumeration value="Granted"/>
+      <xsd:enumeration value="Revoked"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:element name="EntitlementState" type="tns:t_entitlementState"/>
+
+  <xsd:simpleType name="t_entitlementStatus">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Unknown"/>
+      <xsd:enumeration value="Success"/>
+      <xsd:enumeration value="Warning"/>
+      <xsd:enumeration value="Error"/>
+      <xsd:enumeration value="Fatal"/>
+      <xsd:enumeration value="Submitted"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:element name="EntitlementStatus" type="tns:t_entitlementStatus"/>
+
+  <xsd:simpleType name="t_workEntryOrder">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="ADDRESSEE"/>
+      <xsd:enumeration value="PROCESS_ID"/>
+      <xsd:enumeration value="REQUEST_ID"/>
+      <xsd:enumeration value="ACTIVITY"/>
+      <xsd:enumeration value="OWNER"/>
+      <xsd:enumeration value="PRIORITY"/>
+      <xsd:enumeration value="CREATION"/>
+      <xsd:enumeration value="EXPIRATION"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="t_processInfoOrder">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="PROCESS_ID"/>
+      <xsd:enumeration value="REQUEST_ID"/>
+      <xsd:enumeration value="APPROVAL_STATUS"/>
+      <xsd:enumeration value="PROCESS_STATUS"/>
+      <xsd:enumeration value="CREATION_TIME"/>
+      <xsd:enumeration value="COMPLETION_TIME"/>
+      <xsd:enumeration value="INITIATOR"/>
+      <xsd:enumeration value="RECIPIENT"/>
+      <xsd:enumeration value="RESOURCE_TYPE"/>
+      <xsd:enumeration value="ENGINE_ID"/>
+      <xsd:enumeration value="CORRELATION_ID"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="t_provisioningStatusOrder">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="ACTIVITY_ID"/>
+      <xsd:enumeration value="RECIPIENT"/>
+      <xsd:enumeration value="PROVISIONING_TIME"/>
+      <xsd:enumeration value="RESULT_TIME"/>
+      <xsd:enumeration value="STATE"/>
+      <xsd:enumeration value="STATUS"/>
+      <xsd:enumeration value="REQUEST_ID"/>
+      <xsd:enumeration value="MESSAGE"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="t_operator">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="EQ"/>
+      <xsd:enumeration value="LT"/>
+      <xsd:enumeration value="LE"/>
+      <xsd:enumeration value="GT"/>
+      <xsd:enumeration value="GE"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:element name="Operator" type="tns:t_operator"/>
+
+  <xsd:simpleType name="t_action">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="APPROVE"/>
+      <xsd:enumeration value="DENY"/>
+      <xsd:enumeration value="REFUSE"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:element name="Action" type="tns:t_action"/>
+
+  <xsd:simpleType name="t_logic">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="AND"/>
+      <xsd:enumeration value="OR"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name="t_time">
+    <xsd:sequence>
+      <xsd:element name="value" type="xsd:long"/>
+      <xsd:element name="operator" type="tns:t_operator"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:simpleType name="t_processStatus">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Running"/>
+      <xsd:enumeration value="Completed"/>
+      <xsd:enumeration value="Terminated"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:element name="ProcessStatus" type="tns:t_processStatus"/>
+
+  <xsd:simpleType name="t_approvalStatus">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Approved"/>
+      <xsd:enumeration value="Denied"/>
+      <xsd:enumeration value="Retracted"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:element name="ApprovalStatus" type="tns:t_approvalStatus"/>
+  
+  <xsd:complexType name="Process">
+    <xsd:sequence>
+      <xsd:element name="completionTime" nillable="true" type="xsd:dateTime"/>
+      <xsd:element name="creationTime" type="xsd:dateTime"/>
+      <xsd:element name="initiator" type="xsd:string"/>
+      <xsd:element name="processId" type="xsd:string"/>
+      <xsd:element name="recipient" type="xsd:string"/>
+      <xsd:element name="requestId" type="xsd:string"/>
+      <xsd:element name="processStatus" type="xsd:string"/>
+      <xsd:element name="approvalStatus" type="xsd:string"/>
+      <xsd:element name="processName" type="xsd:string"/>
+      <xsd:element name="valueOfProcessStatus" type="xsd:int"/>
+      <xsd:element name="valueOfApprovalStatus" type="xsd:int"/>
+      <xsd:element name="version" type="xsd:string"/>
+      <xsd:element name="engineId" type="xsd:string"/>
+      <xsd:element name="proxy" nillable="true" type="xsd:string"/>
+      <xsd:element name="correlationId" nillable="true" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="t_processInfoQuery">
+    <xsd:choice maxOccurs="unbounded">
+      <xsd:element name="processId" type="xsd:string"/>
+      <xsd:element name="requestId" type="xsd:string"/>
+      <xsd:element name="engineId" type="xsd:string"/>
+      <xsd:element name="recipient" type="xsd:string"/>
+      <xsd:element name="initiator" type="xsd:string"/>
+      <xsd:element name="approvalStatus" type="xsd:int"/>
+      <xsd:element name="processStatus" type="xsd:int"/>
+      <xsd:element name="resourceType" type="xsd:string"/>
+      <xsd:element name="creationTime" type="tns:t_time"/>
+      <xsd:element name="completionTime" type="tns:t_time"/>
+      <xsd:element name="correlationId" nillable="true" type="xsd:string"/>
+    </xsd:choice>
+    <xsd:attribute name="logic" type="tns:t_logic" use="optional"/>
+    <xsd:attribute name="order" type="tns:t_processInfoOrder" use="optional"/>
+  </xsd:complexType>
+
+  <xsd:element name="ProcessInfoQuery" type="tns:t_processInfoQuery"/>
+  
+  <xsd:element name="Process" type="tns:Process"/>
+
+  <xsd:complexType name="ProcessArray">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="process" type="tns:Process"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="ProcessArray" type="tns:ProcessArray"/>
+
+  <xsd:simpleType name="t_engineStatus">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Starting"/>
+      <xsd:enumeration value="Running"/>
+      <xsd:enumeration value="Shutdown"/>
+      <xsd:enumeration value="Timedout"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:element name="EngineStatus" type="tns:t_engineStatus"/>
+  
+  <xsd:complexType name="EngineState">
+    <xsd:sequence>
+      <xsd:element name="engineId" type="xsd:string"/>
+      <xsd:element name="heartbeat" nillable="true" type="xsd:dateTime"/>
+      <xsd:element name="startTime" nillable="true" type="xsd:dateTime"/>
+      <xsd:element name="shutdownTime" nillable="true" type="xsd:dateTime"/>
+      <xsd:element name="engineStatus" type="xsd:string"/>
+      <xsd:element name="valueOfEngineStatus" type="xsd:int"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="EngineState" type="tns:EngineState"/>
+
+  <xsd:complexType name="EngineStateArray">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="engineStates" type="tns:EngineState"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="EngineStateArray" type="tns:EngineStateArray"/>
+
+  <xsd:complexType name="t_workEntryQuery">
+    <xsd:choice maxOccurs="unbounded">
+      <xsd:element name="addressee" type="xsd:string"/>
+      <xsd:element name="processId" type="xsd:string"/>
+      <xsd:element name="requestId" type="xsd:string"/>
+      <xsd:element name="activityId" type="xsd:string"/>
+      <xsd:element name="status" type="xsd:int"/>
+      <xsd:element name="owner" type="xsd:string"/>
+      <xsd:element name="priority" type="xsd:int"/>
+      <xsd:element name="creationTime" type="tns:t_time"/>
+      <xsd:element name="expTime" type="tns:t_time"/>
+      <xsd:element name="completionTime" type="tns:t_time"/>
+      <xsd:element name="recipient" type="xsd:string"/>
+      <xsd:element name="initiator" type="xsd:string"/>
+      <xsd:element name="proxyFor" nillable="true" type="xsd:string"/>
+      <xsd:element name="workTaskId" type="xsd:string"/>
+    </xsd:choice>
+    <xsd:attribute name="logic" type="tns:t_logic" use="optional"/>
+    <xsd:attribute name="order" type="tns:t_workEntryOrder" use="optional"/>
+  </xsd:complexType>
+
+  <xsd:element name="WorkEntryQuery" type="tns:t_workEntryQuery"/>
+  
+  <xsd:complexType name="WorkEntry">
+    <xsd:sequence>
+      <xsd:element name="activityId" type="xsd:string"/>
+      <xsd:element name="activityName" type="xsd:string"/>
+      <xsd:element name="addressee" type="xsd:string"/>
+      <xsd:element name="assignmentType" type="xsd:int"/>
+      <xsd:element name="availableActions" type="tns:AvailableActionArray"/>
+      <xsd:element name="creationTime" type="xsd:dateTime"/>
+      <xsd:element name="expirationTime" nillable="true" type="xsd:dateTime"/>
+      <xsd:element name="id" type="xsd:string"/>
+      <xsd:element name="owner" nillable="true" type="xsd:string"/>
+      <xsd:element name="priority" type="xsd:int"/>
+      <xsd:element name="processId" type="xsd:string"/>
+      <xsd:element name="requestId" type="xsd:string"/>
+      <xsd:element name="status" type="xsd:int"/>
+      <xsd:element name="legalDisclaimer" nillable="true" type="xsd:string"/>
+      <xsd:element name="digitalSignatureType" type="xsd:string"/>
+      <xsd:element name="processVersion" type="xsd:string"/>
+      <xsd:element name="completionTime" nillable="true" type="xsd:dateTime"/>
+      <xsd:element name="recipient" type="xsd:string"/>
+      <xsd:element name="initiator" type="xsd:string"/>
+      <xsd:element name="proxyFor" nillable="true" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="WorkEntry" type="tns:WorkEntry"/>
+
+  <xsd:complexType name="WorkEntryArray">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="workentry" type="tns:WorkEntry"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="WorkEntryArray" type="tns:WorkEntryArray"/>
+
+  <xsd:complexType name="t_provisioningStatusQuery">
+    <xsd:choice maxOccurs="unbounded">
+      <xsd:element name="recipient" type="xsd:string"/>
+      <xsd:element name="requestId" type="xsd:string"/>
+      <xsd:element name="activityId" type="xsd:string"/>
+      <xsd:element name="status" type="xsd:int"/>
+      <xsd:element name="state" type="xsd:int"/>
+      <xsd:element name="provisioningTime" type="tns:t_time"/>
+      <xsd:element name="resultTime" type="tns:t_time"/>
+    </xsd:choice>
+    <xsd:attribute name="logic" type="tns:t_logic" use="optional"/>
+    <xsd:attribute name="order" type="tns:t_provisioningStatusOrder" use="optional"/>
+  </xsd:complexType>
+
+  <xsd:element name="ProvisioningStatusQuery" type="tns:t_provisioningStatusQuery"/>
+
+  <xsd:complexType name="ProvisioningStatus">
+    <xsd:sequence>
+      <xsd:element name="activityId" type="xsd:string"/>
+      <xsd:element name="status" type="xsd:int"/>
+      <xsd:element name="state" type="xsd:int"/>
+      <xsd:element name="provisioningTime" type="xsd:dateTime"/>
+      <xsd:element name="resultTime" type="xsd:dateTime"/>
+      <xsd:element name="recipient" type="xsd:string"/>
+      <xsd:element name="message" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="ProvisioningStatus" type="tns:ProvisioningStatus"/>
+
+  <xsd:complexType name="ProvisioningStatusArray">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="status" type="tns:ProvisioningStatus"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="ProvisioningStatusArray" type="tns:ProvisioningStatusArray"/>
+
+  <xsd:complexType name="AvailableAction">
+    <xsd:sequence>
+      <xsd:element name="actionCode" type="xsd:int"/>
+      <xsd:element name="actionValue" type="xsd:string"/>
+      <xsd:element name="digitalSignatureRequired" type="xsd:boolean"/>
+      <xsd:element name="digitalSignatureType" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="AvailableAction" type="tns:AvailableAction"/>
+
+   <xsd:complexType name="AvailableActionArray">
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="availableAction" type="tns:AvailableAction"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <xsd:element name="AvailableActionArray" type="tns:AvailableActionArray"/>
+
+  <xsd:complexType name="Quorum">
+    <xsd:sequence>
+      <xsd:element name="participantCount" type="xsd:int"/>
+      <xsd:element name="approvalCondition" type="xsd:int"/>
+      <xsd:element name="approveCount" type="xsd:int"/>
+      <xsd:element name="denyCount" type="xsd:int"/>
+      <xsd:element name="refuseCount" type="xsd:int"/>
+      <xsd:element name="status" type="xsd:int"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="Quorum" type="tns:Quorum"/>
+  
+  <xsd:complexType name="ProcessFlowXml">
+    <xsd:sequence>
+      <xsd:element name="processFlowXml" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="ProcessFlowXml" type="tns:ProcessFlowXml"/>
+
+<element name="string" type="xsd:string"/>
+      <element name="long" type="xsd:long"/>
+      <element name="DataItem" type="tns:DataItem"/>
+      <complexType name="DataItem">
+        <sequence>
+          <element name="name" nillable="true" type="xsd:string"/>
+          <element name="value" nillable="true" type="tns:StringArray"/>
+        </sequence>
+      </complexType>
+      <element name="StringArray" type="tns:StringArray"/>
+      <complexType name="StringArray">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="string" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="DataItemArray" type="tns:DataItemArray"/>
+      <complexType name="DataItemArray">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="dataitem" nillable="true" type="tns:DataItem"/>
+        </sequence>
+      </complexType>
+      <element name="Configuration" type="tns:Configuration"/>
+      <complexType name="Configuration">
+        <sequence>
+          <element name="cleanupInterval" type="xsd:long"/>
+          <element name="completedProcessTimeout" type="xsd:int"/>
+          <element name="emailNotification" type="xsd:boolean"/>
+          <element name="heartbeatFactor" type="xsd:int"/>
+          <element name="heartbeatInterval" type="xsd:long"/>
+          <element name="initialPoolSize" type="xsd:int"/>
+          <element name="keepAliveTime" type="xsd:long"/>
+          <element name="maxPoolSize" type="xsd:int"/>
+          <element name="maxShutdownTime" type="xsd:long"/>
+          <element name="minPoolSize" type="xsd:int"/>
+          <element name="pendingInterval" type="xsd:long"/>
+          <element name="processCacheInitialCapacity" type="xsd:int"/>
+          <element name="processCacheLoadFactor" type="xsd:float"/>
+          <element name="processCacheMaxCapacity" type="xsd:int"/>
+          <element name="retryQueueInterval" type="xsd:long"/>
+          <element name="userActivityTimeout" type="xsd:int"/>
+          <element name="webServiceActivityTimeout" type="xsd:int"/>
+        </sequence>
+      </complexType>
+      <element name="int" type="xsd:int"/>
+      <element name="boolean" type="xsd:boolean"/>
+      <element name="float" type="xsd:float"/>
+      <element name="SignatureProperty" type="tns:SignatureProperty"/>
+      <complexType name="SignatureProperty">
+        <sequence>
+          <element name="propertyKey" nillable="true" type="xsd:string"/>
+          <element name="propertyValue" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="SignaturePropertyArray" type="tns:SignaturePropertyArray"/>
+      <complexType name="SignaturePropertyArray">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="signatureproperty" nillable="true" type="tns:SignatureProperty"/>
+        </sequence>
+      </complexType>
+      <element name="Definition" type="tns:Definition"/>
+      <complexType name="Definition">
+        <sequence>
+          <element name="category" nillable="true" type="xsd:string"/>
+          <element name="description" nillable="true" type="xsd:string"/>
+          <element name="digitalSignatureType" nillable="true" type="xsd:string"/>
+          <element name="id" nillable="true" type="xsd:string"/>
+          <element name="items" nillable="true" type="tns:TypedDataItemArray"/>
+          <element name="legalDisclaimer" nillable="true" type="xsd:string"/>
+          <element name="name" nillable="true" type="xsd:string"/>
+          <element name="operation" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="TypedDataItem" type="tns:TypedDataItem"/>
+      <complexType name="TypedDataItem">
+        <sequence>
+          <element name="multiValued" type="xsd:boolean"/>
+          <element name="name" nillable="true" type="xsd:string"/>
+          <element name="type" nillable="true" type="xsd:string"/>
+          <element name="value" nillable="true" type="tns:StringArray"/>
+        </sequence>
+      </complexType>
+      <element name="TypedDataItemArray" type="tns:TypedDataItemArray"/>
+      <complexType name="TypedDataItemArray">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="typeddataitem" nillable="true" type="tns:TypedDataItem"/>
+        </sequence>
+      </complexType>
+      <element name="Comment" type="tns:Comment"/>
+      <complexType name="Comment">
+        <sequence>
+          <element name="activityId" nillable="true" type="xsd:string"/>
+          <element name="comment" nillable="true" type="xsd:string"/>
+          <element name="systemComment" type="xsd:boolean"/>
+          <element name="timestamp" nillable="true" type="xsd:dateTime"/>
+          <element name="user" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="dateTime" type="xsd:dateTime"/>
+      <element name="CommentArray" type="tns:CommentArray"/>
+      <complexType name="CommentArray">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="comment" nillable="true" type="tns:Comment"/>
+        </sequence>
+      </complexType>
+      <element name="ProvisioningRequest" type="tns:ProvisioningRequest"/>
+      <complexType name="ProvisioningRequest">
+        <sequence>
+          <element name="category" nillable="true" type="xsd:string"/>
+          <element name="description" nillable="true" type="xsd:string"/>
+          <element name="digitalSignatureType" nillable="true" type="xsd:string"/>
+          <element name="id" nillable="true" type="xsd:string"/>
+          <element name="items" nillable="true" type="tns:DataItemArray"/>
+          <element name="legalDisclaimer" nillable="true" type="xsd:string"/>
+          <element name="name" nillable="true" type="xsd:string"/>
+          <element name="operation" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="ProvisioningRequestArray" type="tns:ProvisioningRequestArray"/>
+      <complexType name="ProvisioningRequestArray">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="provisioningrequest" nillable="true" type="tns:ProvisioningRequest"/>
+        </sequence>
+      </complexType>
+      <element name="base64Binary" type="xsd:base64Binary"/>
+      <element name="receiveRequest" type="tns:receiveRequest"/>
+      <complexType name="receiveRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg1" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="receiveResponse" type="tns:receiveResponse"/>
+      <complexType name="receiveResponse">
+        <sequence/>
+      </complexType>
+      <element name="getProcessesByApprovalStatusRequest" type="tns:getProcessesByApprovalStatusRequest"/>
+      <complexType name="getProcessesByApprovalStatusRequest">
+        <sequence>
+          <element ref="tns:ApprovalStatus"/>
+        </sequence>
+      </complexType>
+      <element name="getProcessesByApprovalStatusResponse" type="tns:getProcessesByApprovalStatusResponse"/>
+      <complexType name="getProcessesByApprovalStatusResponse">
+        <sequence>
+          <element ref="tns:ProcessArray"/>
+        </sequence>
+      </complexType>
+      <element name="terminateRequest" type="tns:terminateRequest"/>
+      <complexType name="terminateRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element ref="tns:TerminationType"/>
+          <element minOccurs="0" name="arg2" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="terminateResponse" type="tns:terminateResponse"/>
+      <complexType name="terminateResponse">
+        <sequence/>
+      </complexType>
+      <element name="getProcessesRequest" type="tns:getProcessesRequest"/>
+      <complexType name="getProcessesRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element name="arg1" type="xsd:long"/>
+          <element ref="tns:Operator"/>
+          <element minOccurs="0" name="arg3" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg4" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getProcessesResponse" type="tns:getProcessesResponse"/>
+      <complexType name="getProcessesResponse">
+        <sequence>
+          <element ref="tns:ProcessArray"/>
+        </sequence>
+      </complexType>
+      <element name="getClusterStateRequest" type="tns:getClusterStateRequest"/>
+      <complexType name="getClusterStateRequest">
+        <sequence/>
+      </complexType>
+      <element name="getClusterStateResponse" type="tns:getClusterStateResponse"/>
+      <complexType name="getClusterStateResponse">
+        <sequence>
+          <element ref="tns:EngineStateArray"/>
+        </sequence>
+      </complexType>
+      <element name="forwardAsProxyRequest" type="tns:forwardAsProxyRequest"/>
+      <complexType name="forwardAsProxyRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element ref="tns:Action"/>
+          <element minOccurs="0" name="arg2" nillable="true" type="tns:DataItemArray"/>
+          <element minOccurs="0" name="arg3" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg4" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="forwardAsProxyResponse" type="tns:forwardAsProxyResponse"/>
+      <complexType name="forwardAsProxyResponse">
+        <sequence/>
+      </complexType>
+      <element name="getEngineConfigurationRequest" type="tns:getEngineConfigurationRequest"/>
+      <complexType name="getEngineConfigurationRequest">
+        <sequence/>
+      </complexType>
+      <element name="getEngineConfigurationResponse" type="tns:getEngineConfigurationResponse"/>
+      <complexType name="getEngineConfigurationResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="tns:Configuration"/>
+        </sequence>
+      </complexType>
+      <element name="getAllProcessesRequest" type="tns:getAllProcessesRequest"/>
+      <complexType name="getAllProcessesRequest">
+        <sequence/>
+      </complexType>
+      <element name="getAllProcessesResponse" type="tns:getAllProcessesResponse"/>
+      <complexType name="getAllProcessesResponse">
+        <sequence>
+          <element ref="tns:ProcessArray"/>
+        </sequence>
+      </complexType>
+      <element name="reassignAllProcessesRequest" type="tns:reassignAllProcessesRequest"/>
+      <complexType name="reassignAllProcessesRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg1" nillable="true" type="tns:StringArray"/>
+        </sequence>
+      </complexType>
+      <element name="reassignAllProcessesResponse" type="tns:reassignAllProcessesResponse"/>
+      <complexType name="reassignAllProcessesResponse">
+        <sequence>
+          <element name="result" type="xsd:int"/>
+        </sequence>
+      </complexType>
+      <element name="setWebServiceActivityTimeoutRequest" type="tns:setWebServiceActivityTimeoutRequest"/>
+      <complexType name="setWebServiceActivityTimeoutRequest">
+        <sequence>
+          <element name="arg0" type="xsd:int"/>
+        </sequence>
+      </complexType>
+      <element name="setWebServiceActivityTimeoutResponse" type="tns:setWebServiceActivityTimeoutResponse"/>
+      <complexType name="setWebServiceActivityTimeoutResponse">
+        <sequence/>
+      </complexType>
+      <element name="getVersionRequest" type="tns:getVersionRequest"/>
+      <complexType name="getVersionRequest">
+        <sequence/>
+      </complexType>
+      <element name="getVersionResponse" type="tns:getVersionResponse"/>
+      <complexType name="getVersionResponse">
+        <sequence>
+          <element ref="tns:Version"/>
+        </sequence>
+      </complexType>
+      <element name="forwardWithDigitalSignatureRequest" type="tns:forwardWithDigitalSignatureRequest"/>
+      <complexType name="forwardWithDigitalSignatureRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element ref="tns:Action"/>
+          <element minOccurs="0" name="arg2" nillable="true" type="tns:DataItemArray"/>
+          <element minOccurs="0" name="arg3" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg4" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg5" nillable="true" type="tns:SignaturePropertyArray"/>
+        </sequence>
+      </complexType>
+      <element name="forwardWithDigitalSignatureResponse" type="tns:forwardWithDigitalSignatureResponse"/>
+      <complexType name="forwardWithDigitalSignatureResponse">
+        <sequence/>
+      </complexType>
+      <element name="getProcessesByCreationTimeRequest" type="tns:getProcessesByCreationTimeRequest"/>
+      <complexType name="getProcessesByCreationTimeRequest">
+        <sequence>
+          <element name="arg0" type="xsd:long"/>
+          <element ref="tns:Operator"/>
+        </sequence>
+      </complexType>
+      <element name="getProcessesByCreationTimeResponse" type="tns:getProcessesByCreationTimeResponse"/>
+      <complexType name="getProcessesByCreationTimeResponse">
+        <sequence>
+          <element ref="tns:ProcessArray"/>
+        </sequence>
+      </complexType>
+      <element name="getWorkRequest" type="tns:getWorkRequest"/>
+      <complexType name="getWorkRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getWorkResponse" type="tns:getWorkResponse"/>
+      <complexType name="getWorkResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="tns:DataItemArray"/>
+        </sequence>
+      </complexType>
+      <element name="getProcessesByCreationIntervalRequest" type="tns:getProcessesByCreationIntervalRequest"/>
+      <complexType name="getProcessesByCreationIntervalRequest">
+        <sequence>
+          <element name="arg0" type="xsd:long"/>
+          <element name="arg1" type="xsd:long"/>
+        </sequence>
+      </complexType>
+      <element name="getProcessesByCreationIntervalResponse" type="tns:getProcessesByCreationIntervalResponse"/>
+      <complexType name="getProcessesByCreationIntervalResponse">
+        <sequence>
+          <element ref="tns:ProcessArray"/>
+        </sequence>
+      </complexType>
+      <element name="resetPriorityForWorkTaskRequest" type="tns:resetPriorityForWorkTaskRequest"/>
+      <complexType name="resetPriorityForWorkTaskRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element name="arg1" type="xsd:int"/>
+          <element minOccurs="0" name="arg2" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="resetPriorityForWorkTaskResponse" type="tns:resetPriorityForWorkTaskResponse"/>
+      <complexType name="resetPriorityForWorkTaskResponse">
+        <sequence/>
+      </complexType>
+      <element name="getDefinitionByIDRequest" type="tns:getDefinitionByIDRequest"/>
+      <complexType name="getDefinitionByIDRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg1" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getDefinitionByIDResponse" type="tns:getDefinitionByIDResponse"/>
+      <complexType name="getDefinitionByIDResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="tns:Definition"/>
+        </sequence>
+      </complexType>
+      <element name="getCommentsRequest" type="tns:getCommentsRequest"/>
+      <complexType name="getCommentsRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element name="arg1" type="xsd:int"/>
+        </sequence>
+      </complexType>
+      <element name="getCommentsResponse" type="tns:getCommentsResponse"/>
+      <complexType name="getCommentsResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="tns:CommentArray"/>
+        </sequence>
+      </complexType>
+      <element name="startWorkFlowRequest" type="tns:startWorkFlowRequest"/>
+      <complexType name="startWorkFlowRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg1" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg2" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg3" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg4" nillable="true" type="tns:DataItemArray"/>
+          <element minOccurs="0" name="arg5" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="startWorkFlowResponse" type="tns:startWorkFlowResponse"/>
+      <complexType name="startWorkFlowResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getCompletedProcessTimeoutRequest" type="tns:getCompletedProcessTimeoutRequest"/>
+      <complexType name="getCompletedProcessTimeoutRequest">
+        <sequence/>
+      </complexType>
+      <element name="getCompletedProcessTimeoutResponse" type="tns:getCompletedProcessTimeoutResponse"/>
+      <complexType name="getCompletedProcessTimeoutResponse">
+        <sequence>
+          <element name="result" type="xsd:int"/>
+        </sequence>
+      </complexType>
+      <element name="getQuorumForWorkTaskRequest" type="tns:getQuorumForWorkTaskRequest"/>
+      <complexType name="getQuorumForWorkTaskRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getQuorumForWorkTaskResponse" type="tns:getQuorumForWorkTaskResponse"/>
+      <complexType name="getQuorumForWorkTaskResponse">
+        <sequence>
+          <element ref="tns:Quorum"/>
+        </sequence>
+      </complexType>
+      <element name="reassignProcessesRequest" type="tns:reassignProcessesRequest"/>
+      <complexType name="reassignProcessesRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="tns:StringArray"/>
+          <element minOccurs="0" name="arg1" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg2" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="reassignProcessesResponse" type="tns:reassignProcessesResponse"/>
+      <complexType name="reassignProcessesResponse">
+        <sequence>
+          <element name="result" type="xsd:int"/>
+        </sequence>
+      </complexType>
+      <element name="getCommentsByActivityRequest" type="tns:getCommentsByActivityRequest"/>
+      <complexType name="getCommentsByActivityRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg1" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getCommentsByActivityResponse" type="tns:getCommentsByActivityResponse"/>
+      <complexType name="getCommentsByActivityResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="tns:CommentArray"/>
+        </sequence>
+      </complexType>
+      <element name="getProvisioningRequestsRequest" type="tns:getProvisioningRequestsRequest"/>
+      <complexType name="getProvisioningRequestsRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg1" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg2" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="type" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getProvisioningRequestsResponse" type="tns:getProvisioningRequestsResponse"/>
+      <complexType name="getProvisioningRequestsResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="tns:ProvisioningRequestArray"/>
+        </sequence>
+      </complexType>
+      <element name="reassignPercentageProcessesRequest" type="tns:reassignPercentageProcessesRequest"/>
+      <complexType name="reassignPercentageProcessesRequest">
+        <sequence>
+          <element name="arg0" type="xsd:int"/>
+          <element minOccurs="0" name="arg1" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg2" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="reassignPercentageProcessesResponse" type="tns:reassignPercentageProcessesResponse"/>
+      <complexType name="reassignPercentageProcessesResponse">
+        <sequence>
+          <element name="result" type="xsd:int"/>
+        </sequence>
+      </complexType>
+      <element name="getFlowDefinitionRequest" type="tns:getFlowDefinitionRequest"/>
+      <complexType name="getFlowDefinitionRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getFlowDefinitionResponse" type="tns:getFlowDefinitionResponse"/>
+      <complexType name="getFlowDefinitionResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="forwardAsProxyWithDigitalSignatureRequest" type="tns:forwardAsProxyWithDigitalSignatureRequest"/>
+      <complexType name="forwardAsProxyWithDigitalSignatureRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element ref="tns:Action"/>
+          <element minOccurs="0" name="arg2" nillable="true" type="tns:DataItemArray"/>
+          <element minOccurs="0" name="arg3" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg4" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg5" nillable="true" type="tns:SignaturePropertyArray"/>
+          <element minOccurs="0" name="arg6" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="forwardAsProxyWithDigitalSignatureResponse" type="tns:forwardAsProxyWithDigitalSignatureResponse"/>
+      <complexType name="forwardAsProxyWithDigitalSignatureResponse">
+        <sequence/>
+      </complexType>
+      <element name="setCompletedProcessTimeoutRequest" type="tns:setCompletedProcessTimeoutRequest"/>
+      <complexType name="setCompletedProcessTimeoutRequest">
+        <sequence>
+          <element name="arg0" type="xsd:int"/>
+        </sequence>
+      </complexType>
+      <element name="setCompletedProcessTimeoutResponse" type="tns:setCompletedProcessTimeoutResponse"/>
+      <complexType name="setCompletedProcessTimeoutResponse">
+        <sequence/>
+      </complexType>
+      <element name="setRoleRequestStatusRequest" type="tns:setRoleRequestStatusRequest"/>
+      <complexType name="setRoleRequestStatusRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element name="arg1" type="xsd:int"/>
+          <element minOccurs="0" name="arg2" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="setRoleRequestStatusResponse" type="tns:setRoleRequestStatusResponse"/>
+      <complexType name="setRoleRequestStatusResponse">
+        <sequence/>
+      </complexType>
+      <element name="getProvisioningStatusesRequest" type="tns:getProvisioningStatusesRequest"/>
+      <complexType name="getProvisioningStatusesRequest">
+        <sequence>
+          <element ref="tns:ProvisioningStatusQuery"/>
+          <element name="arg1" type="xsd:int"/>
+        </sequence>
+      </complexType>
+      <element name="getProvisioningStatusesResponse" type="tns:getProvisioningStatusesResponse"/>
+      <complexType name="getProvisioningStatusesResponse">
+        <sequence>
+          <element ref="tns:ProvisioningStatusArray"/>
+        </sequence>
+      </complexType>
+      <element name="getUserActivityTimeoutRequest" type="tns:getUserActivityTimeoutRequest"/>
+      <complexType name="getUserActivityTimeoutRequest">
+        <sequence/>
+      </complexType>
+      <element name="getUserActivityTimeoutResponse" type="tns:getUserActivityTimeoutResponse"/>
+      <complexType name="getUserActivityTimeoutResponse">
+        <sequence>
+          <element name="result" type="xsd:int"/>
+        </sequence>
+      </complexType>
+      <element name="reassignRequest" type="tns:reassignRequest"/>
+      <complexType name="reassignRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg1" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg2" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="reassignResponse" type="tns:reassignResponse"/>
+      <complexType name="reassignResponse">
+        <sequence/>
+      </complexType>
+      <element name="getGraphRequest" type="tns:getGraphRequest"/>
+      <complexType name="getGraphRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getGraphResponse" type="tns:getGraphResponse"/>
+      <complexType name="getGraphResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="xsd:base64Binary"/>
+        </sequence>
+      </complexType>
+      <element name="setEngineConfigurationRequest" type="tns:setEngineConfigurationRequest"/>
+      <complexType name="setEngineConfigurationRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="tns:Configuration"/>
+        </sequence>
+      </complexType>
+      <element name="setEngineConfigurationResponse" type="tns:setEngineConfigurationResponse"/>
+      <complexType name="setEngineConfigurationResponse">
+        <sequence/>
+      </complexType>
+      <element name="getProcessFlowXmlRequest" type="tns:getProcessFlowXmlRequest"/>
+      <complexType name="getProcessFlowXmlRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getProcessFlowXmlResponse" type="tns:getProcessFlowXmlResponse"/>
+      <complexType name="getProcessFlowXmlResponse">
+        <sequence>
+          <element ref="tns:ProcessFlowXml"/>
+        </sequence>
+      </complexType>
+      <element name="forwardRequest" type="tns:forwardRequest"/>
+      <complexType name="forwardRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element ref="tns:Action"/>
+          <element minOccurs="0" name="arg2" nillable="true" type="tns:DataItemArray"/>
+          <element minOccurs="0" name="arg3" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="forwardResponse" type="tns:forwardResponse"/>
+      <complexType name="forwardResponse">
+        <sequence/>
+      </complexType>
+      <element name="getAllProvisioningRequestsRequest" type="tns:getAllProvisioningRequestsRequest"/>
+      <complexType name="getAllProvisioningRequestsRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getAllProvisioningRequestsResponse" type="tns:getAllProvisioningRequestsResponse"/>
+      <complexType name="getAllProvisioningRequestsResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="tns:ProvisioningRequestArray"/>
+        </sequence>
+      </complexType>
+      <element name="reassignWorkTaskRequest" type="tns:reassignWorkTaskRequest"/>
+      <complexType name="reassignWorkTaskRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg1" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg2" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="reassignWorkTaskResponse" type="tns:reassignWorkTaskResponse"/>
+      <complexType name="reassignWorkTaskResponse">
+        <sequence/>
+      </complexType>
+      <element name="startWithDigitalSignatureRequest" type="tns:startWithDigitalSignatureRequest"/>
+      <complexType name="startWithDigitalSignatureRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg1" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg2" nillable="true" type="tns:DataItemArray"/>
+          <element minOccurs="0" name="arg3" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg4" nillable="true" type="tns:SignaturePropertyArray"/>
+        </sequence>
+      </complexType>
+      <element name="startWithDigitalSignatureResponse" type="tns:startWithDigitalSignatureResponse"/>
+      <complexType name="startWithDigitalSignatureResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="startAsProxyRequest" type="tns:startAsProxyRequest"/>
+      <complexType name="startAsProxyRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg1" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg2" nillable="true" type="tns:DataItemArray"/>
+          <element minOccurs="0" name="arg3" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="startAsProxyResponse" type="tns:startAsProxyResponse"/>
+      <complexType name="startAsProxyResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getCommentsByTypeRequest" type="tns:getCommentsByTypeRequest"/>
+      <complexType name="getCommentsByTypeRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element ref="tns:CommentType"/>
+        </sequence>
+      </complexType>
+      <element name="getCommentsByTypeResponse" type="tns:getCommentsByTypeResponse"/>
+      <complexType name="getCommentsByTypeResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="tns:CommentArray"/>
+        </sequence>
+      </complexType>
+      <element name="setUserActivityTimeoutRequest" type="tns:setUserActivityTimeoutRequest"/>
+      <complexType name="setUserActivityTimeoutRequest">
+        <sequence>
+          <element name="arg0" type="xsd:int"/>
+        </sequence>
+      </complexType>
+      <element name="setUserActivityTimeoutResponse" type="tns:setUserActivityTimeoutResponse"/>
+      <complexType name="setUserActivityTimeoutResponse">
+        <sequence/>
+      </complexType>
+      <element name="getProcessesByRecipientRequest" type="tns:getProcessesByRecipientRequest"/>
+      <complexType name="getProcessesByRecipientRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getProcessesByRecipientResponse" type="tns:getProcessesByRecipientResponse"/>
+      <complexType name="getProcessesByRecipientResponse">
+        <sequence>
+          <element ref="tns:ProcessArray"/>
+        </sequence>
+      </complexType>
+      <element name="getProcessesByStatusRequest" type="tns:getProcessesByStatusRequest"/>
+      <complexType name="getProcessesByStatusRequest">
+        <sequence>
+          <element ref="tns:ProcessStatus"/>
+        </sequence>
+      </complexType>
+      <element name="getProcessesByStatusResponse" type="tns:getProcessesByStatusResponse"/>
+      <complexType name="getProcessesByStatusResponse">
+        <sequence>
+          <element ref="tns:ProcessArray"/>
+        </sequence>
+      </complexType>
+      <element name="getProcessesArrayRequest" type="tns:getProcessesArrayRequest"/>
+      <complexType name="getProcessesArrayRequest">
+        <sequence>
+          <element name="arg0" type="xsd:int"/>
+        </sequence>
+      </complexType>
+      <element name="getProcessesArrayResponse" type="tns:getProcessesArrayResponse"/>
+      <complexType name="getProcessesArrayResponse">
+        <sequence>
+          <element ref="tns:ProcessArray"/>
+        </sequence>
+      </complexType>
+      <element name="setEmailNotificationsRequest" type="tns:setEmailNotificationsRequest"/>
+      <complexType name="setEmailNotificationsRequest">
+        <sequence>
+          <element name="arg0" type="xsd:boolean"/>
+        </sequence>
+      </complexType>
+      <element name="setEmailNotificationsResponse" type="tns:setEmailNotificationsResponse"/>
+      <complexType name="setEmailNotificationsResponse">
+        <sequence/>
+      </complexType>
+      <element name="getCommentsByUserRequest" type="tns:getCommentsByUserRequest"/>
+      <complexType name="getCommentsByUserRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg1" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getCommentsByUserResponse" type="tns:getCommentsByUserResponse"/>
+      <complexType name="getCommentsByUserResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="tns:CommentArray"/>
+        </sequence>
+      </complexType>
+      <element name="startWithCorrelationIdRequest" type="tns:startWithCorrelationIdRequest"/>
+      <complexType name="startWithCorrelationIdRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg1" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg2" nillable="true" type="tns:DataItemArray"/>
+          <element minOccurs="0" name="arg3" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg4" nillable="true" type="tns:SignaturePropertyArray"/>
+          <element minOccurs="0" name="arg5" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg6" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="startWithCorrelationIdResponse" type="tns:startWithCorrelationIdResponse"/>
+      <complexType name="startWithCorrelationIdResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getEmailNotificationsRequest" type="tns:getEmailNotificationsRequest"/>
+      <complexType name="getEmailNotificationsRequest">
+        <sequence/>
+      </complexType>
+      <element name="getEmailNotificationsResponse" type="tns:getEmailNotificationsResponse"/>
+      <complexType name="getEmailNotificationsResponse">
+        <sequence>
+          <element name="result" type="xsd:boolean"/>
+        </sequence>
+      </complexType>
+      <element name="getProcessesByQueryRequest" type="tns:getProcessesByQueryRequest"/>
+      <complexType name="getProcessesByQueryRequest">
+        <sequence>
+          <element ref="tns:ProcessInfoQuery"/>
+          <element name="arg1" type="xsd:int"/>
+        </sequence>
+      </complexType>
+      <element name="getProcessesByQueryResponse" type="tns:getProcessesByQueryResponse"/>
+      <complexType name="getProcessesByQueryResponse">
+        <sequence>
+          <element ref="tns:ProcessArray"/>
+        </sequence>
+      </complexType>
+      <element name="getWorkEntriesRequest" type="tns:getWorkEntriesRequest"/>
+      <complexType name="getWorkEntriesRequest">
+        <sequence>
+          <element ref="tns:WorkEntryQuery"/>
+          <element name="arg1" type="xsd:int"/>
+        </sequence>
+      </complexType>
+      <element name="getWorkEntriesResponse" type="tns:getWorkEntriesResponse"/>
+      <complexType name="getWorkEntriesResponse">
+        <sequence>
+          <element ref="tns:WorkEntryArray"/>
+        </sequence>
+      </complexType>
+      <element name="getProcessRequest" type="tns:getProcessRequest"/>
+      <complexType name="getProcessRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getProcessResponse" type="tns:getProcessResponse"/>
+      <complexType name="getProcessResponse">
+        <sequence>
+          <element ref="tns:Process"/>
+        </sequence>
+      </complexType>
+      <element name="getProcessesByIdRequest" type="tns:getProcessesByIdRequest"/>
+      <complexType name="getProcessesByIdRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getProcessesByIdResponse" type="tns:getProcessesByIdResponse"/>
+      <complexType name="getProcessesByIdResponse">
+        <sequence>
+          <element ref="tns:ProcessArray"/>
+        </sequence>
+      </complexType>
+      <element name="getFormDefinitionRequest" type="tns:getFormDefinitionRequest"/>
+      <complexType name="getFormDefinitionRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getFormDefinitionResponse" type="tns:getFormDefinitionResponse"/>
+      <complexType name="getFormDefinitionResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="startRequest" type="tns:startRequest"/>
+      <complexType name="startRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg1" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg2" nillable="true" type="tns:DataItemArray"/>
+        </sequence>
+      </complexType>
+      <element name="startResponse" type="tns:startResponse"/>
+      <complexType name="startResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="removeEngineRequest" type="tns:removeEngineRequest"/>
+      <complexType name="removeEngineRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="removeEngineResponse" type="tns:removeEngineResponse"/>
+      <complexType name="removeEngineResponse">
+        <sequence/>
+      </complexType>
+      <element name="clearNIMCachesRequest" type="tns:clearNIMCachesRequest"/>
+      <complexType name="clearNIMCachesRequest">
+        <sequence/>
+      </complexType>
+      <element name="clearNIMCachesResponse" type="tns:clearNIMCachesResponse"/>
+      <complexType name="clearNIMCachesResponse">
+        <sequence/>
+      </complexType>
+      <element name="getProcessesByInitiatorRequest" type="tns:getProcessesByInitiatorRequest"/>
+      <complexType name="getProcessesByInitiatorRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getProcessesByInitiatorResponse" type="tns:getProcessesByInitiatorResponse"/>
+      <complexType name="getProcessesByInitiatorResponse">
+        <sequence>
+          <element ref="tns:ProcessArray"/>
+        </sequence>
+      </complexType>
+      <element name="setResultRequest" type="tns:setResultRequest"/>
+      <complexType name="setResultRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element ref="tns:EntitlementState"/>
+          <element ref="tns:EntitlementStatus"/>
+          <element minOccurs="0" name="arg3" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="setResultResponse" type="tns:setResultResponse"/>
+      <complexType name="setResultResponse">
+        <sequence/>
+      </complexType>
+      <element name="unclaimRequest" type="tns:unclaimRequest"/>
+      <complexType name="unclaimRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg1" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="unclaimResponse" type="tns:unclaimResponse"/>
+      <complexType name="unclaimResponse">
+        <sequence/>
+      </complexType>
+      <element name="getCommentsByCreationTimeRequest" type="tns:getCommentsByCreationTimeRequest"/>
+      <complexType name="getCommentsByCreationTimeRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element name="arg1" type="xsd:long"/>
+          <element ref="tns:Operator"/>
+        </sequence>
+      </complexType>
+      <element name="getCommentsByCreationTimeResponse" type="tns:getCommentsByCreationTimeResponse"/>
+      <complexType name="getCommentsByCreationTimeResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="tns:CommentArray"/>
+        </sequence>
+      </complexType>
+      <element name="getProvisioningCategoriesRequest" type="tns:getProvisioningCategoriesRequest"/>
+      <complexType name="getProvisioningCategoriesRequest">
+        <sequence/>
+      </complexType>
+      <element name="getProvisioningCategoriesResponse" type="tns:getProvisioningCategoriesResponse"/>
+      <complexType name="getProvisioningCategoriesResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="tns:StringArray"/>
+        </sequence>
+      </complexType>
+      <element name="startAsProxyWithDigitalSignatureRequest" type="tns:startAsProxyWithDigitalSignatureRequest"/>
+      <complexType name="startAsProxyWithDigitalSignatureRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg1" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg2" nillable="true" type="tns:DataItemArray"/>
+          <element minOccurs="0" name="arg3" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg4" nillable="true" type="tns:SignaturePropertyArray"/>
+          <element minOccurs="0" name="arg5" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="startAsProxyWithDigitalSignatureResponse" type="tns:startAsProxyWithDigitalSignatureResponse"/>
+      <complexType name="startAsProxyWithDigitalSignatureResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getEngineStateRequest" type="tns:getEngineStateRequest"/>
+      <complexType name="getEngineStateRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getEngineStateResponse" type="tns:getEngineStateResponse"/>
+      <complexType name="getEngineStateResponse">
+        <sequence>
+          <element ref="tns:EngineState"/>
+        </sequence>
+      </complexType>
+      <element name="multiStartRequest" type="tns:multiStartRequest"/>
+      <complexType name="multiStartRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg1" nillable="true" type="tns:StringArray"/>
+          <element minOccurs="0" name="arg2" nillable="true" type="tns:DataItemArray"/>
+        </sequence>
+      </complexType>
+      <element name="multiStartResponse" type="tns:multiStartResponse"/>
+      <complexType name="multiStartResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="tns:StringArray"/>
+        </sequence>
+      </complexType>
+      <element name="getDataItemsRequest" type="tns:getDataItemsRequest"/>
+      <complexType name="getDataItemsRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="getDataItemsResponse" type="tns:getDataItemsResponse"/>
+      <complexType name="getDataItemsResponse">
+        <sequence>
+          <element minOccurs="0" name="result" nillable="true" type="tns:TypedDataItemArray"/>
+        </sequence>
+      </complexType>
+      <element name="getWebServiceActivityTimeoutRequest" type="tns:getWebServiceActivityTimeoutRequest"/>
+      <complexType name="getWebServiceActivityTimeoutRequest">
+        <sequence/>
+      </complexType>
+      <element name="getWebServiceActivityTimeoutResponse" type="tns:getWebServiceActivityTimeoutResponse"/>
+      <complexType name="getWebServiceActivityTimeoutResponse">
+        <sequence>
+          <element name="result" type="xsd:int"/>
+        </sequence>
+      </complexType>
+      <element name="addCommentRequest" type="tns:addCommentRequest"/>
+      <complexType name="addCommentRequest">
+        <sequence>
+          <element minOccurs="0" name="arg0" nillable="true" type="xsd:string"/>
+          <element minOccurs="0" name="arg1" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+      <element name="addCommentResponse" type="tns:addCommentResponse"/>
+      <complexType name="addCommentResponse">
+        <sequence/>
+      </complexType>
+    </xsd:schema>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.novell.com/soa/af/impl/soap">
+      <element name="AdminException" type="ns0:AdminException"/>
+      <complexType name="AdminException">
+        <sequence>
+          <element name="reason" nillable="true" type="xsd:string"/>
+        </sequence>
+      </complexType>
+    </schema>
+  </types>
+  <message name="receiveInput">
+    <part element="tns:receiveRequest" name="bodyIn"/>
+  </message>
+  <message name="receiveOutput">
+    <part element="tns:receiveResponse" name="bodyOut"/>
+  </message>
+  <message name="AdminException">
+    <part element="ns0:AdminException" name="AdminFault"/>
+  </message>
+  <message name="getProcessesByApprovalStatusInput">
+    <part element="tns:getProcessesByApprovalStatusRequest" name="bodyIn"/>
+  </message>
+  <message name="getProcessesByApprovalStatusOutput">
+    <part element="tns:getProcessesByApprovalStatusResponse" name="bodyOut"/>
+  </message>
+  <message name="terminateInput">
+    <part element="tns:terminateRequest" name="bodyIn"/>
+  </message>
+  <message name="terminateOutput">
+    <part element="tns:terminateResponse" name="bodyOut"/>
+  </message>
+  <message name="getProcessesInput">
+    <part element="tns:getProcessesRequest" name="bodyIn"/>
+  </message>
+  <message name="getProcessesOutput">
+    <part element="tns:getProcessesResponse" name="bodyOut"/>
+  </message>
+  <message name="getClusterStateInput">
+    <part element="tns:getClusterStateRequest" name="bodyIn"/>
+  </message>
+  <message name="getClusterStateOutput">
+    <part element="tns:getClusterStateResponse" name="bodyOut"/>
+  </message>
+  <message name="forwardAsProxyInput">
+    <part element="tns:forwardAsProxyRequest" name="bodyIn"/>
+  </message>
+  <message name="forwardAsProxyOutput">
+    <part element="tns:forwardAsProxyResponse" name="bodyOut"/>
+  </message>
+  <message name="getEngineConfigurationInput">
+    <part element="tns:getEngineConfigurationRequest" name="bodyIn"/>
+  </message>
+  <message name="getEngineConfigurationOutput">
+    <part element="tns:getEngineConfigurationResponse" name="bodyOut"/>
+  </message>
+  <message name="getAllProcessesInput">
+    <part element="tns:getAllProcessesRequest" name="bodyIn"/>
+  </message>
+  <message name="getAllProcessesOutput">
+    <part element="tns:getAllProcessesResponse" name="bodyOut"/>
+  </message>
+  <message name="reassignAllProcessesInput">
+    <part element="tns:reassignAllProcessesRequest" name="bodyIn"/>
+  </message>
+  <message name="reassignAllProcessesOutput">
+    <part element="tns:reassignAllProcessesResponse" name="bodyOut"/>
+  </message>
+  <message name="setWebServiceActivityTimeoutInput">
+    <part element="tns:setWebServiceActivityTimeoutRequest" name="bodyIn"/>
+  </message>
+  <message name="setWebServiceActivityTimeoutOutput">
+    <part element="tns:setWebServiceActivityTimeoutResponse" name="bodyOut"/>
+  </message>
+  <message name="getVersionInput">
+    <part element="tns:getVersionRequest" name="bodyIn"/>
+  </message>
+  <message name="getVersionOutput">
+    <part element="tns:getVersionResponse" name="bodyOut"/>
+  </message>
+  <message name="forwardWithDigitalSignatureInput">
+    <part element="tns:forwardWithDigitalSignatureRequest" name="bodyIn"/>
+  </message>
+  <message name="forwardWithDigitalSignatureOutput">
+    <part element="tns:forwardWithDigitalSignatureResponse" name="bodyOut"/>
+  </message>
+  <message name="getProcessesByCreationTimeInput">
+    <part element="tns:getProcessesByCreationTimeRequest" name="bodyIn"/>
+  </message>
+  <message name="getProcessesByCreationTimeOutput">
+    <part element="tns:getProcessesByCreationTimeResponse" name="bodyOut"/>
+  </message>
+  <message name="getWorkInput">
+    <part element="tns:getWorkRequest" name="bodyIn"/>
+  </message>
+  <message name="getWorkOutput">
+    <part element="tns:getWorkResponse" name="bodyOut"/>
+  </message>
+  <message name="getProcessesByCreationIntervalInput">
+    <part element="tns:getProcessesByCreationIntervalRequest" name="bodyIn"/>
+  </message>
+  <message name="getProcessesByCreationIntervalOutput">
+    <part element="tns:getProcessesByCreationIntervalResponse" name="bodyOut"/>
+  </message>
+  <message name="resetPriorityForWorkTaskInput">
+    <part element="tns:resetPriorityForWorkTaskRequest" name="bodyIn"/>
+  </message>
+  <message name="resetPriorityForWorkTaskOutput">
+    <part element="tns:resetPriorityForWorkTaskResponse" name="bodyOut"/>
+  </message>
+  <message name="getDefinitionByIDInput">
+    <part element="tns:getDefinitionByIDRequest" name="bodyIn"/>
+  </message>
+  <message name="getDefinitionByIDOutput">
+    <part element="tns:getDefinitionByIDResponse" name="bodyOut"/>
+  </message>
+  <message name="getCommentsInput">
+    <part element="tns:getCommentsRequest" name="bodyIn"/>
+  </message>
+  <message name="getCommentsOutput">
+    <part element="tns:getCommentsResponse" name="bodyOut"/>
+  </message>
+  <message name="startWorkFlowInput">
+    <part element="tns:startWorkFlowRequest" name="bodyIn"/>
+  </message>
+  <message name="startWorkFlowOutput">
+    <part element="tns:startWorkFlowResponse" name="bodyOut"/>
+  </message>
+  <message name="getCompletedProcessTimeoutInput">
+    <part element="tns:getCompletedProcessTimeoutRequest" name="bodyIn"/>
+  </message>
+  <message name="getCompletedProcessTimeoutOutput">
+    <part element="tns:getCompletedProcessTimeoutResponse" name="bodyOut"/>
+  </message>
+  <message name="getQuorumForWorkTaskInput">
+    <part element="tns:getQuorumForWorkTaskRequest" name="bodyIn"/>
+  </message>
+  <message name="getQuorumForWorkTaskOutput">
+    <part element="tns:getQuorumForWorkTaskResponse" name="bodyOut"/>
+  </message>
+  <message name="reassignProcessesInput">
+    <part element="tns:reassignProcessesRequest" name="bodyIn"/>
+  </message>
+  <message name="reassignProcessesOutput">
+    <part element="tns:reassignProcessesResponse" name="bodyOut"/>
+  </message>
+  <message name="getCommentsByActivityInput">
+    <part element="tns:getCommentsByActivityRequest" name="bodyIn"/>
+  </message>
+  <message name="getCommentsByActivityOutput">
+    <part element="tns:getCommentsByActivityResponse" name="bodyOut"/>
+  </message>
+  <message name="getProvisioningRequestsInput">
+    <part element="tns:getProvisioningRequestsRequest" name="bodyIn"/>
+  </message>
+  <message name="getProvisioningRequestsOutput">
+    <part element="tns:getProvisioningRequestsResponse" name="bodyOut"/>
+  </message>
+  <message name="reassignPercentageProcessesInput">
+    <part element="tns:reassignPercentageProcessesRequest" name="bodyIn"/>
+  </message>
+  <message name="reassignPercentageProcessesOutput">
+    <part element="tns:reassignPercentageProcessesResponse" name="bodyOut"/>
+  </message>
+  <message name="getFlowDefinitionInput">
+    <part element="tns:getFlowDefinitionRequest" name="bodyIn"/>
+  </message>
+  <message name="getFlowDefinitionOutput">
+    <part element="tns:getFlowDefinitionResponse" name="bodyOut"/>
+  </message>
+  <message name="forwardAsProxyWithDigitalSignatureInput">
+    <part element="tns:forwardAsProxyWithDigitalSignatureRequest" name="bodyIn"/>
+  </message>
+  <message name="forwardAsProxyWithDigitalSignatureOutput">
+    <part element="tns:forwardAsProxyWithDigitalSignatureResponse" name="bodyOut"/>
+  </message>
+  <message name="setCompletedProcessTimeoutInput">
+    <part element="tns:setCompletedProcessTimeoutRequest" name="bodyIn"/>
+  </message>
+  <message name="setCompletedProcessTimeoutOutput">
+    <part element="tns:setCompletedProcessTimeoutResponse" name="bodyOut"/>
+  </message>
+  <message name="setRoleRequestStatusInput">
+    <part element="tns:setRoleRequestStatusRequest" name="bodyIn"/>
+  </message>
+  <message name="setRoleRequestStatusOutput">
+    <part element="tns:setRoleRequestStatusResponse" name="bodyOut"/>
+  </message>
+  <message name="getProvisioningStatusesInput">
+    <part element="tns:getProvisioningStatusesRequest" name="bodyIn"/>
+  </message>
+  <message name="getProvisioningStatusesOutput">
+    <part element="tns:getProvisioningStatusesResponse" name="bodyOut"/>
+  </message>
+  <message name="getUserActivityTimeoutInput">
+    <part element="tns:getUserActivityTimeoutRequest" name="bodyIn"/>
+  </message>
+  <message name="getUserActivityTimeoutOutput">
+    <part element="tns:getUserActivityTimeoutResponse" name="bodyOut"/>
+  </message>
+  <message name="reassignInput">
+    <part element="tns:reassignRequest" name="bodyIn"/>
+  </message>
+  <message name="reassignOutput">
+    <part element="tns:reassignResponse" name="bodyOut"/>
+  </message>
+  <message name="getGraphInput">
+    <part element="tns:getGraphRequest" name="bodyIn"/>
+  </message>
+  <message name="getGraphOutput">
+    <part element="tns:getGraphResponse" name="bodyOut"/>
+  </message>
+  <message name="setEngineConfigurationInput">
+    <part element="tns:setEngineConfigurationRequest" name="bodyIn"/>
+  </message>
+  <message name="setEngineConfigurationOutput">
+    <part element="tns:setEngineConfigurationResponse" name="bodyOut"/>
+  </message>
+  <message name="getProcessFlowXmlInput">
+    <part element="tns:getProcessFlowXmlRequest" name="bodyIn"/>
+  </message>
+  <message name="getProcessFlowXmlOutput">
+    <part element="tns:getProcessFlowXmlResponse" name="bodyOut"/>
+  </message>
+  <message name="forwardInput">
+    <part element="tns:forwardRequest" name="bodyIn"/>
+  </message>
+  <message name="forwardOutput">
+    <part element="tns:forwardResponse" name="bodyOut"/>
+  </message>
+  <message name="getAllProvisioningRequestsInput">
+    <part element="tns:getAllProvisioningRequestsRequest" name="bodyIn"/>
+  </message>
+  <message name="getAllProvisioningRequestsOutput">
+    <part element="tns:getAllProvisioningRequestsResponse" name="bodyOut"/>
+  </message>
+  <message name="reassignWorkTaskInput">
+    <part element="tns:reassignWorkTaskRequest" name="bodyIn"/>
+  </message>
+  <message name="reassignWorkTaskOutput">
+    <part element="tns:reassignWorkTaskResponse" name="bodyOut"/>
+  </message>
+  <message name="startWithDigitalSignatureInput">
+    <part element="tns:startWithDigitalSignatureRequest" name="bodyIn"/>
+  </message>
+  <message name="startWithDigitalSignatureOutput">
+    <part element="tns:startWithDigitalSignatureResponse" name="bodyOut"/>
+  </message>
+  <message name="startAsProxyInput">
+    <part element="tns:startAsProxyRequest" name="bodyIn"/>
+  </message>
+  <message name="startAsProxyOutput">
+    <part element="tns:startAsProxyResponse" name="bodyOut"/>
+  </message>
+  <message name="getCommentsByTypeInput">
+    <part element="tns:getCommentsByTypeRequest" name="bodyIn"/>
+  </message>
+  <message name="getCommentsByTypeOutput">
+    <part element="tns:getCommentsByTypeResponse" name="bodyOut"/>
+  </message>
+  <message name="setUserActivityTimeoutInput">
+    <part element="tns:setUserActivityTimeoutRequest" name="bodyIn"/>
+  </message>
+  <message name="setUserActivityTimeoutOutput">
+    <part element="tns:setUserActivityTimeoutResponse" name="bodyOut"/>
+  </message>
+  <message name="getProcessesByRecipientInput">
+    <part element="tns:getProcessesByRecipientRequest" name="bodyIn"/>
+  </message>
+  <message name="getProcessesByRecipientOutput">
+    <part element="tns:getProcessesByRecipientResponse" name="bodyOut"/>
+  </message>
+  <message name="getProcessesByStatusInput">
+    <part element="tns:getProcessesByStatusRequest" name="bodyIn"/>
+  </message>
+  <message name="getProcessesByStatusOutput">
+    <part element="tns:getProcessesByStatusResponse" name="bodyOut"/>
+  </message>
+  <message name="getProcessesArrayInput">
+    <part element="tns:getProcessesArrayRequest" name="bodyIn"/>
+  </message>
+  <message name="getProcessesArrayOutput">
+    <part element="tns:getProcessesArrayResponse" name="bodyOut"/>
+  </message>
+  <message name="setEmailNotificationsInput">
+    <part element="tns:setEmailNotificationsRequest" name="bodyIn"/>
+  </message>
+  <message name="setEmailNotificationsOutput">
+    <part element="tns:setEmailNotificationsResponse" name="bodyOut"/>
+  </message>
+  <message name="getCommentsByUserInput">
+    <part element="tns:getCommentsByUserRequest" name="bodyIn"/>
+  </message>
+  <message name="getCommentsByUserOutput">
+    <part element="tns:getCommentsByUserResponse" name="bodyOut"/>
+  </message>
+  <message name="startWithCorrelationIdInput">
+    <part element="tns:startWithCorrelationIdRequest" name="bodyIn"/>
+  </message>
+  <message name="startWithCorrelationIdOutput">
+    <part element="tns:startWithCorrelationIdResponse" name="bodyOut"/>
+  </message>
+  <message name="getEmailNotificationsInput">
+    <part element="tns:getEmailNotificationsRequest" name="bodyIn"/>
+  </message>
+  <message name="getEmailNotificationsOutput">
+    <part element="tns:getEmailNotificationsResponse" name="bodyOut"/>
+  </message>
+  <message name="getProcessesByQueryInput">
+    <part element="tns:getProcessesByQueryRequest" name="bodyIn"/>
+  </message>
+  <message name="getProcessesByQueryOutput">
+    <part element="tns:getProcessesByQueryResponse" name="bodyOut"/>
+  </message>
+  <message name="getWorkEntriesInput">
+    <part element="tns:getWorkEntriesRequest" name="bodyIn"/>
+  </message>
+  <message name="getWorkEntriesOutput">
+    <part element="tns:getWorkEntriesResponse" name="bodyOut"/>
+  </message>
+  <message name="getProcessInput">
+    <part element="tns:getProcessRequest" name="bodyIn"/>
+  </message>
+  <message name="getProcessOutput">
+    <part element="tns:getProcessResponse" name="bodyOut"/>
+  </message>
+  <message name="getProcessesByIdInput">
+    <part element="tns:getProcessesByIdRequest" name="bodyIn"/>
+  </message>
+  <message name="getProcessesByIdOutput">
+    <part element="tns:getProcessesByIdResponse" name="bodyOut"/>
+  </message>
+  <message name="getFormDefinitionInput">
+    <part element="tns:getFormDefinitionRequest" name="bodyIn"/>
+  </message>
+  <message name="getFormDefinitionOutput">
+    <part element="tns:getFormDefinitionResponse" name="bodyOut"/>
+  </message>
+  <message name="startInput">
+    <part element="tns:startRequest" name="bodyIn"/>
+  </message>
+  <message name="startOutput">
+    <part element="tns:startResponse" name="bodyOut"/>
+  </message>
+  <message name="removeEngineInput">
+    <part element="tns:removeEngineRequest" name="bodyIn"/>
+  </message>
+  <message name="removeEngineOutput">
+    <part element="tns:removeEngineResponse" name="bodyOut"/>
+  </message>
+  <message name="clearNIMCachesInput">
+    <part element="tns:clearNIMCachesRequest" name="bodyIn"/>
+  </message>
+  <message name="clearNIMCachesOutput">
+    <part element="tns:clearNIMCachesResponse" name="bodyOut"/>
+  </message>
+  <message name="getProcessesByInitiatorInput">
+    <part element="tns:getProcessesByInitiatorRequest" name="bodyIn"/>
+  </message>
+  <message name="getProcessesByInitiatorOutput">
+    <part element="tns:getProcessesByInitiatorResponse" name="bodyOut"/>
+  </message>
+  <message name="setResultInput">
+    <part element="tns:setResultRequest" name="bodyIn"/>
+  </message>
+  <message name="setResultOutput">
+    <part element="tns:setResultResponse" name="bodyOut"/>
+  </message>
+  <message name="unclaimInput">
+    <part element="tns:unclaimRequest" name="bodyIn"/>
+  </message>
+  <message name="unclaimOutput">
+    <part element="tns:unclaimResponse" name="bodyOut"/>
+  </message>
+  <message name="getCommentsByCreationTimeInput">
+    <part element="tns:getCommentsByCreationTimeRequest" name="bodyIn"/>
+  </message>
+  <message name="getCommentsByCreationTimeOutput">
+    <part element="tns:getCommentsByCreationTimeResponse" name="bodyOut"/>
+  </message>
+  <message name="getProvisioningCategoriesInput">
+    <part element="tns:getProvisioningCategoriesRequest" name="bodyIn"/>
+  </message>
+  <message name="getProvisioningCategoriesOutput">
+    <part element="tns:getProvisioningCategoriesResponse" name="bodyOut"/>
+  </message>
+  <message name="startAsProxyWithDigitalSignatureInput">
+    <part element="tns:startAsProxyWithDigitalSignatureRequest" name="bodyIn"/>
+  </message>
+  <message name="startAsProxyWithDigitalSignatureOutput">
+    <part element="tns:startAsProxyWithDigitalSignatureResponse" name="bodyOut"/>
+  </message>
+  <message name="getEngineStateInput">
+    <part element="tns:getEngineStateRequest" name="bodyIn"/>
+  </message>
+  <message name="getEngineStateOutput">
+    <part element="tns:getEngineStateResponse" name="bodyOut"/>
+  </message>
+  <message name="multiStartInput">
+    <part element="tns:multiStartRequest" name="bodyIn"/>
+  </message>
+  <message name="multiStartOutput">
+    <part element="tns:multiStartResponse" name="bodyOut"/>
+  </message>
+  <message name="getDataItemsInput">
+    <part element="tns:getDataItemsRequest" name="bodyIn"/>
+  </message>
+  <message name="getDataItemsOutput">
+    <part element="tns:getDataItemsResponse" name="bodyOut"/>
+  </message>
+  <message name="getWebServiceActivityTimeoutInput">
+    <part element="tns:getWebServiceActivityTimeoutRequest" name="bodyIn"/>
+  </message>
+  <message name="getWebServiceActivityTimeoutOutput">
+    <part element="tns:getWebServiceActivityTimeoutResponse" name="bodyOut"/>
+  </message>
+  <message name="addCommentInput">
+    <part element="tns:addCommentRequest" name="bodyIn"/>
+  </message>
+  <message name="addCommentOutput">
+    <part element="tns:addCommentResponse" name="bodyOut"/>
+  </message>
+  <portType name="Provisioning">
+    <operation name="receive">
+      <input message="tns:receiveInput"/>
+      <output message="tns:receiveOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getProcessesByApprovalStatus">
+      <input message="tns:getProcessesByApprovalStatusInput"/>
+      <output message="tns:getProcessesByApprovalStatusOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="terminate">
+      <input message="tns:terminateInput"/>
+      <output message="tns:terminateOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getProcesses">
+      <input message="tns:getProcessesInput"/>
+      <output message="tns:getProcessesOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getClusterState">
+      <input message="tns:getClusterStateInput"/>
+      <output message="tns:getClusterStateOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="forwardAsProxy">
+      <input message="tns:forwardAsProxyInput"/>
+      <output message="tns:forwardAsProxyOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getEngineConfiguration">
+      <input message="tns:getEngineConfigurationInput"/>
+      <output message="tns:getEngineConfigurationOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getAllProcesses">
+      <input message="tns:getAllProcessesInput"/>
+      <output message="tns:getAllProcessesOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="reassignAllProcesses">
+      <input message="tns:reassignAllProcessesInput"/>
+      <output message="tns:reassignAllProcessesOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="setWebServiceActivityTimeout">
+      <input message="tns:setWebServiceActivityTimeoutInput"/>
+      <output message="tns:setWebServiceActivityTimeoutOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getVersion">
+      <input message="tns:getVersionInput"/>
+      <output message="tns:getVersionOutput"/>
+    </operation>
+    <operation name="forwardWithDigitalSignature">
+      <input message="tns:forwardWithDigitalSignatureInput"/>
+      <output message="tns:forwardWithDigitalSignatureOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getProcessesByCreationTime">
+      <input message="tns:getProcessesByCreationTimeInput"/>
+      <output message="tns:getProcessesByCreationTimeOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getWork">
+      <input message="tns:getWorkInput"/>
+      <output message="tns:getWorkOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getProcessesByCreationInterval">
+      <input message="tns:getProcessesByCreationIntervalInput"/>
+      <output message="tns:getProcessesByCreationIntervalOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="resetPriorityForWorkTask">
+      <input message="tns:resetPriorityForWorkTaskInput"/>
+      <output message="tns:resetPriorityForWorkTaskOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getDefinitionByID">
+      <input message="tns:getDefinitionByIDInput"/>
+      <output message="tns:getDefinitionByIDOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getComments">
+      <input message="tns:getCommentsInput"/>
+      <output message="tns:getCommentsOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="startWorkFlow">
+      <input message="tns:startWorkFlowInput"/>
+      <output message="tns:startWorkFlowOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getCompletedProcessTimeout">
+      <input message="tns:getCompletedProcessTimeoutInput"/>
+      <output message="tns:getCompletedProcessTimeoutOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getQuorumForWorkTask">
+      <input message="tns:getQuorumForWorkTaskInput"/>
+      <output message="tns:getQuorumForWorkTaskOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="reassignProcesses">
+      <input message="tns:reassignProcessesInput"/>
+      <output message="tns:reassignProcessesOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getCommentsByActivity">
+      <input message="tns:getCommentsByActivityInput"/>
+      <output message="tns:getCommentsByActivityOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getProvisioningRequests">
+      <input message="tns:getProvisioningRequestsInput"/>
+      <output message="tns:getProvisioningRequestsOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="reassignPercentageProcesses">
+      <input message="tns:reassignPercentageProcessesInput"/>
+      <output message="tns:reassignPercentageProcessesOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getFlowDefinition">
+      <input message="tns:getFlowDefinitionInput"/>
+      <output message="tns:getFlowDefinitionOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="forwardAsProxyWithDigitalSignature">
+      <input message="tns:forwardAsProxyWithDigitalSignatureInput"/>
+      <output message="tns:forwardAsProxyWithDigitalSignatureOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="setCompletedProcessTimeout">
+      <input message="tns:setCompletedProcessTimeoutInput"/>
+      <output message="tns:setCompletedProcessTimeoutOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="setRoleRequestStatus">
+      <input message="tns:setRoleRequestStatusInput"/>
+      <output message="tns:setRoleRequestStatusOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getProvisioningStatuses">
+      <input message="tns:getProvisioningStatusesInput"/>
+      <output message="tns:getProvisioningStatusesOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getUserActivityTimeout">
+      <input message="tns:getUserActivityTimeoutInput"/>
+      <output message="tns:getUserActivityTimeoutOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="reassign">
+      <input message="tns:reassignInput"/>
+      <output message="tns:reassignOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getGraph">
+      <input message="tns:getGraphInput"/>
+      <output message="tns:getGraphOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="setEngineConfiguration">
+      <input message="tns:setEngineConfigurationInput"/>
+      <output message="tns:setEngineConfigurationOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getProcessFlowXml">
+      <input message="tns:getProcessFlowXmlInput"/>
+      <output message="tns:getProcessFlowXmlOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="forward">
+      <input message="tns:forwardInput"/>
+      <output message="tns:forwardOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getAllProvisioningRequests">
+      <input message="tns:getAllProvisioningRequestsInput"/>
+      <output message="tns:getAllProvisioningRequestsOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="reassignWorkTask">
+      <input message="tns:reassignWorkTaskInput"/>
+      <output message="tns:reassignWorkTaskOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="startWithDigitalSignature">
+      <input message="tns:startWithDigitalSignatureInput"/>
+      <output message="tns:startWithDigitalSignatureOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="startAsProxy">
+      <input message="tns:startAsProxyInput"/>
+      <output message="tns:startAsProxyOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getCommentsByType">
+      <input message="tns:getCommentsByTypeInput"/>
+      <output message="tns:getCommentsByTypeOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="setUserActivityTimeout">
+      <input message="tns:setUserActivityTimeoutInput"/>
+      <output message="tns:setUserActivityTimeoutOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getProcessesByRecipient">
+      <input message="tns:getProcessesByRecipientInput"/>
+      <output message="tns:getProcessesByRecipientOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getProcessesByStatus">
+      <input message="tns:getProcessesByStatusInput"/>
+      <output message="tns:getProcessesByStatusOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getProcessesArray">
+      <input message="tns:getProcessesArrayInput"/>
+      <output message="tns:getProcessesArrayOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="setEmailNotifications">
+      <input message="tns:setEmailNotificationsInput"/>
+      <output message="tns:setEmailNotificationsOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getCommentsByUser">
+      <input message="tns:getCommentsByUserInput"/>
+      <output message="tns:getCommentsByUserOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="startWithCorrelationId">
+      <input message="tns:startWithCorrelationIdInput"/>
+      <output message="tns:startWithCorrelationIdOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getEmailNotifications">
+      <input message="tns:getEmailNotificationsInput"/>
+      <output message="tns:getEmailNotificationsOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getProcessesByQuery">
+      <input message="tns:getProcessesByQueryInput"/>
+      <output message="tns:getProcessesByQueryOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getWorkEntries">
+      <input message="tns:getWorkEntriesInput"/>
+      <output message="tns:getWorkEntriesOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getProcess">
+      <input message="tns:getProcessInput"/>
+      <output message="tns:getProcessOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getProcessesById">
+      <input message="tns:getProcessesByIdInput"/>
+      <output message="tns:getProcessesByIdOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getFormDefinition">
+      <input message="tns:getFormDefinitionInput"/>
+      <output message="tns:getFormDefinitionOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="start">
+      <input message="tns:startInput"/>
+      <output message="tns:startOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="removeEngine">
+      <input message="tns:removeEngineInput"/>
+      <output message="tns:removeEngineOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="clearNIMCaches">
+      <input message="tns:clearNIMCachesInput"/>
+      <output message="tns:clearNIMCachesOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getProcessesByInitiator">
+      <input message="tns:getProcessesByInitiatorInput"/>
+      <output message="tns:getProcessesByInitiatorOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="setResult">
+      <input message="tns:setResultInput"/>
+      <output message="tns:setResultOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="unclaim">
+      <input message="tns:unclaimInput"/>
+      <output message="tns:unclaimOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getCommentsByCreationTime">
+      <input message="tns:getCommentsByCreationTimeInput"/>
+      <output message="tns:getCommentsByCreationTimeOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getProvisioningCategories">
+      <input message="tns:getProvisioningCategoriesInput"/>
+      <output message="tns:getProvisioningCategoriesOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="startAsProxyWithDigitalSignature">
+      <input message="tns:startAsProxyWithDigitalSignatureInput"/>
+      <output message="tns:startAsProxyWithDigitalSignatureOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getEngineState">
+      <input message="tns:getEngineStateInput"/>
+      <output message="tns:getEngineStateOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="multiStart">
+      <input message="tns:multiStartInput"/>
+      <output message="tns:multiStartOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getDataItems">
+      <input message="tns:getDataItemsInput"/>
+      <output message="tns:getDataItemsOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="getWebServiceActivityTimeout">
+      <input message="tns:getWebServiceActivityTimeoutInput"/>
+      <output message="tns:getWebServiceActivityTimeoutOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+    <operation name="addComment">
+      <input message="tns:addCommentInput"/>
+      <output message="tns:addCommentOutput"/>
+      <fault message="tns:AdminException" name="AdminFault"/>
+    </operation>
+  </portType>
+  <binding name="ProvisioningBinding" type="tns:Provisioning">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="receive">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/receive"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getProcessesByApprovalStatus">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getProcessesByApprovalStatus"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="terminate">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/terminate"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getProcesses">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getProcesses"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getClusterState">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getClusterState"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="forwardAsProxy">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/forwardAsProxy"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getEngineConfiguration">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getEngineConfiguration"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getAllProcesses">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getAllProcesses"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="reassignAllProcesses">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/reassignAllProcesses"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="setWebServiceActivityTimeout">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/setWebServiceActivityTimeout"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getVersion">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getVersion"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="forwardWithDigitalSignature">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/forwardWithDigitalSignature"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getProcessesByCreationTime">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getProcessesByCreationTime"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getWork">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getWork"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getProcessesByCreationInterval">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getProcessesByCreationInterval"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="resetPriorityForWorkTask">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/resetPriorityForWorkTask"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getDefinitionByID">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getDefinitionByID"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getComments">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getComments"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="startWorkFlow">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/startWorkFlow"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getCompletedProcessTimeout">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getCompletedProcessTimeout"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getQuorumForWorkTask">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getQuorumForWorkTask"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="reassignProcesses">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/reassignProcesses"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getCommentsByActivity">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getCommentsByActivity"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getProvisioningRequests">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getProvisioningRequests"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="reassignPercentageProcesses">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/reassignPercentageProcesses"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getFlowDefinition">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getFlowDefinition"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="forwardAsProxyWithDigitalSignature">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/forwardAsProxyWithDigitalSignature"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="setCompletedProcessTimeout">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/setCompletedProcessTimeout"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="setRoleRequestStatus">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/setRoleRequestStatus"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getProvisioningStatuses">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getProvisioningStatuses"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getUserActivityTimeout">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getUserActivityTimeout"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="reassign">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/reassign"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getGraph">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getGraph"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="setEngineConfiguration">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/setEngineConfiguration"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getProcessFlowXml">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getProcessFlowXml"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="forward">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/forward"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getAllProvisioningRequests">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getAllProvisioningRequests"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="reassignWorkTask">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/reassignWorkTask"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="startWithDigitalSignature">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/startWithDigitalSignature"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="startAsProxy">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/startAsProxy"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getCommentsByType">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getCommentsByType"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="setUserActivityTimeout">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/setUserActivityTimeout"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getProcessesByRecipient">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getProcessesByRecipient"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getProcessesByStatus">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getProcessesByStatus"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getProcessesArray">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getProcessesArray"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="setEmailNotifications">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/setEmailNotifications"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getCommentsByUser">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getCommentsByUser"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="startWithCorrelationId">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/startWithCorrelationId"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getEmailNotifications">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getEmailNotifications"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getProcessesByQuery">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getProcessesByQuery"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getWorkEntries">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getWorkEntries"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getProcess">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getProcess"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getProcessesById">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getProcessesById"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getFormDefinition">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getFormDefinition"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="start">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/start"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="removeEngine">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/removeEngine"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="clearNIMCaches">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/clearNIMCaches"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getProcessesByInitiator">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getProcessesByInitiator"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="setResult">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/setResult"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="unclaim">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/unclaim"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getCommentsByCreationTime">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getCommentsByCreationTime"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getProvisioningCategories">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getProvisioningCategories"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="startAsProxyWithDigitalSignature">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/startAsProxyWithDigitalSignature"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getEngineState">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getEngineState"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="multiStart">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/multiStart"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getDataItems">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getDataItems"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getWebServiceActivityTimeout">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/getWebServiceActivityTimeout"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="addComment">
+      <soap:operation soapAction="http://www.novell.com/provisioning/service/addComment"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="AdminFault">
+        <soap:fault name="AdminFault" use="literal"/>
+      </fault>
+    </operation>
+  </binding>
+  <service name="ProvisioningService">
+    <port binding="tns:ProvisioningBinding" name="ProvisioningPort">
+      <soap:address location="https://idmuser.csc.fi:8543/IDMProv/provisioning/service"/>
+    </port>
+  </service>
+</definitions>
