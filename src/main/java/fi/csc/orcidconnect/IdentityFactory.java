@@ -8,16 +8,16 @@ public class IdentityFactory {
 	public static Identifier eppnFactory (String eppnStr) {
 		Identifier id = new Identifier();
 		id.setIdentifierValue(eppnStr);
-		id.setFriendlyName(Identifier.eppnOid);
-		id.setName(Identifier.eppnFrName);
+		id.setFriendlyName(Identifier.eppnFrName);
+		id.setName(Identifier.eppnOid);
 		return id;
 	}
 	
 	public static Identifier orcidFactory (String orcidStr) {
 		Identifier id = new Identifier();
 		id.setIdentifierValue(orcidStr);
-		id.setFriendlyName(Identifier.orcidOid);
-		id.setName(Identifier.orcidFrName);
+		id.setFriendlyName(Identifier.orcidFrName);
+		id.setName(Identifier.orcidOid);
 		return id;
 	}
 	
