@@ -79,15 +79,15 @@ public class Controller {
 	@RequestMapping("/shib/trigsoap")
 	public List<String> trigSoap(Authentication a, HttpServletRequest req) {
 		IdentityDescriptor id = getIdDescr(a, req);
-		if (id != null) {
-			IdentitiesRelayer relayer = new EntityIdIdentityRelayer();
+		if (id.getIdentifier().isEmpty()) {
+			return Arrays.asList("empty identity");
+		} else {
+			IdentitiesRelayer relayer = IdentitiesRelayer.implPicker(id);
 			if (relayer.relay(id)) {
 				return Arrays.asList("success");
 			} else {
 				return Arrays.asList("generic error");
 			}
-		} else {
-			return Arrays.asList("not authenticated");
 		}
 	}
 

@@ -4,7 +4,7 @@ import fi.csc.orcidconnect.push.soap.MockSoapServerClient;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.Identifier;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescriptor;
 
-public class EntityIdIdentityRelayer implements IdentitiesRelayer {
+public class EntityIdIdentityRelayer extends IdentitiesRelayer {
 
 	@Override
 	public boolean relay (IdentityDescriptor idDescr) {
