@@ -10,7 +10,7 @@ import fi.csc.orcidconnect.push.soap.schema.csc.ReceiveRequest;
 
 public class MockSoapServerClient extends WebServiceGatewaySupport {
 	
-    public void sendToMockServer(String eppnStr, String orcidStr) {
+    public void send (String eppnStr, String orcidStr) {
     	
     	WebServiceTemplate wsTempl = new WebServiceTemplate();
 
