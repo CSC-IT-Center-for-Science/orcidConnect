@@ -10,6 +10,8 @@ import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescrip
 
 public class IdentityFactory {
 	
+	private static final String mediatorId = "https://connect.tutkijatunniste.fi";
+	
 	public static Identifier eppnFactory (String eppnStr) {
 		Identifier id = new Identifier();
 		id.setIdentifierValue(eppnStr);
@@ -37,7 +39,7 @@ public class IdentityFactory {
 	}
 	
 	private static void setBasics(Identifier id) {
-		id.setMediator("https://connect.tutkijatunniste.fi");
+		id.setMediator(mediatorId);
 		id.setNameFormat("urn:oasis:names:tc:SAML:2.0:attrname-format:uri");
 		try {
 			id.setMediationInstant(
