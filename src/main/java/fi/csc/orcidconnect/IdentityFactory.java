@@ -24,6 +24,7 @@ public class IdentityFactory {
 		id.setIdentifierValue(orcidStr);
 		id.setFriendlyName(Identifier.orcidFrName);
 		id.setName(Identifier.orcidOid);
+		setBasics(id);
 		return id;
 	}
 	
