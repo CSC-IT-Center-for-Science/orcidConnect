@@ -37,6 +37,7 @@ public class IdentityFactory {
 	
 	private static void setBasics(Identifier id) {
 		id.setMediator("https://connect.tutkijatunniste.fi");
+		id.setNameFormat("urn:oasis:names:tc:SAML:2.0:attrname-format:uri");
 		try {
 			id.setMediationInstant(
 					DatatypeFactory.newInstance().newXMLGregorianCalendar(
