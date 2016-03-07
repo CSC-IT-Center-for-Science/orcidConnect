@@ -67,7 +67,7 @@ public class Controller {
 		return null;
 	}
 	
-	@RequestMapping("/shib/iddescriptor")
+	@RequestMapping("/shib/iddescriptor.{xml|json}")
 	public IdentityDescriptor idDescriptor (Authentication a, HttpServletRequest req) {
 		return getIdDescr(a, req);
 	}
