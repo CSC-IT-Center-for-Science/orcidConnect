@@ -108,8 +108,8 @@
 				</configuration>
 			</plugin>
 
-	        <plugin>
-	            <groupId>org.jvnet.jaxb2.maven2</groupId>
+	       <!-- <plugin>
+	             <groupId>org.jvnet.jaxb2.maven2</groupId>
 	            <artifactId>maven-jaxb2-plugin</artifactId>
 	            <executions>
 	                <execution>
@@ -124,24 +124,23 @@
 			        <schemaLanguage>WSDL</schemaLanguage>
 			        <generatePackage>fi.csc.orcidconnect.push.soap.schema</generatePackage>
 			        
-			        <schemaIncludes>
-			        	<!-- <include>csc_idm_service_wsdl.xml</include>  -->
-			        	<!-- <include>*.xsd</include> -->
-			        </schemaIncludes>
+			        <schemaIncludes> 
+			        	 <include>csc_idm_service_wsdl.xml</include>  ->
+			        	 <include>*.xsd</include> 
+			         </schemaIncludes>
 			        <schemaExcludes>
 			        	<exclude>xml_example.xsd</exclude>
 			        	<exclude>xml_example.xml</exclude>
 			        </schemaExcludes>
 			        <schemas>
 			            <schema>
-			            	<!-- <url>http://wsf.cdyne.com/WeatherWS/Weather.asmx?wsdl</url>  -->
-			                <!-- <url>http://klaalo-air13:8088/mockWeatherSoap?WSDL</url> -->
-			                <!-- <url>http://klaalo-air13:8088/mockProvisioningBinding?WSDL</url> -->
-			            </schema>
+			                <url>http://klaalo-air13:8088/mockWeatherSoap?WSDL</url>
+			                <url>http://klaalo-air13:8088/mockProvisioningBinding?WSDL</url>
+			             </schema>
 			        </schemas>
 			    </configuration>
 
-	        </plugin>
+	        </plugin>  -->
 
 		</plugins>
    		<filters>
