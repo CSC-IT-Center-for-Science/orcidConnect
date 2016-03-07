@@ -44,7 +44,7 @@ import javax.xml.bind.annotation.XmlType;
 public class IdentityDescriptor {
 
     @XmlElement(name = "Identifier", required = true)
-    protected List<Identifier> identifier;
+    protected List<Identifier> identifier = new ArrayList<Identifier>();
 
     /**
      * Gets the value of the identifier property.
@@ -69,9 +69,6 @@ public class IdentityDescriptor {
      * 
      */
     public List<Identifier> getIdentifier() {
-        if (identifier == null) {
-            identifier = new ArrayList<Identifier>();
-        }
         return this.identifier;
     }
     
