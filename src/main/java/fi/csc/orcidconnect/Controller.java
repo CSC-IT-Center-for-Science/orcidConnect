@@ -53,16 +53,30 @@ public class Controller {
     
 	@Autowired
 	RequestMappingHandlerMapping handlerMapping;
-	
-	@RequestMapping("/shib/trigsoap")
-	public List<String> trigSoap(Authentication a, HttpServletRequest req) {
+
+	private IdentityDescriptor getIdDescr (Authentication a, HttpServletRequest req) {
+		IdentityDescriptor id;
 		if (a.isAuthenticated()) {
 			@SuppressWarnings("unchecked")
 			HashMap<String, ?> map = (HashMap<String, ?>) a.getDetails();
 			String orcidStr = String.valueOf(map.get(authName_orcid));
 			String eppnStr = String.valueOf(req.getAttribute(attrName_eppn));
+			id = IdentityFactory.idPairFactory(orcidStr, eppnStr);
+			return id;
+		}
+		return null;
+	}
+	
+	@RequestMapping("/shib/iddescriptor")
+	public IdentityDescriptor idDescriptor (Authentication a, HttpServletRequest req) {
+		return getIdDescr(a, req);
+	}
+	
+	@RequestMapping("/shib/trigsoap")
+	public List<String> trigSoap(Authentication a, HttpServletRequest req) {
+		IdentityDescriptor id = getIdDescr(a, req);
+		if (id != null) {
 			String idpStr = String.valueOf(req.getAttribute(attrName_idp));
-			IdentityDescriptor id = IdentityFactory.idPairFactory(orcidStr, eppnStr);
 			IdentitiesRelayer relayer = new EntityIdIdentityRelayer();
 			if (relayer.relay(id, idpStr)) {
 				return Arrays.asList("success");
@@ -85,7 +99,6 @@ public class Controller {
 		}
 		return lis;
 	}
-    
     
 	@RequestMapping(value = {"/{pathVar:git|google|orcidSandbox}/user", "/user"}, method = RequestMethod.GET)
 	public Map<String, String> auth(Authentication a) {
