@@ -24,6 +24,7 @@ public class IdentityFactory {
 		id.setIdentifierValue(orcidStr);
 		id.setFriendlyName(Identifier.orcidFrName);
 		id.setName(Identifier.orcidOid);
+		id.setIssuer("https://sandbox.orgid.org");
 		setBasics(id);
 		return id;
 	}
