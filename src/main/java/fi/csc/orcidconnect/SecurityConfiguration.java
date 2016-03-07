@@ -50,7 +50,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	    .regexMatchers("/(git|google|orcidSandbox|shib)/signin").authenticated()
         .and().authorizeRequests()
                 .antMatchers("/auth", "/mappings", "/shib/trigsoap",
-                		"/shib/iddescriptor").authenticated()
+                		"/shib/iddescriptor.(xml|json)").authenticated()
                 .anyRequest().denyAll()
     	;
         
