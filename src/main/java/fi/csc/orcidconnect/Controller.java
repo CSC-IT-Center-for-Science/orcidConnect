@@ -50,7 +50,14 @@ public class Controller {
 	RequestMappingHandlerMapping handlerMapping;
 	
 	@RequestMapping("/shib/trigsoap")
-	public List<String> trigSoap() {
+	public List<String> trigSoap(Authentication a, HttpServletRequest req) {
+		if (a.isAuthenticated()) {
+			@SuppressWarnings("unchecked")
+			HashMap<String, ?> map = (HashMap<String, ?>) a.getDetails();
+			String orcid = String.valueOf(map.get("orcid"));
+			String eppn = String.valueOf(req.getAttribute("eppn"));
+			System.out.println("----- " + orcid + " | " + eppn);
+		}
 		SoapClient sc = new SoapClient();
 		sc.customSendAndReceive();
 		return Arrays.asList("test");
@@ -69,7 +76,6 @@ public class Controller {
 	}
     
     
-    @SuppressWarnings("unchecked")
 	@RequestMapping(value = {"/{pathVar:git|google|orcidSandbox}/user", "/user"}, method = RequestMethod.GET)
 	public Map<String, String> auth(Authentication a) {
 		HashMap<String, String> m = new HashMap<String, String>();
@@ -80,6 +86,7 @@ public class Controller {
 						      "expires_in"
 						      );
 		try {
+			@SuppressWarnings("unchecked")
 			HashMap<String, ?> map = (HashMap<String, ?>) a.getDetails();
 			for (String k: map.keySet()) {
 			    if (!dontShow.contains(k)) {
