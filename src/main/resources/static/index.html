@@ -191,7 +191,7 @@ $(function () {
 			isOAuthSessionBool = true;
 			$.getJSON('/app/user', function (jsonReply) {
 				$('#oauthId').append(
-						"<a href='http://orcid.org/" + jsonReply.id + "'>" +
+						"<a href='http://sandbox.orcid.org/" + jsonReply.id + "'>" +
 						"<img src='/favicon.ico'> " +
 						"http://orcid.org/" + jsonReply.id + "</a>");
 				$('#oauthName').append(jsonReply.name);
