@@ -1,0 +1,2 @@
+# update
+cd ~/orcidconnect/ && git pull && mvn clean package && sudo systemctl restart spring && sudo tail -f /var/log/messages
