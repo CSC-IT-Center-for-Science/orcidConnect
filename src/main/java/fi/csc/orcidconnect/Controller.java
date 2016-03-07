@@ -20,6 +20,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.Identifier;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescriptor;
 
 
@@ -55,16 +56,19 @@ public class Controller {
 	RequestMappingHandlerMapping handlerMapping;
 
 	private IdentityDescriptor getIdDescr (Authentication a, HttpServletRequest req) {
-		IdentityDescriptor id;
+		IdentityDescriptor id = new IdentityDescriptor();
 		if (a.isAuthenticated()) {
 			@SuppressWarnings("unchecked")
 			HashMap<String, ?> map = (HashMap<String, ?>) a.getDetails();
 			String orcidStr = String.valueOf(map.get(authName_orcid));
 			String eppnStr = String.valueOf(req.getAttribute(attrName_eppn));
-			id = IdentityFactory.idPairFactory(orcidStr, eppnStr);
-			return id;
+			Identifier eppnId = IdentityFactory.eppnFactory(eppnStr);
+			eppnId.setIssuer(String.valueOf(req.getAttribute(attrName_idp)));
+			Identifier orcidId = IdentityFactory.orcidFactory(orcidStr);
+			id.addIdentifier(orcidId);
+			id.addIdentifier(eppnId);
 		}
-		return null;
+		return id;
 	}
 	
 	@RequestMapping("/shib/iddescriptor.{xml|json}")
