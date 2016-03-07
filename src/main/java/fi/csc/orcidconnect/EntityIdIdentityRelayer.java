@@ -7,8 +7,9 @@ import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescrip
 public class EntityIdIdentityRelayer implements IdentitiesRelayer {
 
 	@Override
-	public boolean relay(IdentityDescriptor idDescr, String idpStr) {
-		if (idpStr.equals("https://testidp.funet.fi/idp/shibboleth")) {
+	public boolean relay (IdentityDescriptor idDescr) {
+		if (getEppnIssuer(idDescr)
+				.equals("https://testidp.funet.fi/idp/shibboleth")) {
 			MockSoapServerClient sc = new MockSoapServerClient();
 			sc.send(
 					idDescr.findFirstIdentifierWithFn(
@@ -18,6 +19,12 @@ public class EntityIdIdentityRelayer implements IdentitiesRelayer {
 			return true;
 		}
 		return false;
+	}
+	
+	private String getEppnIssuer (IdentityDescriptor idDescr) {
+		Identifier id =
+				idDescr.findFirstIdentifierWithFn(Identifier.eppnFrName);
+		return id.getIssuer();
 	}
 
 }

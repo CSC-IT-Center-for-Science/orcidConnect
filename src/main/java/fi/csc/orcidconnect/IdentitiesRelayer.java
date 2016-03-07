@@ -4,6 +4,6 @@ import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescrip
 
 public interface IdentitiesRelayer {
 	
-	public boolean relay (IdentityDescriptor idDescr, String idPStr);
+	public boolean relay (IdentityDescriptor idDescr);
 
 }

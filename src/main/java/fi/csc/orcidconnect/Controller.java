@@ -80,9 +80,8 @@ public class Controller {
 	public List<String> trigSoap(Authentication a, HttpServletRequest req) {
 		IdentityDescriptor id = getIdDescr(a, req);
 		if (id != null) {
-			String idpStr = String.valueOf(req.getAttribute(attrName_idp));
 			IdentitiesRelayer relayer = new EntityIdIdentityRelayer();
-			if (relayer.relay(id, idpStr)) {
+			if (relayer.relay(id)) {
 				return Arrays.asList("success");
 			} else {
 				return Arrays.asList("generic error");
