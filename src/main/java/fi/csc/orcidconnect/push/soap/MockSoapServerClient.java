@@ -2,15 +2,17 @@ package fi.csc.orcidconnect.push.soap;
 
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.client.core.WebServiceTemplate;
-import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 
+import fi.csc.orcidconnect.IdentitiesRelayer;
 import fi.csc.orcidconnect.push.soap.schema.csc.ObjectFactory;
 import fi.csc.orcidconnect.push.soap.schema.csc.ReceiveRequest;
+import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.Identifier;
+import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescriptor;
 
 
-public class MockSoapServerClient extends WebServiceGatewaySupport {
+public class MockSoapServerClient extends IdentitiesRelayer {
 	
-    public void send (String eppnStr, String orcidStr) {
+    private void send (String eppnStr, String orcidStr) {
     	
     	WebServiceTemplate wsTempl = new WebServiceTemplate();
 
@@ -28,6 +30,16 @@ public class MockSoapServerClient extends WebServiceGatewaySupport {
     	
     	wsTempl.marshalSendAndReceive(req);    	
     }
+
+	@Override
+	public boolean relay(IdentityDescriptor idDescr) {
+		this.send(
+				idDescr.findFirstIdentifierWithFn(
+						Identifier.eppnFrName).getIdentifierValue(),
+				idDescr.findFirstIdentifierWithFn(
+						Identifier.orcidFrName).getIdentifierValue());
+		return true;
+	}
 	
 	
 }
