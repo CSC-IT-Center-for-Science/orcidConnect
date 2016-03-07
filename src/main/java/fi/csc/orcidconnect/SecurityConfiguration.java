@@ -44,13 +44,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         		.authenticationEntryPoint(authEntryPoint())
         	.and()
         	.authorizeRequests()
-	    .antMatchers("/", "/**/isAuthenticated", "/**/favicon.ico", "/*login", "/shib/*", "/logout",
-	    		"/trigsoap")
+	    .antMatchers("/", "/**/isAuthenticated", "/**/favicon.ico", "/*login", "/logout")
 	    	.permitAll()
 	    .regexMatchers("/((git|google|orcidSandbox|shib)/){0,1}user").authenticated()
 	    .regexMatchers("/(git|google|orcidSandbox|shib)/signin").authenticated()
         .and().authorizeRequests()
-                .antMatchers("/auth", "/mappings").authenticated()
+                .antMatchers("/auth", "/mappings", "/shib/trigsoap").authenticated()
                 .anyRequest().denyAll()
     	;
         
@@ -69,6 +68,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     	DelegatingAuthenticationEntryPoint authEntry =
     			new DelegatingAuthenticationEntryPoint(entryPoints);
+    	authEntry.setDefaultEntryPoint(getEntrypoint(oauthConf.getDefaultProvider()));
     	return authEntry;
     }
     

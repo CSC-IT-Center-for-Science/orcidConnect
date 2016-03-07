@@ -49,7 +49,7 @@ public class Controller {
 	@Autowired
 	RequestMappingHandlerMapping handlerMapping;
 	
-	@RequestMapping("/trigsoap")
+	@RequestMapping("/shib/trigsoap")
 	public List<String> trigSoap() {
 		SoapClient sc = new SoapClient();
 		sc.customSendAndReceive();
