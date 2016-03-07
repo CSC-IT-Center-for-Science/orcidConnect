@@ -10,6 +10,7 @@ package fi.csc.orcidconnect.push.soap.schema.csc;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -33,6 +34,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "receiveResponse")
+@XmlRootElement(name="receiveResponse", namespace = "http://www.novell.com/provisioning/service")
 public class ReceiveResponse {
 
 
