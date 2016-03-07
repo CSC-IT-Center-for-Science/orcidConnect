@@ -34,10 +34,10 @@ public class MockSoapServerClient extends IdentitiesRelayer {
 	@Override
 	public boolean relay(IdentityDescriptor idDescr) {
 		this.send(
-				idDescr.findFirstIdentifierWithFn(
-						Identifier.eppnFrName).getIdentifierValue(),
-				idDescr.findFirstIdentifierWithFn(
-						Identifier.orcidFrName).getIdentifierValue());
+			idDescr.findFirstIdentifierWithFn(
+					Identifier.eppnFrName).getIdentifierValue(),
+			idDescr.findFirstIdentifierWithFn(
+					Identifier.orcidFrName).getIdentifierValue());
 		return true;
 	}
 	
