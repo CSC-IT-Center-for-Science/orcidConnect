@@ -1,5 +1,10 @@
 package fi.csc.orcidconnect;
 
+import java.util.GregorianCalendar;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.Identifier;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescriptor;
 
@@ -10,6 +15,7 @@ public class IdentityFactory {
 		id.setIdentifierValue(eppnStr);
 		id.setFriendlyName(Identifier.eppnFrName);
 		id.setName(Identifier.eppnOid);
+		setBasics(id);
 		return id;
 	}
 	
@@ -26,6 +32,18 @@ public class IdentityFactory {
 		id.addIdentifier(eppnFactory(eppnStr));
 		id.addIdentifier(orcidFactory(orcidStr));
 		return id;
+	}
+	
+	private static void setBasics(Identifier id) {
+		id.setMediator("https://connect.tutkijatunniste.fi");
+		try {
+			id.setMediationInstant(
+					DatatypeFactory.newInstance().newXMLGregorianCalendar(
+							new GregorianCalendar()));
+		} catch (DatatypeConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }
