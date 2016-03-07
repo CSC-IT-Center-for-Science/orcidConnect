@@ -74,5 +74,18 @@ public class IdentityDescriptor {
         }
         return this.identifier;
     }
+    
+    public void addIdentifier(Identifier id) {
+    	this.identifier.add(id);
+    }
+    
+    public Identifier findFirstIdentifierWithFn (String friendlyName) {
+    	for (Identifier i: identifier) {
+    		if (i.getFriendlyName().equals(friendlyName)) {
+    			return i;
+    		}
+    	}
+    	return null;
+    }
 
 }

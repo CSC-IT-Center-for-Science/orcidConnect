@@ -2,9 +2,9 @@ package fi.csc.orcidconnect;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,22 +14,27 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
-import fi.csc.orcidconnect.push.soap.SoapClient;
+import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescriptor;
 
 
 @RestController
 public class Controller {
+	
+	private final String attrName_idp = "Shib-Identity-Provider";
+	private final String attrName_eppn = "eppn";
+	
+	private final String authName_orcid = "orcid";
 
     private final String[] shibAttrKeys = { 
-    		"Shib-Identity-Provider",
+    		attrName_idp,
     		"Shib-Application-ID",
-    		"eppn",
+    		attrName_eppn,
     		"persistent-id",
     		"Shib-Session-ID",
     		"Shib-AuthnContext-Decl",
@@ -54,13 +59,19 @@ public class Controller {
 		if (a.isAuthenticated()) {
 			@SuppressWarnings("unchecked")
 			HashMap<String, ?> map = (HashMap<String, ?>) a.getDetails();
-			String orcid = String.valueOf(map.get("orcid"));
-			String eppn = String.valueOf(req.getAttribute("eppn"));
-			System.out.println("----- " + orcid + " | " + eppn);
+			String orcidStr = String.valueOf(map.get(authName_orcid));
+			String eppnStr = String.valueOf(req.getAttribute(attrName_eppn));
+			String idpStr = String.valueOf(req.getAttribute(attrName_idp));
+			IdentityDescriptor id = IdentityFactory.idPairFactory(orcidStr, eppnStr);
+			IdentitiesRelayer relayer = new EntityIdIdentityRelayer();
+			if (relayer.relay(id, idpStr)) {
+				return Arrays.asList("success");
+			} else {
+				return Arrays.asList("generic error");
+			}
+		} else {
+			return Arrays.asList("not authenticated");
 		}
-		SoapClient sc = new SoapClient();
-		sc.customSendAndReceive();
-		return Arrays.asList("test");
 	}
 
 	@RequestMapping("/mappings")

@@ -8,9 +8,9 @@ import fi.csc.orcidconnect.push.soap.schema.csc.ObjectFactory;
 import fi.csc.orcidconnect.push.soap.schema.csc.ReceiveRequest;
 
 
-public class SoapClient extends WebServiceGatewaySupport {
+public class MockSoapServerClient extends WebServiceGatewaySupport {
 	
-    public void customSendAndReceive() {
+    public void sendToMockServer(String eppnStr, String orcidStr) {
     	
     	WebServiceTemplate wsTempl = new WebServiceTemplate();
 
@@ -23,8 +23,8 @@ public class SoapClient extends WebServiceGatewaySupport {
     	
     	ObjectFactory objf = new ObjectFactory();
     	ReceiveRequest req = new ReceiveRequest();
-    	req.setArg0(objf.createReceiveRequestArg0("zero"));
-    	req.setArg1(objf.createReceiveRequestArg1("one"));
+    	req.setArg0(objf.createReceiveRequestArg0(eppnStr));
+    	req.setArg1(objf.createReceiveRequestArg1(orcidStr));
     	
     	wsTempl.marshalSendAndReceive(req);    	
     }
