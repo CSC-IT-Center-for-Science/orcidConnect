@@ -86,6 +86,8 @@
         </MetadataProvider>
         -->
 
+    <MetadataProvider type="Chaining">
+
         <MetadataProvider type="XML" validate="true"
 	      uri="https://haka.funet.fi/metadata/haka_test_metadata_signed.xml"
               backingFilePath="haka-test-metadata-signed.xml" reloadInterval="7200">
@@ -96,6 +98,13 @@
               attributeNameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
               attributeValue="http://refeds.org/category/hide-from-discovery" />
         </MetadataProvider>
+
+	<MetadataProvider id="HTTPMetadataTESTSHIB"
+                  type="XML"
+                  backingFile="testshib-providers.xml"
+                  uri="http://www.testshib.org/metadata/testshib-providers.xml"/>
+
+     </MetadataProvider>
 
         <!-- Example of locally maintained metadata. -->
         <!--
