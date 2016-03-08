@@ -76,8 +76,8 @@ public class Controller {
 		return getIdDescr(a, req);
 	}
 	
-	@RequestMapping("/shib/trigsoap")
-	public List<String> trigSoap(Authentication a, HttpServletRequest req) {
+	@RequestMapping("/shib/trigpush")
+	public List<String> trigPush(Authentication a, HttpServletRequest req) {
 		IdentityDescriptor id = getIdDescr(a, req);
 		if (id.getIdentifier().isEmpty()) {
 			return Arrays.asList("empty identity");

@@ -88,11 +88,12 @@
 				<div id='confirmBlock' class='col-md-12' style='display: none;'>
 					<div class='form-group'>
 					<div class='checkbox'>
-						<label><input id='acceptBox' type="checkbox">Tämä demopalvelu ei vielä
-						tallenna tietoja.
-						Jos tämä olisi tuotantopalvelu, käyttäjän pitäisi
-						hyväksyä, että tunnisteet tallennetaan
-						ja luovutetaan kotiorganisaatiolle.</input></label>
+						<label><input id='acceptBox' type="checkbox">
+						Hyväksyn tietojen lähettämisen kotiorganisaatiooni.
+						Demopalvelussa on vasta kuvitteellisia palveluja,
+						jotka vastaanottavat kuvittellisia tietoja.
+						Älä käytä todellisia henkilötietoja.
+						</input></label>
 					</div>
 					<button id='saveData' type='submit' class='btn btn-primary'>Tallenna</button>
 					</div>
@@ -111,17 +112,13 @@
 			</div>
 		</div>
 		
-		<div class='row'>
-			<div class='col-md-offset-4 col-md-6'>
-				<button id='trigSoap' type='submit' class='btn btn-primary'>TrigSoap</button>
-			</div>
-		</div>
-                <div class='row'>
-                        <div class='col-md-offset-4 col-md-6'>
-                          <script type="text/javascript" src="/ds/eds-conf.js"></script>
-                          <script type="text/javascript" src="https://testsp.funet.fi/shibboleth/wayf.php/embedded-wayf.js"></script>
-                        </div>
-                </div>		
+      <div class='row'>
+              <div class='col-md-offset-4 col-md-6'>
+                <script type="text/javascript" src="/ds/eds-conf.js"></script>
+                <script type="text/javascript" src="https://testsp.funet.fi/shibboleth/wayf.php/embedded-wayf.js"></script>
+              </div>
+      </div>		
+
 	</div>
 	
 <script>
@@ -225,17 +222,15 @@ $(function () {
 $('#saveData').on('click', function(event) {
 	event.preventDefault();
 	if ($('#acceptBox:checked').length > 0) {
-		alert("Demopalvelu ei vielä tallenna tietoja");
+		event.preventDefault();
+		$.getJSON('/app/shib/trigpush', function (jsonReply) {
+			console.out(jsonReply);
+		});
 	} else {
-		alert("Jos tämä demo olisi tuotantokäytössä, tietojen tallentaminen pitäisi hyväksyä.")
+		alert("Tietojen lähettäminen ei onnistu ilman käyttäjän hyväksyntää.")
 	}
 });
 
-$('#trigSoap').on('click', function(event) {
-	event.preventDefault();
-	$.getJSON('/app/shib/trigsoap', function (jsonReply) {
-		console.out(jsonReply);
-	});
 });
 
 </script>
