@@ -21,11 +21,17 @@ cp /home/vagrant/sync/orcid-saml.pem /etc/pki/tls/certs
 cp /home/vagrant/sync/shibboleth2.xml /etc/shibboleth/
 cp /home/vagrant/sync/shib.conf /etc/httpd/conf.d/
 cp /home/vagrant/sync/ssl.conf /etc/httpd/conf.d/
+# selinux permissive
+# otherwise we would need to resolve discoveryFeed problem etc
+cp /home/vagrant/sync/config /etc/selinux/
+
 
 curl -O https://confluence.csc.fi/download/attachments/31195585/haka_testi_2015_sha2.crt
 mv haka_testi_2015_sha2.crt /etc/pki/tls/certs/
 
 cd /var/www/html
+mkdir ds
+cp /home/vagrant/sync/eds-conf.js ds/
 curl -kO https://orcid-connect01.csc.fi/favicon.ico
 mkdir img
 cd img
@@ -39,5 +45,6 @@ systemctl start spring
 systemctl start shibd
 systemctl start httpd
 
+# these shouldn't be necessary anymore now that we set selinux to permissive mode
 #grep httpd_t /var/log/audit/audit.log | audit2allow -M shibd
 #semodule -i shibd.pp

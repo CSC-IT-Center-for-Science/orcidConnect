@@ -1,2 +1,14 @@
+###
 # update
 cd ~/orcidconnect/ && git pull && mvn clean package && sudo systemctl restart spring && sudo tail -f /var/log/messages
+
+
+###
+# List entityIds of IdPs in metadata
+#
+# Blacklist IdP's from Embedded Haka DS: https://confluence.csc.fi/x/GwLcAQ
+#
+for i in \
+    $(curl -s https://rr.funet.fi/metadata/haka-test/haka-test-metadata.xml | \
+    	   xmllint --xpath "//*[local-name()='EntityDescriptor']/*[local-name()='IDPSSODescriptor']/parent::*/@entityID" -) ; do \
+    echo "$i" | sed 's/entityID=//' ; done
