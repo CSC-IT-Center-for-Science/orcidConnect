@@ -190,27 +190,28 @@ $(function () {
 	
 	$.getJSON('/app/isAuthenticated', function (jsonReply) {
 		if (jsonReply.isAuthenticated == "true") {
-			isOAuthSessionBool = true;
-			$.getJSON('/app/user', function (jsonReply) {
-				$('#oauthId').append(
-						"<a href='http://sandbox.orcid.org/" + jsonReply.id + "'>" +
-						"<img src='/favicon.ico'> " +
-						"http://orcid.org/" + jsonReply.id + "</a>");
-				$('#oauthName').append(jsonReply.name);
+		    isOAuthSessionBool = true;
+		    $('#oauthId').empty();
+		    $.getJSON('/app/user', function (jsonReply) {
+			$('#oauthId').append(
+			    "<a href='http://sandbox.orcid.org/" + jsonReply.id + "'>" +
+				"<img src='/favicon.ico'> " +
+				"http://orcid.org/" + jsonReply.id + "</a>");
+			$('#oauthName').append(jsonReply.name);
+		    });
+		    $.getJSON('/app/mappings', function (jsonReply) {
+			var items = [];
+			$.each(jsonReply, function(key, val) {
+			    var str = val.substring(1, val.length);
+			    items.push( "<li id='" + key + "'><a href='/app/" + str +
+					"'>" + str + "</a></li>");
 			});
-			$.getJSON('/app/mappings', function (jsonReply) {
-				var items = [];
-				$.each(jsonReply, function(key, val) {
-					var str = val.substring(1, val.length);
-					items.push( "<li id='" + key + "'><a href='/app/" + str +
-							"'>" + str + "</a></li>");
-				});
-				$('#mappings').empty();
-				$('#mappings').append('<h4>Dev-linkkejä</h4>');
-				$('#mappings').append( items.join( "" ));
-				$('#logout').toggle(true);
-			});
-			check();
+			$('#mappings').empty();
+			$('#mappings').append('<h4>Dev-linkkejä</h4>');
+			$('#mappings').append( items.join( "" ));
+			$('#logout').toggle(true);
+		    });
+		    check();
 		} else {
 			//$('#btnOrcid').toggle(true);
 			check();
