@@ -75,6 +75,9 @@
 		    Tunnisteesi haetaan allaolevaan taulukkoon ensin omasta tutkimusorganisaatiostasi, jonka jälkeen voit kirjautua nykyisellä ORCID-tunnisteellasi
 		    tai luoda uuden. Kun molemmat tunnisteet on haettu palveluun, voit toimittaa ne omaan organisatioosi hyväksyttyäsi tietojen välittämisen.
 		    Aloita kirjautuminen valitsemalla oma organisaatiosi alla olevasta listasta.</p>
+		    <p class='well' id='shibId' style='display: none'>Olet nyt kirjautunut oman tutkimusorganisaatiosi tunnuksella. Nyt voit kirjautua nykyisellä
+		      ORCID-tunnusteellasi tai luoda uuden. Jos olet aiemmin luonut ORCID-tunnusteen, huomaa, että kirjautumislomake tulee näkyville klikkaamalla
+		      ORCID:n sivun keskiosasta löytyvää 'Sign in'-linkkiä.</p>
 		  </div>
 		</div>
 
@@ -94,7 +97,7 @@
 					<table class="table">
 						<tr><th></th><th>ORCID iD</th><th>Haka eppn</th></tr>
 						<tr><th>Id</th>
-							<td id="oauthId"><a href='/app/orcidSandbox/signin' class='btn btn-default btn-signin' style='display: none; white-space: normal;' id='btnOrcid'>
+							<td id="oauthId" style='display: none;'><a href='/app/orcidSandbox/signin' class='btn btn-default btn-signin' style='white-space: normal;' id='btnOrcid'>
 								<img src="/img/orcid_24x24.png" alt="Sign in with ORCID"> Create or Connect your ORCID SANDBOX iD</a></td>
 							<td id="hakaId"></td>
 						<tr style='display: none;'><th>Nimi</th><td id="oauthName"></td><td id="hakaName"></td>
@@ -169,9 +172,12 @@ function isShibSession() {
 			if (getParameterByName("logout") == "true") {
 				window.location = "/Shibboleth.sso/Logout";
 			} else {
-				$('#hakaId').empty();
-				fillEppn();
-				check();
+			    //$('#hakaId').empty();
+			    $('#oauthId').toggle(true);
+			    $('#initial').toggle(false);
+			    $('#shibId').toggle(true);
+			    fillEppn();
+			    check();
 			}
 		} else {
 			$('#btnHaka').toggle(true);
