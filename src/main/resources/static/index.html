@@ -54,11 +54,11 @@
 	        <span class="icon-bar"></span>
 	        <span class="icon-bar"></span>
 	      </button>
-	      <a class="navbar-brand" href="/">Home</a>
+	      <a class="navbar-brand" href="https://tutkijatunniste.wordpress.com">Tutkijatunniste</a>
 	    </div>
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	      <ul class="nav navbar-nav">
-	        <li><a href="/">Link Template</a></li>
+	        <li><a href="https://tutkijatunniste.wordpress.com/kansallinen-orcid-haka-yhdistamispalvelu/">Tietoa yhdistämispalvelusta</a></li>
 	      </ul>
 	      <ul class='nav navbar-nav pull-right'>
 	    	<li id='logout' style='display: none;'><a href="/app/logout">Logout</a></li>
@@ -68,6 +68,23 @@
 	</nav>
 
 	<div class="container-fluid">
+	        <div class='row'>
+		  <div class='col-md-offset-4 col-md-6 wellBox'>
+		    <p class='well' id='initial' >Yhdistämispalvelussa tutkija voi liittää oman <a href='https://orcid.org'>ORCID</a>-tunnisteensa tutkimusorganisaatioon.
+		    Löydät lisätietoa yhdistämispalvelusta <a href ='https://tutkijatunniste.wordpress.com/kansallinen-orcid-haka-yhdistamispalvelu/'>tästä linkistä</a>.
+		    Tunnisteesi haetaan allaolevaan taulukkoon ensin omasta tutkimusorganisaatiostasi, jonka jälkeen voit kirjautua nykyisellä ORCID-tunnisteellasi
+		    tai luoda uuden. Kun molemmat tunnisteet on haettu palveluun, voit toimittaa ne omaan organisatioosi hyväksyttyäsi tietojen välittämisen.
+		    Aloita kirjautuminen valitsemalla oma organisaatiosi alla olevasta listasta.</p>
+		  </div>
+		</div>
+
+		<div class='row'>
+		  <div class='col-md-offset-4 col-md-6'>
+                    <script type="text/javascript" src="/ds/eds-conf.js"></script>
+                    <script type="text/javascript" src="https://testsp.funet.fi/shibboleth/wayf.php/embedded-wayf.js"></script>
+		  </div>
+		</div>		
+
 		<div class='row'>
 			<div class="col-md-4">
 				<ul id="mappings"></ul>
@@ -79,8 +96,7 @@
 						<tr><th>Id</th>
 							<td id="oauthId"><a href='/app/orcidSandbox/signin' class='btn btn-default btn-signin' style='display: none; white-space: normal;' id='btnOrcid'>
 								<img src="/img/orcid_24x24.png" alt="Sign in with ORCID"> Create or Connect your ORCID SANDBOX iD</a></td>
-							<td id="hakaId"><a href='/app/shib/signin' id='btnHaka' style='display: normal;'>
-								<img src="/img/haka_landscape_large.gif" alt="Sign in with Haka" style='width: 90%;'> TEST</a></td>
+							<td id="hakaId"></td>
 						<tr style='display: none;'><th>Nimi</th><td id="oauthName"></td><td id="hakaName"></td>
 						</tr>
 					</table>
@@ -99,26 +115,9 @@
 					</div>
 				</div>
 
-				<div class="col-md-6 wellBox" style='display: none; margin-top:4em;'>
-					<p class='well'>ORCID provides a persistent digital identifier that distinguishes you from other researchers. Learn more at 
-					<a href="http://orcid.org">orcid.org</a></p>
-				</div>
-				<div class="col-md-6 wellBox" style='display: none; margin-top:4em;'>
-					<p class='well'>ORCID is an independent non-profit effort to provide an open registry of unique researcher identifiers and open
-					 services to link research activities and organizations to these identifiers. Learn more at 
-					 <a href="http://orcid.org">orcid.org</a>
-				</div>
-
 			</div>
 		</div>
 		
-      <div class='row'>
-              <div class='col-md-offset-4 col-md-6'>
-                <script type="text/javascript" src="/ds/eds-conf.js"></script>
-                <script type="text/javascript" src="https://testsp.funet.fi/shibboleth/wayf.php/embedded-wayf.js"></script>
-              </div>
-      </div>		
-
 	</div>
 	
 <script>
@@ -139,21 +138,12 @@ function fillEppn() {
 	});
 }
 
-function showWells() {
-	$('.wellBox').toggle(true);
-}
-
 function checkBoth() {
 	if (isShibSessionBool && isOAuthSessionBool) {
 		$('#confirmBlock').toggle(true);
 	}
 }
 
-function checkNeither() {
-	if ((!isShibSessionBool) && (!isOAuthSessionBool)) {
-		showWells();
-	}
-}
 
 function checkEither() {
 	if (isShibSessionBool || isOAuthSessionBool) {
@@ -161,9 +151,13 @@ function checkEither() {
 	}
 }
 
+function checkNeither() {
+   if ((!isShibSessionBool) && (!isOAuthSessionBool)) {
+   }
+}
+
 function check() {
 	checkBoth();
-	checkNeither();
 	checkEither();
 }
 
@@ -212,7 +206,7 @@ $(function () {
 			});
 			check();
 		} else {
-			$('#btnOrcid').toggle(true);
+			//$('#btnOrcid').toggle(true);
 			check();
 		}
 	});
