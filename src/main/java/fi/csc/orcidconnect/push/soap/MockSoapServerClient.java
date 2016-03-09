@@ -19,7 +19,7 @@ public class MockSoapServerClient extends IdentitiesRelayer {
     	Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
     	marshaller.setPackagesToScan("fi.csc.orcidconnect.push.soap.schema.csc");
 
-    	wsTempl.setDefaultUri("http://klaalo-air13:8088/mockProvisioningBinding");
+    	wsTempl.setDefaultUri("https://demo9650738.mockable.io/mockProvisioningBinding");
     	wsTempl.setMarshaller(marshaller);
     	wsTempl.setUnmarshaller(marshaller);
     	
