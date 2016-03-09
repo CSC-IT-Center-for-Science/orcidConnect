@@ -1,7 +1,10 @@
 package fi.csc.orcidconnect.push.soap;
 
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.client.core.WebServiceMessageCallback;
 import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.ws.soap.SoapMessage;
 
 import fi.csc.orcidconnect.IdentitiesRelayer;
 import fi.csc.orcidconnect.push.soap.schema.csc.ObjectFactory;
@@ -28,7 +31,12 @@ public class MockSoapServerClient extends IdentitiesRelayer {
     	req.setArg0(objf.createReceiveRequestArg0(eppnStr));
     	req.setArg1(objf.createReceiveRequestArg1(orcidStr));
     	
-    	wsTempl.marshalSendAndReceive(req);    	
+    	wsTempl.marshalSendAndReceive(req, new WebServiceMessageCallback() {
+    	    public void doWithMessage(WebServiceMessage message) {
+    	    	SoapMessage msg = ((SoapMessage)message);
+    	        msg.setSoapAction("http://www.novell.com/provisioning/service/receive");
+    	    }
+    	});    	
     }
 
 	@Override
