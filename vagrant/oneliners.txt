@@ -12,3 +12,9 @@ for i in \
     $(curl -s https://rr.funet.fi/metadata/haka-test/haka-test-metadata.xml | \
     	   xmllint --xpath "//*[local-name()='EntityDescriptor']/*[local-name()='IDPSSODescriptor']/parent::*/@entityID" -) ; do \
     echo "$i" | sed 's/entityID=//' ; done
+
+###
+#
+# Send SOAP Request with curl
+#
+curl --data '@env-xml'  --header 'SOAPAction: http://www.novell.com/provisioning/service/receive' https://demo9650738.mockable.io/mockProvisioningBinding
