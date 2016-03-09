@@ -90,6 +90,12 @@
 			joka vie ORCID-tunnisteesi edelleen organisaation käyttäjähakemistoon, josta se on käytettävissä esimerkiksi Haka-kirjautumisen yhteydessä.
 			Tarkemmat ohjeet, miten voit käyttää ORCID-tunnistetta saat omalta tutkimusorganisaatioltasi.</p>
 		    </div>
+		    <div id='done' style='display: none'>
+		      <h3>Vaihe 4/4: valmis</h3>
+		      <p class='well'>ORCID-tunnisteesi on nyt siirretty tutkimusorganisaatioosi. Voit nyt aloittaa tunnisteesi käyttämisen oman
+		        oman tutkimusorganisaatiosi ohjeiden mukaisesti. Voit nyt kirjautua ulos tästä palvelusta sivun oikeasta yläreunasta
+		        ja/tai sulkea tämän selainikkunan.</p>
+		    </div>
 		  </div>
 		</div>
 
@@ -117,17 +123,21 @@
 					</table>
 				</div>
 				<div id='confirmBlock' class='col-md-12' style='display: none;'>
-					<div class='form-group'>
-					<div class='checkbox'>
-						<label><input id='acceptBox' type="checkbox">
-						Hyväksyn tietojen lähettämisen kotiorganisaatiooni.
-						Demopalvelussa on vasta kuvitteellisia palveluja,
-						jotka vastaanottavat kuvittellisia tietoja.
-						Älä käytä todellisia henkilötietoja.
-						</input></label>
-					</div>
-					<button id='saveData' type='submit' class='btn btn-primary'>Tallenna</button>
-					</div>
+				  <div class='form-group'>
+				    <div class='checkbox'>
+				      <label><input id='acceptBox' type="checkbox">
+					Hyväksyn tietojen lähettämisen kotiorganisaatiooni.
+					Demopalvelussa on vasta kuvitteellisia palveluja,
+					jotka vastaanottavat kuvittellisia tietoja.
+					Älä käytä todellisia henkilötietoja.
+				      </input></label>
+				    </div>
+				    <button disabled='true' id='saveData' type='submit' class='btn btn-primary'
+					    data-loading-text="<span class='glyphicon glyphicon-refresh glyphicon-spin' aria-hidden='true'></span>" 
+					    data-done-text="<span class='glyphicon glyphicon-ok' aria-hidden='true'></span>"
+					    data-error-text="<span class='glyphicon glyphicon-remove' aria-hidden='true'></span>"
+					    >Tallenna</button>
+				  </div>
 				</div>
 
 			</div>
@@ -139,6 +149,7 @@
 
 var isShibSessionBool;
 var isOAuthSessionBool;
+var showMappings = false;
 
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -214,18 +225,20 @@ $(function () {
 				"http://orcid.org/" + jsonReply.id + "</a>");
 			$('#oauthName').append(jsonReply.name);
 		    });
-		    $.getJSON('/app/mappings', function (jsonReply) {
-			var items = [];
-			$.each(jsonReply, function(key, val) {
-			    var str = val.substring(1, val.length);
-			    items.push( "<li id='" + key + "'><a href='/app/" + str +
-					"'>" + str + "</a></li>");
+		    if (showMappings) {
+			$.getJSON('/app/mappings', function (jsonReply) {
+			    var items = [];
+			    $.each(jsonReply, function(key, val) {
+				var str = val.substring(1, val.length);
+				items.push( "<li id='" + key + "'><a href='/app/" + str +
+					    "'>" + str + "</a></li>");
+			    });
+			    $('#mappings').empty();
+			    $('#mappings').append('<h4>Dev-linkkejä</h4>');
+			    $('#mappings').append( items.join( "" ));
+			    $('#logout').toggle(true);
 			});
-			$('#mappings').empty();
-			$('#mappings').append('<h4>Dev-linkkejä</h4>');
-			$('#mappings').append( items.join( "" ));
-			$('#logout').toggle(true);
-		    });
+		    }
 		    check();
 		} else {
 			//$('#btnOrcid').toggle(true);
@@ -235,16 +248,30 @@ $(function () {
 	isShibSession();
 });
 
+$('#acceptBox').on('click', function(event) {
+    $('#saveData').prop('disabled', false);
+});
+
 $('#saveData').on('click', function(event) {
+    event.preventDefault();
+    if ($('#acceptBox:checked').length > 0) {
 	event.preventDefault();
-	if ($('#acceptBox:checked').length > 0) {
-		event.preventDefault();
-		$.getJSON('/app/shib/trigpush', function (jsonReply) {
-			console.out(jsonReply);
-		});
-	} else {
-		alert("Tietojen lähettäminen ei onnistu ilman käyttäjän hyväksyntää.")
-	}
+	var btn = $(this);
+	btn.button('loading');
+
+	$.getJSON('/app/shib/trigpush', function (jsonReply) {
+	    btn.empty();
+	    btn.append('Siirto valmis');
+	    $('#acceptBox').parent().parent().empty();
+	    $('#initial').toggle(false);
+	    $('#shibId').toggle(false);
+	    $('#waitingRelay').toggle(false);
+	    $('#done').toggle(true);
+	    $('#saveData').prop('disabled', 'true');
+	});
+    } else {
+	alert("Tietojen lähettäminen ei onnistu ilman käyttäjän hyväksyntää.")
+    }
 });
 
 </script>
