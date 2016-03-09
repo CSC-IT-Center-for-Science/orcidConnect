@@ -212,7 +212,7 @@ var wayf_default_idp = "https://testidp.funet.fi/idp/shibboleth";
 // If you want to hide the embedded WAYF completely, uncomment
 // the property and set it to "". This then won't draw anything
 // [Optional, default commented out: You are already logged in]
-// var wayf_logged_in_messsage = "";
+var wayf_logged_in_messsage = "";
 
 // Provide the name of a JavaScript function that checks whether the user
 // already is logged in. The function should return true if the user is logged
