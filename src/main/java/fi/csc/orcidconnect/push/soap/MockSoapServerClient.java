@@ -34,7 +34,7 @@ public class MockSoapServerClient extends IdentitiesRelayer {
     	wsTempl.marshalSendAndReceive(req, new WebServiceMessageCallback() {
     	    public void doWithMessage(WebServiceMessage message) {
     	    	SoapMessage msg = ((SoapMessage)message);
-    	        msg.setSoapAction("http://www.novell.com/provisioning/service/receive");
+    	        msg.setSoapAction("receiveRequest");
     	    }
     	});    	
     }
