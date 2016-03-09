@@ -1,7 +1,7 @@
 package fi.csc.orcidconnect;
 
-import fi.csc.orcidconnect.push.rest.MockRestClient;
-import fi.csc.orcidconnect.push.soap.MockSoapServerClient;
+import fi.csc.orcidconnect.push.rest.RestJsonClient;
+import fi.csc.orcidconnect.push.soap.MockSoapClient;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.Identifier;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescriptor;
 
@@ -12,9 +12,10 @@ public abstract class IdentitiesRelayer {
 	public static IdentitiesRelayer implPicker (IdentityDescriptor idDescr) {
 		switch (getEppnIssuer(idDescr)) {
 		case "https://testidp.funet.fi/idp/shibboleth":
-			return new MockSoapServerClient();
+			return new MockSoapClient();
 		case "https://idp.testshib.org/idp/shibboleth":
-			return new MockRestClient();
+			return new RestJsonClient(
+					"https://demo9650738.mockable.io/identities");
 		}
 		return null;
 	}

@@ -13,7 +13,7 @@ import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.Identifier;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescriptor;
 
 
-public class MockSoapServerClient extends IdentitiesRelayer {
+public class MockSoapClient extends IdentitiesRelayer {
 	
     private void send (String eppnStr, String orcidStr) {
     	

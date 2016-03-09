@@ -6,10 +6,15 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 
 import fi.csc.orcidconnect.IdentitiesRelayer;
-import fi.csc.orcidconnect.push.soap.Status;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescriptor;
 
-public class MockRestClient extends IdentitiesRelayer {
+public class RestJsonClient extends IdentitiesRelayer {
+	
+	String url;
+	
+	public RestJsonClient (String callUrl) {
+		this.url = callUrl;
+	}
 
 	@Override
 	public boolean relay(IdentityDescriptor idDescr) {
@@ -19,7 +24,7 @@ public class MockRestClient extends IdentitiesRelayer {
 						new MappingJackson2HttpMessageConverter())
 				);
 		Status stat = rt.postForObject(
-				"https://demo9650738.mockable.io/identities",
+				url,
 				idDescr, Status.class);
 		return stat.status();
 	}

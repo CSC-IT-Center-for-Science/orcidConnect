@@ -1,4 +1,4 @@
-package fi.csc.orcidconnect.push.soap;
+package fi.csc.orcidconnect.push.rest;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
