@@ -18,3 +18,11 @@ for i in \
 # Send SOAP Request with curl
 #
 curl --data '@env-xml'  --header 'SOAPAction: http://www.novell.com/provisioning/service/receive' https://demo9650738.mockable.io/mockProvisioningBinding
+
+###
+#
+# Request a certificate
+#
+openssl req -out /home/zzz/connect-http.csr -new -newkey rsa:4096 -nodes -days 1095 \
+	-keyout private/connect-http.key -sha256 -config /home/zzz/openssl.cnf \
+	-subj '/C=FI/ST=/L=Espoo/O=CSC - IT Center for Science/OU=/CN=connect.tutkijatunniste.fi'
