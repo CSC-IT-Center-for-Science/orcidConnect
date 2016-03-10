@@ -1,7 +1,13 @@
 package fi.csc.orcidconnect.push.soap;
 
+import java.io.IOException;
+
+import javax.xml.transform.Result;
+import javax.xml.transform.stream.StreamResult;
+
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.client.core.FaultMessageResolver;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.SoapMessage;
@@ -25,6 +31,16 @@ public class MockSoapClient extends IdentitiesRelayer {
     	wsTempl.setDefaultUri("https://demo9650738.mockable.io/mockProvisioningBinding");
     	wsTempl.setMarshaller(marshaller);
     	wsTempl.setUnmarshaller(marshaller);
+    	
+    	wsTempl.setFaultMessageResolver(new FaultMessageResolver() {
+			
+			@Override
+			public void resolveFault(WebServiceMessage message) throws IOException {
+				StreamResult res = (StreamResult) message.getPayloadResult();
+				System.out.println("----- Fault: " + res.getWriter());
+				
+			}
+		});
     	
     	ObjectFactory objf = new ObjectFactory();
     	ReceiveRequest req = new ReceiveRequest();
