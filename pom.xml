@@ -154,7 +154,7 @@
     		<resource>
         		<directory>src/main/resources</directory>
         		<includes>
-                    <include>application.properties</include>
+                    <include>application.yml</include>
                     <include>static/*.html</include>
                 </includes>
         		<filtering>true</filtering>

@@ -9,6 +9,7 @@ yum -y install emacs-nox java-1.7.0-openjdk java-1.8.0-openjdk java-1.8.0-openjd
 # vagrant guest additions plugin wasn't perfect
 yum -y install epel-release
 yum -y install dkms
+yum -y install emacs-yaml-mode yamllint
 systemctl enable shibd
 systemctl enable httpd
 su vagrant -c "/home/vagrant/sync/gitstrap.sh"

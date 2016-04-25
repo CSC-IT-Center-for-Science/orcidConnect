@@ -1,0 +1,58 @@
+---
+server:
+  session:
+#   avoid castexceptions on startup
+    persistent: false
+    contextPath: /app
+spring:
+  mvc:
+    favicon:
+      enabled: false
+
+logging:
+  - level: TRACE
+    org:
+      springframework:
+        - web: INFO
+          ws:
+            client: TRACE
+            apache: INFO
+            
+my:
+  oauth2client:
+#   define authentication providers in use
+    providerList: 'google,git,orcidSandbox'
+    defaultProvider: orcidSandbox
+    specialCase: orcidSandbox
+    callBackBase: https://orcid-connect01.csc.fi:4443/app/
+#    callBackBase: http://localhost:8080/app/
+
+# Be aware with leading white space on resource
+# variables. They will cause extra characters
+# on oauth ids and authentication will fail
+# TODO: chomp
+
+# Google OAuth2 settings
+# google.clientId:
+#  ${clientId}
+# google.clientSecret = ${clientSecret}
+# google.tokenUriStr = https://accounts.google.com/o/oauth2/token
+# google.authUriStr = https://accounts.google.com/o/oauth2/auth
+# google.scope = profile
+# google.userInfoUri = https://www.googleapis.com/userinfo/v2/me
+
+# Git OAuth2 settings
+# git.clientId = ${gitClientId}
+# git.clientSecret = ${gitClientSecret}
+# git.tokenUriStr = https://github.com/login/oauth/access_token
+# git.authUriStr = https://github.com/login/oauth/authorize
+# git.scope = user # only read access when scope is not defined
+# git.userInfoUri = https://api.github.com/user
+
+orcidSandbox:
+  clientId: '${orcidSandboxClientId}'
+  clientSecret: '${orcidSandboxClientSecret}'
+  tokenUriStr: 'https://api.sandbox.orcid.org/oauth/token'
+  authUriStr: 'http://sandbox.orcid.org/oauth/authorize?show_login=true'
+  scope: '/authenticate'
+  userInfoUri: 'https://api.sandbox.orcid.org/orcid_id'
