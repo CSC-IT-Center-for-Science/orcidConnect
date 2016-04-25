@@ -2,7 +2,6 @@ package fi.csc.orcidconnect.push.soap;
 
 import java.io.IOException;
 
-import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
