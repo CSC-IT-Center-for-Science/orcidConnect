@@ -97,6 +97,7 @@ public class OAuth2Client {
 		    URI uri = request.toURI();
 		    URIBuilder uBuilder = new URIBuilder(uri);
 		    // TODO: parametrise
+		    // TODO: this is special setup for Orcid only. What about other providers?
 		    uBuilder.addParameter("show_login", "true");
 		    requestURI = uBuilder.build();
 		} catch (SerializeException | URISyntaxException e) {

@@ -17,6 +17,23 @@ my:
     specialCase: 'orcidSandbox'
     callBackBase: 'https://orcid-connect01.csc.fi:4443/app/'
 #    callBackBase: http://localhost:8080/app/
+  pushInterfaces:
+    - uniarts
+    - hakaTest
+  pushInterfaceSpecs:
+    uniarts:
+      idp: 'https://idp.testshib.org/idp/shibboleth'
+      relayerImplClass: 'fi.csc.orcidconnect.push.rest.RestJsonClient.java'
+      restUrl: 'https://demo9650738.mockable.io/identities'
+      authUser: 'user'
+      authPass: 'pass'
+    hakaTest:
+      idp: 'https://testidp.funet.fi/idp/shibboleth'
+      relayerImplClass: 'fi.csc.orcidconnect.push.soac.MockSoapClient.java'
+      schemaPackage: 'fi.csc.orcidconnect.push.soap.schema.csc'
+      soapUrl: 'https://demo9650738.mockable.io/mockProvisioningBinding'
+      soapAction: 'http://www.novell.com/provisioning/service/receive'
+    
 
 # Be aware with leading white space on resource
 # variables. They will cause extra characters
