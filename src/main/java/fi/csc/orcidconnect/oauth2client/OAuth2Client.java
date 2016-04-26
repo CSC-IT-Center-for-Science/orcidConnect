@@ -8,6 +8,7 @@ import org.springframework.boot.json.JacksonJsonParser;
 import java.util.Map;
 
 
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.log4j.Logger;
 
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -93,11 +94,15 @@ public class OAuth2Client {
     	// Use this URI to send the end-user's browser to the server
     	URI requestURI;
 		try {
-			requestURI = request.toURI();
-		} catch (SerializeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
+		    URI uri = request.toURI();
+		    URIBuilder uBuilder = new URIBuilder(uri);
+		    // TODO: parametrise
+		    uBuilder.addParameter("show_login", "true");
+		    requestURI = uBuilder.build();
+		} catch (SerializeException | URISyntaxException e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		    return null;
 		} 
     	
     	return requestURI;

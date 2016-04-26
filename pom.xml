@@ -32,153 +32,116 @@
 	</repositories>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
+	  <dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter</artifactId>
+	  </dependency>
+	  
+	  <dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-security</artifactId>
+	  </dependency>
 		
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security.oauth</groupId>
-			<artifactId>spring-security-oauth2</artifactId>
-		</dependency>
-    	<dependency>
-        	<groupId>org.springframework.boot</groupId>
-        	<artifactId>spring-boot-devtools</artifactId>
-        	<optional>true</optional>
-    	</dependency>
+	  <dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-test</artifactId>
+	    <scope>test</scope>
+	  </dependency>
+	  <dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-web</artifactId>
+	  </dependency>
+	  <dependency>
+	    <groupId>org.springframework.security.oauth</groupId>
+	    <artifactId>spring-security-oauth2</artifactId>
+	  </dependency>
+    	  <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+    	  </dependency>
 
-		<dependency>
-		    <groupId>com.nimbusds</groupId>
-		    <artifactId>oauth2-oidc-sdk</artifactId>
-          	<exclusions>
-              	<exclusion>
-                  	<groupId>com.nimbusds</groupId>
-                	<artifactId>nimbus-jose-jwt</artifactId>
-              	</exclusion>
-          	</exclusions>
-        </dependency>
-        <dependency>
-          <groupId>com.nimbusds</groupId>
-          <artifactId>nimbus-jose-jwt</artifactId>
-        </dependency>
+	  <dependency>
+	    <groupId>com.nimbusds</groupId>
+	    <artifactId>oauth2-oidc-sdk</artifactId>
+            <exclusions>
+              <exclusion>
+		<groupId>com.nimbusds</groupId>
+		<artifactId>nimbus-jose-jwt</artifactId>
+              </exclusion>
+            </exclusions>
+          </dependency>
+          <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+          </dependency>
 
-		<!--  https://github.com/vbauer/herald  -->
-		<dependency>
-		    <groupId>com.github.vbauer</groupId>
-		    <artifactId>herald</artifactId>
-		    <version>1.1.0</version>
-		</dependency>
+	  <!--  https://github.com/vbauer/herald  -->
+	  <dependency>
+	    <groupId>com.github.vbauer</groupId>
+	    <artifactId>herald</artifactId>
+	    <version>1.1.0</version>
+	  </dependency>
 
-		<dependency>
-			<groupId>org.springframework.ws</groupId>
-			<artifactId>spring-ws-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>log4j-over-slf4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-		</dependency>
+	  <dependency>
+	    <groupId>org.springframework.ws</groupId>
+	    <artifactId>spring-ws-core</artifactId>
+	  </dependency>
+	  <dependency>
+	    <groupId>org.apache.httpcomponents</groupId>
+	    <artifactId>httpclient</artifactId>
+	  </dependency>
 	</dependencies>
 	
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<executable>true</executable>
-					<fork>true</fork>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<configuration>
-					<delimiters>
-					  <delimiter>${*}</delimiter>
-					</delimiters>
-				</configuration>
-			</plugin>
+	  <plugins>
+	    <plugin>
+	      <groupId>org.springframework.boot</groupId>
+	      <artifactId>spring-boot-maven-plugin</artifactId>
+	      <configuration>
+		<executable>true</executable>
+		<fork>true</fork>
+	      </configuration>
+	    </plugin>
+	    <plugin>
+	      <groupId>org.apache.maven.plugins</groupId>
+	      <artifactId>maven-resources-plugin</artifactId>
+	      <configuration>
+		<delimiters>
+		  <delimiter>${*}</delimiter>
+		</delimiters>
+	      </configuration>
+	    </plugin>
 
-	       <!-- <plugin>
-	             <groupId>org.jvnet.jaxb2.maven2</groupId>
-	            <artifactId>maven-jaxb2-plugin</artifactId>
-	            <executions>
-	                <execution>
-	                    <goals>
-	                        <goal>generate</goal>
-	                    </goals>
-	                </execution>
-	                
-	            </executions>
-
-			    <configuration>
-			        <schemaLanguage>WSDL</schemaLanguage>
-			        <generatePackage>fi.csc.orcidconnect.push.soap.schema</generatePackage>
-			        
-			        <schemaIncludes> 
-			        	 <include>csc_idm_service_wsdl.xml</include>  ->
-			        	 <include>*.xsd</include> 
-			         </schemaIncludes>
-			        <schemaExcludes>
-			        	<exclude>xml_example.xsd</exclude>
-			        	<exclude>xml_example.xml</exclude>
-			        </schemaExcludes>
-			        <schemas>
-			            <schema>
-			                <url>http://klaalo-air13:8088/mockWeatherSoap?WSDL</url>
-			                <url>http://klaalo-air13:8088/mockProvisioningBinding?WSDL</url>
-			             </schema>
-			        </schemas>
-			    </configuration>
-
-	        </plugin>  -->
-
-		</plugins>
-   		<filters>
-   			<filter>src/main/resources/private.properties</filter>
-   		</filters>
-		<resources>
-    		<resource>
-        		<directory>src/main/resources</directory>
-        		<includes>
-                    <include>application.yml</include>
-                    <include>static/*.html</include>
-                </includes>
-        		<filtering>true</filtering>
-      		</resource>
-    	</resources>
+	  </plugins>
+   	  <filters>
+   	    <filter>src/main/resources/private.properties</filter>
+   	  </filters>
+	  <resources>
+    	    <resource>
+              <directory>src/main/resources</directory>
+              <includes>
+                <include>application.yml</include>
+                <include>application.properties</include>
+                <include>static/*.html</include>
+              </includes>
+              <filtering>true</filtering>
+      	    </resource>
+    	  </resources>
 	</build>
 	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.nimbusds</groupId>
-				<artifactId>oauth2-oidc-sdk</artifactId>
-				<version>4.17</version>
-			</dependency>
-			<dependency>
-				<groupId>com.nimbusds</groupId>
-				<artifactId>nimbus-jose-jwt</artifactId>
-				<version>4.2</version>
-			</dependency>
-		</dependencies>
+	  <dependencies>
+	    <dependency>
+	      <groupId>com.nimbusds</groupId>
+	      <artifactId>oauth2-oidc-sdk</artifactId>
+	      <version>4.17</version>
+	    </dependency>
+	    <dependency>
+	      <groupId>com.nimbusds</groupId>
+	      <artifactId>nimbus-jose-jwt</artifactId>
+	      <version>4.2</version>
+	    </dependency>
+	  </dependencies>
 	</dependencyManagement>
 	
 </project>
