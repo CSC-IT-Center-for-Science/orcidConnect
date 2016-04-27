@@ -2,6 +2,7 @@ package fi.csc.orcidconnect.oauth2client;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -149,6 +150,9 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 	
 	private boolean isAdmin (Map<String, Object> authMap) {
 	    // TODO: parameterise
+		for (Iterator<String> it = orcidAdminList.iterator(); it.hasNext(); ) {
+			System.out.println("---- " + it.next());
+		}
 	    if (authMap.containsKey("orcid") &&
 	    		authMap.get("orcid").equals("0000-0003-0833-4032")) {
 	    	return true;
