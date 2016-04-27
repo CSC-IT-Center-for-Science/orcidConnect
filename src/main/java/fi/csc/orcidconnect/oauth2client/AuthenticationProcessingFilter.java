@@ -150,6 +150,7 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 	
 	private boolean isAdmin (Map<String, Object> authMap) {
 	    // TODO: parameterise
+		System.out.println("---- " + orcidAdminList.size());
 		for (Iterator<String> it = orcidAdminList.iterator(); it.hasNext(); ) {
 			System.out.println("---- " + it.next());
 		}
