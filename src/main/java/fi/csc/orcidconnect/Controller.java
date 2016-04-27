@@ -13,10 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MapPropertySource;
+import org.springframework.core.env.PropertySource;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -66,11 +66,11 @@ public class Controller {
 	@RequestMapping("/shib/env.json")
 	public Map<String, String> printEnv() {
 		Map<String, Object> map = new HashMap<String, Object>();
-		for (Iterator<org.springframework.core.env.PropertySource<?>> i =
+		for (Iterator<?> i =
 				((AbstractEnvironment) env).getPropertySources().iterator();
 				i.hasNext();
 				) {
-			PropertySource propS = (PropertySource) i.next();
+			PropertySource<?> propS = (PropertySource<?>) i.next();
 			if (propS instanceof MapPropertySource) {
 				map.putAll(((MapPropertySource) propS).getSource());
 			}
