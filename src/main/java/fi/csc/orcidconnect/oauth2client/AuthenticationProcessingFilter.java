@@ -2,7 +2,6 @@ package fi.csc.orcidconnect.oauth2client;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -14,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -29,6 +29,7 @@ import com.github.vbauer.herald.annotation.Log;
 
 
 @Component
+@ConfigurationProperties(prefix="my")
 public class AuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
 	@Autowired
@@ -36,6 +37,8 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 	
 	@Log
 	private Logger logger;
+	
+	List<String> orcidAdminList = new ArrayList<String>();
 	
 	public AuthenticationProcessingFilter() {
 		super (new AntPathRequestMatcher("/*login"));
@@ -132,9 +135,7 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 		    List<SimpleGrantedAuthority> authList = 
 		    		new ArrayList<SimpleGrantedAuthority>();
 		    authList.add(new SimpleGrantedAuthority("ROLE_USER"));
-		    // TODO: parameterise
-		    if (map.containsKey("orcid") &&
-		    		map.get("orcid").equals("0000-0003-0833-4032")) {
+		    if (isAdmin(map)) {
 		    	authList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
 		    }
 			OAuth2AuthenticationToken auth = new OAuth2AuthenticationToken(
@@ -144,6 +145,15 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 		} else {
 			throw new AuthenticationServiceException("OAuth token error");
 		}
+	}
+	
+	private boolean isAdmin (Map<String, Object> authMap) {
+	    // TODO: parameterise
+	    if (authMap.containsKey("orcid") &&
+	    		authMap.get("orcid").equals("0000-0003-0833-4032")) {
+	    	return true;
+	    }
+		return false;
 	}
 
 	private static class NoopAuthenticationManager implements AuthenticationManager {

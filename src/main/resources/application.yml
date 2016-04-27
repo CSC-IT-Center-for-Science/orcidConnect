@@ -33,7 +33,9 @@ my:
       schemaPackage: 'fi.csc.orcidconnect.push.soap.schema.csc'
       soapUrl: 'https://demo9650738.mockable.io/mockProvisioningBinding'
       soapAction: 'http://www.novell.com/provisioning/service/receive'
-    
+    orcidAdminList:
+      - '0000-0003-0833-4032'
+
 
 # Be aware with leading white space on resource
 # variables. They will cause extra characters
