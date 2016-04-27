@@ -11,10 +11,10 @@ import java.util.regex.Pattern;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,6 +40,7 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 	@Log
 	private Logger logger;
 	
+	@NotNull
 	private List<String> orcidAdminList;
 	
 	public AuthenticationProcessingFilter() {
@@ -51,9 +52,9 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 		this.orcidAdminList = orcidAdminList;
 	}
 	
-	public List<String> getOrcidAdminList() {
+	/*public List<String> getOrcidAdminList() {
 		return this.orcidAdminList;
-	}
+	}*/
 	
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest req,
@@ -159,11 +160,9 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 	
 	private boolean isAdmin (Map<String, Object> authMap) {
 	    // TODO: parameterise
-		if (orcidAdminList != null) {
-			System.out.println("---- " + orcidAdminList.size());
-			for (Iterator<String> it = orcidAdminList.iterator(); it.hasNext(); ) {
-				System.out.println("---- " + it.next());
-			}
+		System.out.println("---- " + orcidAdminList.size());
+		for (Iterator<String> it = orcidAdminList.iterator(); it.hasNext(); ) {
+			System.out.println("---- " + it.next());
 		}
 	    if (authMap.containsKey("orcid") &&
 	    		authMap.get("orcid").equals("0000-0003-0833-4032")) {
