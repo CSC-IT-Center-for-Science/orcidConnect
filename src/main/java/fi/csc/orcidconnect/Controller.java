@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -64,6 +65,7 @@ public class Controller {
 	@Autowired
 	Environment env;
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping("/shib/env.json")
 	public Map<String, String> printEnv() {
 		Map<String, Object> map = new HashMap<String, Object>();
