@@ -76,12 +76,12 @@ public class Controller {
 				map.putAll(((MapPropertySource) propS).getSource());
 			}
 		}
-		TreeMap<String, String> printMap = new TreeMap<String, String>();
+		Map<String, String> printMap = new HashMap<String, String>();
 		for (Iterator<String> it = map.keySet().iterator(); it.hasNext(); ) {
 			String key = (String) it.next();
 			printMap.put(key, String.valueOf(map.get(key)));
 		}
-		return printMap;
+		return new TreeMap<String, String>(printMap);
 	}
 	
 
