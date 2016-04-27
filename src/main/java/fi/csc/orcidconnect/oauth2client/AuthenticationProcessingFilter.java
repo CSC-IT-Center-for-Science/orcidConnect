@@ -1,7 +1,9 @@
 package fi.csc.orcidconnect.oauth2client;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -127,9 +129,16 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 			JacksonJsonParser parser = new JacksonJsonParser();
 			map = parser.parseMap(result);
 		    }
+		    List<SimpleGrantedAuthority> authList = 
+		    		new ArrayList<SimpleGrantedAuthority>();
+		    authList.add(new SimpleGrantedAuthority("ROLE_USER"));
+		    // TODO: parameterise
+		    if (map.containsKey("orcid") &&
+		    		map.get("orcid").equals("0000-0003-0833-4032")) {
+		    	authList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+		    }
 			OAuth2AuthenticationToken auth = new OAuth2AuthenticationToken(
-					Arrays.asList(
-					new SimpleGrantedAuthority("ROLE_USER")),
+					authList,
 					map);
 			return auth;
 		} else {
