@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -76,9 +76,8 @@ public class Controller {
 				map.putAll(((MapPropertySource) propS).getSource());
 			}
 		}
-		Map<String, String> printMap = new HashMap<String, String>();
-		SortedSet<String> keys = (SortedSet<String>) map.keySet();
-		for (Iterator<String> it = keys.iterator(); it.hasNext(); ) {
+		TreeMap<String, String> printMap = new TreeMap<String, String>();
+		for (Iterator<String> it = map.keySet().iterator(); it.hasNext(); ) {
 			String key = (String) it.next();
 			printMap.put(key, String.valueOf(map.get(key)));
 		}
