@@ -42,14 +42,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	    .authenticationProvider(oAuth2AuthenticationProvider)
         	.exceptionHandling()
         		.authenticationEntryPoint(authEntryPoint())
-        	.and()
-        	.authorizeRequests()
+    	.and().authorizeRequests()
 	    .antMatchers("/", "/**/isAuthenticated", "/**/favicon.ico", "/*login", "/logout",
 	    		"/shib/user")
 	    	.permitAll()
 	    .regexMatchers("/((git|google|orcidSandbox|shib)/){0,1}user").authenticated()
 	    .regexMatchers("/(git|google|orcidSandbox|shib)/signin").authenticated()
-	    .antMatchers("/shib/env.json").hasRole("ROLE_ADMIN")
+	    .antMatchers("/shib/env.json").hasAuthority("ROLE_ADMIN")
         .and().authorizeRequests()
                 .antMatchers("/auth", "/mappings", "/shib/trigpush",
                 		"/shib/iddescriptor.xml", "/shib/iddescriptor.json").authenticated()
