@@ -50,9 +50,9 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 		this.orcidAdminList = orcidAdminList;
 	}
 	
-	/*public List<String> getOrcidAdminList() {
+	public List<String> getOrcidAdminList() {
 		return this.orcidAdminList;
-	}*/
+	}
 	
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest req,
