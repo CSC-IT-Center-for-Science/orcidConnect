@@ -31,6 +31,7 @@ import com.github.vbauer.herald.annotation.Log;
 
 
 @Component
+@ConfigurationProperties(prefix="my")
 public class AuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
 	@Autowired
@@ -39,12 +40,19 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 	@Log
 	private Logger logger;
 	
-	@Value("${my.orcidAdminList")
 	private List<String> orcidAdminList;
 	
 	public AuthenticationProcessingFilter() {
 		super (new AntPathRequestMatcher("/*login"));
 		setAuthenticationManager(new NoopAuthenticationManager());
+	}
+	
+	public void setOrcidAdminList(List<String> orcidAdminList) {
+		this.orcidAdminList = orcidAdminList;
+	}
+	
+	public List<String> getOrcidAdminList() {
+		return this.orcidAdminList;
 	}
 	
 	@Override
