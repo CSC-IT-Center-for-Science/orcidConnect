@@ -134,7 +134,7 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 		    authList.add(new SimpleGrantedAuthority("ROLE_USER"));
 		    // TODO: parameterise
 		    if (map.containsKey("orcid") &&
-		    		map.get("orcid").equals("0000-0003-0833-4031")) {
+		    		map.get("orcid").equals("0000-0003-0833-4032")) {
 		    	authList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
 		    }
 			OAuth2AuthenticationToken auth = new OAuth2AuthenticationToken(
