@@ -39,11 +39,15 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 	@Log
 	private Logger logger;
 	
-	List<String> orcidAdminList = new ArrayList<String>();
+	List<String> orcidAdminList;
 	
 	public AuthenticationProcessingFilter() {
 		super (new AntPathRequestMatcher("/*login"));
 		setAuthenticationManager(new NoopAuthenticationManager());
+	}
+	
+	public void setOrcidAdminList (List<String> list) {
+		this.orcidAdminList = list;
 	}
 
 	@Override
