@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.apache.log4j.Logger;
@@ -41,6 +42,7 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 	private Logger logger;
 	
 	@NotNull
+	@Valid
 	private List<String> orcidAdminList;
 	
 	public AuthenticationProcessingFilter() {
@@ -160,9 +162,11 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 	
 	private boolean isAdmin (Map<String, Object> authMap) {
 	    // TODO: parameterise
-		System.out.println("---- " + orcidAdminList.size());
-		for (Iterator<String> it = orcidAdminList.iterator(); it.hasNext(); ) {
-			System.out.println("---- " + it.next());
+		if (orcidAdminList != null) {
+			System.out.println("---- " + orcidAdminList.size());
+			for (Iterator<String> it = orcidAdminList.iterator(); it.hasNext(); ) {
+				System.out.println("---- " + it.next());
+			}
 		}
 	    if (authMap.containsKey("orcid") &&
 	    		authMap.get("orcid").equals("0000-0003-0833-4032")) {
