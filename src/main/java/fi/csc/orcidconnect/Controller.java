@@ -65,7 +65,7 @@ public class Controller {
 	Environment env;
 	
 	@RequestMapping("/shib/env.json")
-	public TreeMap<String, String> printEnv() {
+	public Map<String, String> printEnv() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		for (Iterator<?> i =
 				((AbstractEnvironment) env).getPropertySources().iterator();
@@ -76,12 +76,12 @@ public class Controller {
 				map.putAll(((MapPropertySource) propS).getSource());
 			}
 		}
-		Map<String, String> printMap = new HashMap<String, String>();
+		Map<String, String> printMap = new TreeMap<String, String>();
 		for (Iterator<String> it = map.keySet().iterator(); it.hasNext(); ) {
 			String key = (String) it.next();
 			printMap.put(key, String.valueOf(map.get(key)));
 		}
-		return new TreeMap<String, String>(printMap);
+		return printMap;
 	}
 	
 
