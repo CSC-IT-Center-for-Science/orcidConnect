@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,7 +31,6 @@ import com.github.vbauer.herald.annotation.Log;
 
 
 @Component
-@ConfigurationProperties(prefix="my")
 public class AuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
 	@Autowired
@@ -39,17 +39,14 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 	@Log
 	private Logger logger;
 	
-	List<String> orcidAdminList;
+	@Value("${my.orcidAdminList")
+	private List<String> orcidAdminList;
 	
 	public AuthenticationProcessingFilter() {
 		super (new AntPathRequestMatcher("/*login"));
 		setAuthenticationManager(new NoopAuthenticationManager());
 	}
 	
-	public void setOrcidAdminList (List<String> orcidAdminList) {
-		this.orcidAdminList = orcidAdminList;
-	}
-
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest req,
 			HttpServletResponse response) throws AuthenticationException,
