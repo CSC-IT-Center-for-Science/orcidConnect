@@ -157,9 +157,13 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 	}
 	
 	private boolean isAdmin (Map<String, Object> authMap) {
+		if (orcidAdminList != null) {
+	    	System.out.println("----- " + orcidAdminList.size());
+		} else {
+			System.out.println("----- orcidAdminList == null");
+		}
 	    if (orcidAdminList != null && 
 	    		authMap.containsKey("orcid")) {
-	    	System.out.println("----- " + orcidAdminList.size());
 			for (Iterator<String> it = orcidAdminList.iterator(); it.hasNext(); ) {
 				String adminId = (String) it.next();
 				System.out.println("---- " + adminId);
