@@ -1,6 +1,7 @@
 ---
 server:
   contextPath: '/app'
+server:
   session:
     # to avoid castexceptions on startup
     persistent: 'false'
