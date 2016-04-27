@@ -3,11 +3,11 @@ server:
   contextPath: '/app'
   session:
     # to avoid castexceptions on startup
-    persistent: false
+    persistent: 'false'
 spring:
   mvc:
     favicon:
-      enabled: false
+      enabled: 'false'
 
 my:
   oauth2client:
