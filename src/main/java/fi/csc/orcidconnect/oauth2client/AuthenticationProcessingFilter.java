@@ -46,8 +46,8 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 		setAuthenticationManager(new NoopAuthenticationManager());
 	}
 	
-	public void setOrcidAdminList (List<String> list) {
-		this.orcidAdminList = list;
+	public void setOrcidAdminList (List<String> orcidAdminList) {
+		this.orcidAdminList = orcidAdminList;
 	}
 
 	@Override
