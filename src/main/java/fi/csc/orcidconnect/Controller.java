@@ -65,7 +65,7 @@ public class Controller {
 	Environment env;
 	
 	@RequestMapping("/shib/env.json")
-	public Map<String, String> printEnv() {
+	public TreeMap<String, String> printEnv() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		for (Iterator<?> i =
 				((AbstractEnvironment) env).getPropertySources().iterator();
