@@ -5,6 +5,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.AbstractEnvironment;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.MapPropertySource;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -54,6 +59,30 @@ public class Controller {
     
 	@Autowired
 	RequestMappingHandlerMapping handlerMapping;
+	
+	@Autowired
+	Environment env;
+	
+	@RequestMapping("/shib/env.json")
+	public Map<String, String> printEnv() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		for (Iterator<org.springframework.core.env.PropertySource<?>> i =
+				((AbstractEnvironment) env).getPropertySources().iterator();
+				i.hasNext();
+				) {
+			PropertySource propS = (PropertySource) i.next();
+			if (propS instanceof MapPropertySource) {
+				map.putAll(((MapPropertySource) propS).getSource());
+			}
+		}
+		Map<String, String> printMap = new HashMap<String, String>();
+		for (Iterator<String> it = map.keySet().iterator(); it.hasNext(); ) {
+			String key = (String) it.next();
+			printMap.put(key, String.valueOf(map.get(key)));
+		}
+		return printMap;
+	}
+	
 
 	private IdentityDescriptor getIdDescr (Authentication a, HttpServletRequest req) {
 		IdentityDescriptor id = new IdentityDescriptor();
