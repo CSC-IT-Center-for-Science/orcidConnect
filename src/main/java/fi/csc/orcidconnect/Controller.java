@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -76,7 +77,8 @@ public class Controller {
 			}
 		}
 		Map<String, String> printMap = new HashMap<String, String>();
-		for (Iterator<String> it = map.keySet().iterator(); it.hasNext(); ) {
+		SortedSet<String> keys = (SortedSet<String>) map.keySet();
+		for (Iterator<String> it = keys.iterator(); it.hasNext(); ) {
 			String key = (String) it.next();
 			printMap.put(key, String.valueOf(map.get(key)));
 		}
