@@ -64,6 +64,9 @@ public class Controller {
 	@Autowired
 	Environment env;
 	
+	@Autowired
+	IdentitiesRelayerConfiguration idRelConf;
+	
 	@RequestMapping("/shib/env.json")
 	public Map<String, String> printEnv() {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -112,7 +115,7 @@ public class Controller {
 		if (id.getIdentifier().isEmpty()) {
 			return Arrays.asList("empty identity");
 		} else {
-			IdentitiesRelayer relayer = IdentitiesRelayer.implPicker(id);
+			IdentitiesRelayer relayer = idRelConf.implPicker(id);
 			if (relayer.relay(id)) {
 				return Arrays.asList("success");
 			} else {
