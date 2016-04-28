@@ -18,7 +18,7 @@ import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.Identifier;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescriptor;
 
 
-public class MockSoapClient extends IdentitiesRelayer {
+public class MockSoapClient implements IdentitiesRelayer {
 	
     private void send (String eppnStr, String orcidStr) {
     	

@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import fi.csc.orcidconnect.IdentitiesRelayer;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescriptor;
 
-public class RestJsonClient extends IdentitiesRelayer {
+public class RestJsonClient implements IdentitiesRelayer {
 	
 	String url;
 	
