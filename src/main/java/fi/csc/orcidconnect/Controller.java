@@ -115,11 +115,16 @@ public class Controller {
 		if (id.getIdentifier().isEmpty()) {
 			return Arrays.asList("empty identity");
 		} else {
-			IdentitiesRelayer relayer = idRelConf.implPicker(id);
-			if (relayer.relay(id)) {
-				return Arrays.asList("success");
+			if (idRelConf != null) {
+				IdentitiesRelayer relayer = idRelConf.implPicker(id);
+				if (relayer.relay(id)) {
+					return Arrays.asList("success");
+				} else {
+					return Arrays.asList("generic error");
+				}
 			} else {
-				return Arrays.asList("generic error");
+				System.out.println("----- relayerConfig null");
+				return Arrays.asList("missing configuration");
 			}
 		}
 	}

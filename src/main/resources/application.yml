@@ -23,13 +23,13 @@ my:
   pushInterfaceSpecs:
     uniarts:
       idp: 'https://idp.testshib.org/idp/shibboleth'
-      relayerImplClass: 'fi.csc.orcidconnect.push.rest.RestJsonClient.java'
+      relayerImplClass: 'fi.csc.orcidconnect.push.rest.RestJsonClient'
       restUrl: 'https://demo9650738.mockable.io/identities'
       authUser: 'user'
       authPass: 'pass'
     hakaTest:
       idp: 'https://testidp.funet.fi/idp/shibboleth'
-      relayerImplClass: 'fi.csc.orcidconnect.push.soac.MockSoapClient.java'
+      relayerImplClass: 'fi.csc.orcidconnect.push.soap.MockSoapClient'
       schemaPackage: 'fi.csc.orcidconnect.push.soap.schema.csc'
       soapUrl: 'https://demo9650738.mockable.io/mockProvisioningBinding'
       soapAction: 'http://www.novell.com/provisioning/service/receive'
