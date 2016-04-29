@@ -117,6 +117,9 @@ public class Controller {
 		} else {
 			if (idRelConf != null) {
 				IdentitiesRelayer relayer = idRelConf.implPicker(id);
+				if (relayer == null) {
+					return Arrays.asList("relayerimplementation not found");
+				}
 				if (relayer.relay(id)) {
 					return Arrays.asList("success");
 				} else {
