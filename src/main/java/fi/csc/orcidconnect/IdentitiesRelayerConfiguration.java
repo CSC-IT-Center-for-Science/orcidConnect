@@ -38,11 +38,11 @@ public class IdentitiesRelayerConfiguration {
 			IdentitiesRelayer i;
 			Constructor con;
 			switch (className) {
-			case "fi.csc.orcidconnect.push.soac.MockSoapClient.java":
+			case "fi.csc.orcidconnect.push.soap.MockSoapClient":
 				con = c.getClass().getConstructor();
 				i = (IdentitiesRelayer) con.newInstance();
 				break;
-			case "fi.csc.orcidconnect.push.rest.RestJsonClient.java":
+			case "fi.csc.orcidconnect.push.rest.RestJsonClient":
 				con = c.getClass().getConstructor(String.class);
 				i = (IdentitiesRelayer) con
 						.newInstance("https://demo9650738.mockable.io/identities");

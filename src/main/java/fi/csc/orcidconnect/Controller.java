@@ -123,7 +123,6 @@ public class Controller {
 					return Arrays.asList("generic error");
 				}
 			} else {
-				System.out.println("----- relayerConfig null");
 				return Arrays.asList("missing configuration");
 			}
 		}
