@@ -16,7 +16,7 @@ my:
     defaultProvider: 'orcidSandbox'
     specialCase: 'orcidSandbox'
     callBackBase: 'https://orcid-connect01.csc.fi:4443/app/'
-#    callBackBase: http://localhost:8080/app/
+    # callBackBase: http://localhost:8080/app/
   pushInterfaces:
     - uniarts
     - hakaTest
