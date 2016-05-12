@@ -20,10 +20,6 @@ import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescrip
 
 public class MockSoapClient implements IdentitiesRelayer {
 	
-	public MockSoapClient() {
-		
-	}
-	
     private void send (String eppnStr, String orcidStr) {
     	
     	WebServiceTemplate wsTempl = new WebServiceTemplate();
