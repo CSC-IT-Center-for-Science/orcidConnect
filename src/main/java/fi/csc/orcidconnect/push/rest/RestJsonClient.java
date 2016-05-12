@@ -21,6 +21,10 @@ public class RestJsonClient implements IdentitiesRelayer {
 	
 	String url;
 	
+	public RestJsonClient() {
+		
+	}
+	
 	public RestJsonClient (String callUrl) {
 		this.url = callUrl;
 	}
