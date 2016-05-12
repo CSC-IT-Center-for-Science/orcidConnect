@@ -34,16 +34,15 @@ public class IdentitiesRelayerConfiguration {
 	public IdentitiesRelayer implPicker(IdentityDescriptor idDescr) {
 		String className = implNamePicker(idDescr);
 		try {
-			Class c = Class.forName(className);
 			IdentitiesRelayer i;
 			Constructor con;
 			switch (className) {
 			case "fi.csc.orcidconnect.push.soap.MockSoapClient":
-				con = c.getClass().getConstructor();
+				con = Class.forName(className).getConstructor();
 				i = (IdentitiesRelayer) con.newInstance();
 				break;
 			case "fi.csc.orcidconnect.push.rest.RestJsonClient":
-				con = c.getClass().getConstructor(String.class);
+				con = Class.forName(className).getConstructor(String.class);
 				i = (IdentitiesRelayer) con
 						.newInstance("https://demo9650738.mockable.io/identities");
 				break;
