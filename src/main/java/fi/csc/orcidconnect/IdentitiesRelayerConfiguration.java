@@ -17,6 +17,8 @@ import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescrip
 @ConfigurationProperties(prefix="my")
 public class IdentitiesRelayerConfiguration {
 
+	final private String propertyPrefix = "my.pushInterfaceSpecs.";
+	
 	List<String> pushInterfaces;
 	
 	@Autowired
@@ -44,7 +46,9 @@ public class IdentitiesRelayerConfiguration {
 			case "fi.csc.orcidconnect.push.rest.RestJsonClient":
 				con = Class.forName(className).getConstructor(String.class);
 				i = (IdentitiesRelayer) con
-						.newInstance("https://demo9650738.mockable.io/identities");
+						.newInstance(
+								getRestUrl(idDescr)
+								);
 				break;
 			default:
 				i = null;
@@ -62,14 +66,25 @@ public class IdentitiesRelayerConfiguration {
 	
 	private String implNamePicker(IdentityDescriptor idDescr) {
 		return implNamePicker(
-				findOrgByIdP(
-				getEppnIssuer(idDescr)
-				));
+				getOrg(idDescr)
+				);
 	}
 	
 	private String implNamePicker(String org) {
 		return env.getProperty(
-				"my.pushInterfaceSpecs." + org + ".relayerImplClass");
+				propertyPrefix + org + ".relayerImplClass");
+	}
+	
+	private String getRestUrl(IdentityDescriptor id) {
+		return env.getProperty(propertyPrefix +
+				getOrg(id)
+				+ ".restUrl"
+				);
+	}
+	
+	private String getOrg(IdentityDescriptor id) {
+		return findOrgByIdP(
+				getEppnIssuer(id));
 	}
 	
 	private static String getEppnIssuer (IdentityDescriptor idDescr) {
