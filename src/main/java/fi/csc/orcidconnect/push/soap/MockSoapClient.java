@@ -42,14 +42,6 @@ public class MockSoapClient implements IdentitiesRelayer {
     	
     	HttpComponentsMessageSender messageSender = 
     			new HttpComponentsMessageSender();
-    	messageSender.setCredentials(creds);
-		messageSender.setAuthScope(AuthScope.ANY);
-		try {
-			messageSender.afterPropertiesSet();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 		
 		CredentialsProvider crProv = new BasicCredentialsProvider();
