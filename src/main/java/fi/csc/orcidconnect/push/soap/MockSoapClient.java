@@ -32,11 +32,11 @@ public class MockSoapClient implements IdentitiesRelayer {
     	
     	WebServiceTemplate wsTempl = new WebServiceTemplate();
     	
-    	HttpComponentsMessageSender messageSender = 
+    	/*HttpComponentsMessageSender messageSender = 
     			new HttpComponentsMessageSender();
     	messageSender.setCredentials(creds);
     	
-    	wsTempl.setMessageSender(messageSender);
+    	wsTempl.setMessageSender(messageSender);*/
 
     	Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
     	marshaller.setPackagesToScan(schemaPackage);
