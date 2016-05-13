@@ -1,8 +1,6 @@
 package fi.csc.orcidconnect.push.soap;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.xml.transform.stream.StreamResult;
 
@@ -37,14 +35,7 @@ public class MockSoapClient implements IdentitiesRelayer {
     	HttpComponentsMessageSender messageSender = 
     			new HttpComponentsMessageSender();
     	messageSender.setCredentials(creds);
-    	try {
-			messageSender.setAuthScope(
-					new AuthScope(
-							new URL(callUrl).getHost(), 443));
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		messageSender.setAuthScope(AuthScope.ANY);
     	
     	wsTempl.setMessageSender(messageSender);
 
