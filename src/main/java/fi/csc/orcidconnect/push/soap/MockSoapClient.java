@@ -2,10 +2,15 @@ package fi.csc.orcidconnect.push.soap;
 
 import java.io.IOException;
 
+import javax.net.ssl.SSLContext;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.ssl.SSLContexts;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.FaultMessageResolver;
@@ -42,7 +47,16 @@ public class MockSoapClient implements IdentitiesRelayer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	
+		
+		SSLContext ctx = SSLContexts.createSystemDefault();
+
+        @SuppressWarnings("deprecation")
+		SSLConnectionSocketFactory fac = new SSLConnectionSocketFactory(ctx, new String[] { "TLSv1" }, null,
+                SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+        CloseableHttpClient httpclient = HttpClientBuilder.create().setSSLSocketFactory(fac).build();
+		
+		messageSender.setHttpClient(httpclient);
     	wsTempl.setMessageSender(messageSender);
 
     	Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
