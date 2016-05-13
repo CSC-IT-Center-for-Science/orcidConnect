@@ -1,10 +1,12 @@
 package fi.csc.orcidconnect.push.soap;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.http.auth.Credentials;
+import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.WebServiceMessage;
@@ -26,17 +28,25 @@ public class MockSoapClient implements IdentitiesRelayer {
 	final String callUrl = "https://demo9650738.mockable.io/mockProvisioningBinding";
 	final String schemaPackage = "fi.csc.orcidconnect.push.soap.schema.csc";
 	final String soapAction = "http://www.novell.com/provisioning/service/receive";
-	Credentials creds = new UsernamePasswordCredentials("test", "test");
+	UsernamePasswordCredentials creds = new UsernamePasswordCredentials("test", "test");
 	
     private void send (String eppnStr, String orcidStr) {
     	
     	WebServiceTemplate wsTempl = new WebServiceTemplate();
     	
-    	/*HttpComponentsMessageSender messageSender = 
+    	HttpComponentsMessageSender messageSender = 
     			new HttpComponentsMessageSender();
     	messageSender.setCredentials(creds);
+    	try {
+			messageSender.setAuthScope(
+					new AuthScope(
+							new URL(callUrl).getHost(), 443));
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	
-    	wsTempl.setMessageSender(messageSender);*/
+    	wsTempl.setMessageSender(messageSender);
 
     	Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
     	marshaller.setPackagesToScan(schemaPackage);
