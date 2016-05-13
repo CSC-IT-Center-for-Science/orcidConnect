@@ -2,18 +2,16 @@ package fi.csc.orcidconnect.push.soap;
 
 import java.io.IOException;
 
-import javax.net.ssl.SSLContext;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.ssl.SSLContexts;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.FaultMessageResolver;
@@ -46,11 +44,15 @@ public class MockSoapClient implements IdentitiesRelayer {
 		
 		CredentialsProvider crProv = new BasicCredentialsProvider();
 		crProv.setCredentials(AuthScope.ANY, creds);
-
+		
         CloseableHttpClient httpclient = HttpClients.custom()
         		.setDefaultCredentialsProvider(crProv)
         		.build();
 		
+		httpclient.getConnectionManager().getSchemeRegistry().register(
+			    new Scheme("https", 443, SSLSocketFactory.getSystemSocketFactory())
+			);
+
 		messageSender.setHttpClient(httpclient);
     	wsTempl.setMessageSender(messageSender);
 
