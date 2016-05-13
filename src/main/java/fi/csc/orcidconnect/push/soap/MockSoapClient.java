@@ -7,8 +7,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -49,10 +47,6 @@ public class MockSoapClient implements IdentitiesRelayer {
         		.setDefaultCredentialsProvider(crProv)
         		.build();
 		
-		httpclient.getConnectionManager().getSchemeRegistry().register(
-			    new Scheme("https", 443, SSLSocketFactory.getSystemSocketFactory())
-			);
-
 		messageSender.setHttpClient(httpclient);
     	wsTempl.setMessageSender(messageSender);
 
