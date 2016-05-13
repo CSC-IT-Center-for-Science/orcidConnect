@@ -7,9 +7,12 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.WebServiceMessage;
@@ -48,13 +51,13 @@ public class MockSoapClient implements IdentitiesRelayer {
 			e.printStackTrace();
 		}
 		
-		SSLContext ctx = SSLContexts.createSystemDefault();
+		
+		CredentialsProvider crProv = new BasicCredentialsProvider();
+		crProv.setCredentials(AuthScope.ANY, creds);
 
-        @SuppressWarnings("deprecation")
-		SSLConnectionSocketFactory fac = new SSLConnectionSocketFactory(ctx, new String[] { "TLSv1" }, null,
-                SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-
-        CloseableHttpClient httpclient = HttpClientBuilder.create().setSSLSocketFactory(fac).build();
+        CloseableHttpClient httpclient = HttpClients.custom()
+        		.setDefaultCredentialsProvider(crProv)
+        		.build();
 		
 		messageSender.setHttpClient(httpclient);
     	wsTempl.setMessageSender(messageSender);
