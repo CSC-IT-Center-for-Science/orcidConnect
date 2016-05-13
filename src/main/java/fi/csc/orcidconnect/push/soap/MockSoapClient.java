@@ -47,7 +47,7 @@ public class MockSoapClient implements IdentitiesRelayer {
         		.setDefaultCredentialsProvider(crProv)
         		.build();
 		
-		messageSender.setHttpClient(httpclient);
+	messageSender.setHttpClient(httpclient);
     	wsTempl.setMessageSender(messageSender);
 
     	Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
