@@ -5,7 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -21,6 +20,8 @@ public class IdentitiesRelayerConfiguration {
 
 	final private String propertyPrefix = "my.pushInterfaceSpecs.";
 	
+	// Spring will initialise this automatically
+	// based on ConfirugrationProperties-annotation
 	List<String> pushInterfaces;
 	
 	@Autowired
@@ -54,14 +55,7 @@ public class IdentitiesRelayerConfiguration {
 	}
 	
 	private String implNamePicker(IdentityDescriptor idDescr) {
-		return implNamePicker(
-				getOrg(idDescr)
-				);
-	}
-	
-	private String implNamePicker(String org) {
-		return env.getProperty(
-				propertyPrefix + org + ".relayerImplClass");
+		return  getConfigString(idDescr, "relayerImplClass");
 	}
 	
 	private String getConfigString (IdentityDescriptor id, String key) {
@@ -86,7 +80,7 @@ public class IdentitiesRelayerConfiguration {
 		if (isNotInit()) throw new IllegalStateException();
 		for (Iterator<String> i = pushInterfaces.iterator(); i.hasNext(); ) {
 			String org = i.next();
-			String cIdp = env.getProperty("my.pushInterfaceSpecs." + org + ".idp");
+			String cIdp = env.getProperty(propertyPrefix + org + ".idp");
 			if (cIdp.equals(entityId)) return org; 
 		}
 		return "";
