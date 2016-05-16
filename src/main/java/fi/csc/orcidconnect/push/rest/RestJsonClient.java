@@ -38,7 +38,7 @@ public class RestJsonClient implements IdentitiesRelayer {
 
 	@Override
 	public final String[] getConfStrs() {
-		return this.confStrs;
+		return RestJsonClient.confStrs;
 	}
 	
 	private boolean checkConfig() {
