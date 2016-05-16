@@ -1,6 +1,7 @@
 package fi.csc.orcidconnect.push.rest;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -17,15 +18,46 @@ import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescrip
 
 public class RestJsonClient implements IdentitiesRelayer {
 	
+	private static final String[] confStrs = {
+			"restUrl",
+			"authUser",
+			"authPass"
+	};
+	
+	private Map<String, String> config;
+	
 	String url;
 	
 	public RestJsonClient (String callUrl) {
 		this.url = callUrl;
 	}
+	
+	@Override
+	public void setConfig(Map<String, String> confMap) {
+		this.config = confMap;
+	}
 
+	@Override
+	public final String[] getConfStrs() {
+		return confStrs;
+	}
+	
+	private boolean checkConfig() {
+		for (String s: confStrs) {
+			if (!config.containsKey(s)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	@Override
 	public boolean relay(IdentityDescriptor idDescr) {
 
+		if (!checkConfig()) {
+    		throw new IllegalStateException("Inadequate config");
+		}
+    	
 		UsernamePasswordCredentials creds = new UsernamePasswordCredentials("user", "pwd");
 		CredentialsProvider crProv = new BasicCredentialsProvider();
 		crProv.setCredentials(AuthScope.ANY, creds);
@@ -51,5 +83,5 @@ public class RestJsonClient implements IdentitiesRelayer {
 				idDescr, Status.class);
 		return stat.status();
 	}
-	
+
 }

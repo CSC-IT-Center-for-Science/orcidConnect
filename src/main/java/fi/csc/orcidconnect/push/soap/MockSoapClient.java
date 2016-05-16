@@ -1,6 +1,7 @@
 package fi.csc.orcidconnect.push.soap;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.xml.transform.stream.StreamResult;
 
@@ -27,10 +28,54 @@ import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescrip
 
 public class MockSoapClient implements IdentitiesRelayer {
 	
+	private static final String[] confStrs = {
+			"schemaPackage",
+			"soapUrl",
+			"soapAction",
+			"authUser",
+			"authPass"
+	};
+	
+	private Map<String, String> config;
+	
 	final String callUrl = "https://demo9650738.mockable.io/mockProvisioningBinding";
 	final String schemaPackage = "fi.csc.orcidconnect.push.soap.schema.csc";
 	final String soapAction = "http://www.novell.com/provisioning/service/receive";
 	UsernamePasswordCredentials creds = new UsernamePasswordCredentials("test", "test");
+	
+	@Override
+	public void setConfig (Map<String, String> confMap) {
+		this.config = confMap;
+	}
+	
+	@Override
+	public final String[] getConfStrs() {
+		return confStrs;
+	}
+	
+	private boolean checkConfig() {
+		for (String s: confStrs) {
+			if (!config.containsKey(s)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	@Override
+	public boolean relay(IdentityDescriptor idDescr) {
+
+		if (!checkConfig()) {
+    		throw new IllegalStateException("Inadequate config");
+		}
+    	
+		this.send(
+			idDescr.findFirstIdentifierWithFn(
+				Identifier.eppnFrName).getIdentifierValue(),
+			idDescr.findFirstIdentifierWithFn(
+				Identifier.orcidFrName).getIdentifierValue());
+		return true;
+	}	
 	
     private void send (String eppnStr, String orcidStr) {
     	
@@ -82,17 +127,6 @@ public class MockSoapClient implements IdentitiesRelayer {
     	        msg.setSoapAction(soapAction);
     	    }
     	});    	
-    }
-
-	@Override
-	public boolean relay(IdentityDescriptor idDescr) {
-		this.send(
-			idDescr.findFirstIdentifierWithFn(
-				Identifier.eppnFrName).getIdentifierValue(),
-			idDescr.findFirstIdentifierWithFn(
-				Identifier.orcidFrName).getIdentifierValue());
-		return true;
-	}
-	
+    }	
 	
 }

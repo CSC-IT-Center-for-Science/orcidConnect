@@ -2,8 +2,10 @@ package fi.csc.orcidconnect;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -36,26 +38,13 @@ public class IdentitiesRelayerConfiguration {
 	public IdentitiesRelayer implPicker(IdentityDescriptor idDescr) {
 		String className = implNamePicker(idDescr);
 		try {
-			IdentitiesRelayer i;
-			Constructor con;
-			switch (className) {
-			case "fi.csc.orcidconnect.push.soap.MockSoapClient":
-				con = Class.forName(className).getConstructor();
-				i = (IdentitiesRelayer) con.newInstance();
-				break;
-			case "fi.csc.orcidconnect.push.rest.RestJsonClient":
-				con = Class.forName(className).getConstructor(String.class);
-				i = (IdentitiesRelayer) con
-						.newInstance(
-								getRestUrl(idDescr)
-								);
-				break;
-			default:
-				i = null;
-				break;
+			Constructor con = Class.forName(className).getConstructor();
+			IdentitiesRelayer i = (IdentitiesRelayer) con.newInstance();
+			HashMap<String, String> confMap = new HashMap<String, String>();
+			for (String key: i.getConfStrs()) {
+				confMap.put(key, getConfigString(idDescr, key));
 			}
-			
-			
+			i.setConfig(confMap);
 			return i;
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			// TODO Auto-generated catch block
@@ -75,10 +64,10 @@ public class IdentitiesRelayerConfiguration {
 				propertyPrefix + org + ".relayerImplClass");
 	}
 	
-	private String getRestUrl(IdentityDescriptor id) {
+	private String getConfigString (IdentityDescriptor id, String key) {
 		return env.getProperty(propertyPrefix +
-				getOrg(id)
-				+ ".restUrl"
+				getOrg(id) +
+				"." + key
 				);
 	}
 	
