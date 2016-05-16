@@ -1,6 +1,5 @@
 package fi.csc.orcidconnect.push.rest;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
