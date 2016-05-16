@@ -12,9 +12,12 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.core.FaultMessageResolver;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
 import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.ws.client.support.interceptor.ClientInterceptor;
+import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 
@@ -45,11 +48,13 @@ public class MockSoapClient implements IdentitiesRelayer {
 		
         CloseableHttpClient httpclient = HttpClients.custom()
         		.setDefaultCredentialsProvider(crProv)
+        		.addInterceptorFirst(new HttpComponentsMessageSender.RemoveSoapHeadersInterceptor())
         		.build();
-		
-	messageSender.setHttpClient(httpclient);
-    	wsTempl.setMessageSender(messageSender);
 
+        
+        messageSender.setHttpClient(httpclient);
+        wsTempl.setMessageSender(messageSender);
+        
     	Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
     	marshaller.setPackagesToScan(schemaPackage);
 
