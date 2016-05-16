@@ -28,20 +28,22 @@ import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescrip
 
 public class MockSoapClient implements IdentitiesRelayer {
 	
+	private final static String schemaPackage = "schemaPackage"; 
+	private final static String soapUrl = "soapUrl"; 
+	private final static String soapAction = "soapAction"; 
+	private final static String authUser = "authUser"; 
+	private final static String authPass = "authPass"; 
+	
 	private static final String[] confStrs = {
-			"schemaPackage",
-			"soapUrl",
-			"soapAction",
-			"authUser",
-			"authPass"
+			schemaPackage,
+			soapUrl,
+			soapAction,
+			authUser,
+			authPass
 	};
 	
 	private Map<String, String> config;
 	
-	final String callUrl = "https://demo9650738.mockable.io/mockProvisioningBinding";
-	final String schemaPackage = "fi.csc.orcidconnect.push.soap.schema.csc";
-	final String soapAction = "http://www.novell.com/provisioning/service/receive";
-	UsernamePasswordCredentials creds = new UsernamePasswordCredentials("test", "test");
 	
 	@Override
 	public void setConfig (Map<String, String> confMap) {
@@ -84,7 +86,9 @@ public class MockSoapClient implements IdentitiesRelayer {
     	HttpComponentsMessageSender messageSender = 
     			new HttpComponentsMessageSender();
 		
-		
+		UsernamePasswordCredentials creds = new UsernamePasswordCredentials(
+				config.get(authUser),
+				config.get(authPass));
 		CredentialsProvider crProv = new BasicCredentialsProvider();
 		crProv.setCredentials(AuthScope.ANY, creds);
 		
@@ -100,9 +104,9 @@ public class MockSoapClient implements IdentitiesRelayer {
         wsTempl.setMessageSender(messageSender);
         
     	Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-    	marshaller.setPackagesToScan(schemaPackage);
+    	marshaller.setPackagesToScan(config.get(schemaPackage));
 
-    	wsTempl.setDefaultUri(callUrl);
+    	wsTempl.setDefaultUri(config.get(soapUrl));
     	wsTempl.setMarshaller(marshaller);
     	wsTempl.setUnmarshaller(marshaller);
     	
@@ -124,7 +128,7 @@ public class MockSoapClient implements IdentitiesRelayer {
     	wsTempl.marshalSendAndReceive(req, new WebServiceMessageCallback() {
     	    public void doWithMessage(WebServiceMessage message) {
     	    	SoapMessage msg = ((SoapMessage)message);
-    	        msg.setSoapAction(soapAction);
+    	        msg.setSoapAction(config.get(soapAction));
     	    }
     	});    	
     }	

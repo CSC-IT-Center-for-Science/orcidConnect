@@ -1,5 +1,6 @@
 package fi.csc.orcidconnect.push.rest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -18,19 +19,17 @@ import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescrip
 
 public class RestJsonClient implements IdentitiesRelayer {
 	
+	private final static String restUrl = "restUrl";
+	private final static String authPass = "authPass";
+	private final static String authUser = "authUser";
+	
 	private static final String[] confStrs = {
-			"restUrl",
-			"authUser",
-			"authPass"
+			restUrl,
+			authPass,
+			authUser
 	};
 	
 	private Map<String, String> config;
-	
-	String url;
-	
-	public RestJsonClient (String callUrl) {
-		this.url = callUrl;
-	}
 	
 	@Override
 	public void setConfig(Map<String, String> confMap) {
@@ -39,7 +38,7 @@ public class RestJsonClient implements IdentitiesRelayer {
 
 	@Override
 	public final String[] getConfStrs() {
-		return confStrs;
+		return this.confStrs;
 	}
 	
 	private boolean checkConfig() {
@@ -58,7 +57,10 @@ public class RestJsonClient implements IdentitiesRelayer {
     		throw new IllegalStateException("Inadequate config");
 		}
     	
-		UsernamePasswordCredentials creds = new UsernamePasswordCredentials("user", "pwd");
+		UsernamePasswordCredentials creds = 
+				new UsernamePasswordCredentials(
+						config.get(authUser), 
+						config.get(authPass));
 		CredentialsProvider crProv = new BasicCredentialsProvider();
 		crProv.setCredentials(AuthScope.ANY, creds);
 		
@@ -79,7 +81,7 @@ public class RestJsonClient implements IdentitiesRelayer {
 				);
 
 		Status stat = rt.postForObject(
-				url,
+				config.get(restUrl),
 				idDescr, Status.class);
 		return stat.status();
 	}
