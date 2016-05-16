@@ -48,6 +48,9 @@ public class MockSoapClient implements IdentitiesRelayer {
 		
         CloseableHttpClient httpclient = HttpClients.custom()
         		.setDefaultCredentialsProvider(crProv)
+        		// fix for annoying bug
+        		// (see John Rix's answer: 
+        		// http://stackoverflow.com/questions/3332370/content-length-header-already-present )
         		.addInterceptorFirst(new HttpComponentsMessageSender.RemoveSoapHeadersInterceptor())
         		.build();
 
