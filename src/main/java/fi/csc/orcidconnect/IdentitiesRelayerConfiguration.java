@@ -48,7 +48,6 @@ public class IdentitiesRelayerConfiguration {
 			i.setConfig(confMap);
 			return i;
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}

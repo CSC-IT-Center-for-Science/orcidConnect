@@ -46,7 +46,6 @@ public class IdentityFactory {
 					DatatypeFactory.newInstance().newXMLGregorianCalendar(
 							new GregorianCalendar()));
 		} catch (DatatypeConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

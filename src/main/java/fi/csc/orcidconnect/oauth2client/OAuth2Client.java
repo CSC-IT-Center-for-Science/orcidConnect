@@ -47,7 +47,6 @@ public class OAuth2Client {
 		try {
 			authzEndpoint = new URI(conf.getAuthUriStr(provider));
 		} catch (URISyntaxException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -65,7 +64,6 @@ public class OAuth2Client {
 		try {
 			callback = new URI(conf.getCallBackURI(provider));
 		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -101,7 +99,6 @@ public class OAuth2Client {
 		    uBuilder.addParameter("show_login", "true");
 		    requestURI = uBuilder.build();
 		} catch (SerializeException | URISyntaxException e) {
-		    // TODO Auto-generated catch block
 		    e.printStackTrace();
 		    return null;
 		} 
@@ -142,7 +139,6 @@ public class OAuth2Client {
 			return getToken(httpResponse);
 			
 		} catch (URISyntaxException | SerializeException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}

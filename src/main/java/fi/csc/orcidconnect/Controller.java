@@ -201,7 +201,6 @@ public class Controller {
     	try {
 			resp.sendRedirect("/app/");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
