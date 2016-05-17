@@ -130,12 +130,7 @@ public class Controller {
 	@RequestMapping(value = {"/{pathVar:${my.controllerConfig.userMatcherString}}/user", "/user"}, method = RequestMethod.GET)
 	public Map<String, String> auth(Authentication a) {
 		HashMap<String, String> m = new HashMap<String, String>();
-		List<String> dontShow = Arrays.asList(
-						      "access_token",
-						      "scope",
-						      "token_type",
-						      "expires_in"
-						      );
+		List<String> dontShow = webConf.getUserHiddenAttrs();
 		try {
 			@SuppressWarnings("unchecked")
 			HashMap<String, ?> map = (HashMap<String, ?>) a.getDetails();
@@ -196,7 +191,7 @@ public class Controller {
 	return attrs;
     }
     
-    @RequestMapping(value= "/{pathVar:git|google|orcidSandbox|${my.oauth2client.shibSignInPath}}/signin")
+    @RequestMapping(value= "/{pathVar:${my.controllerConfig.userMatcherString}|${my.oauth2client.shibSignInPath}}/signin")
     public void redirectSigned(HttpServletResponse resp) {
     	try {
 			resp.sendRedirect("/app/");

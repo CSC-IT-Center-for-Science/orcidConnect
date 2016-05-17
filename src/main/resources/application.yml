@@ -59,6 +59,11 @@ my:
       - REMOTE_USER
       - Shib-Authentication-Method
       - unscoped-affiliation
+    userHiddenAttrs:
+      - access_token
+      - scope
+      - token_type
+      - expires_in
     shibAttrNameIdP: Shib-Identity-Provider
     shibAttrNameEppn: eppn 
     authNameOrcid: orcid

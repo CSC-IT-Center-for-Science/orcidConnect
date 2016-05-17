@@ -13,6 +13,7 @@ public class WebControllerConfiguration {
 	// Spring will initialise this automatically
 	// based on ConfirugrationProperties-annotation
 	private List<String> shibAttrKeys;
+	private List<String> userHiddenAttrs;
 	
 	private String shibAttrNameIdP;
 	private String shibAttrNameEppn;
@@ -50,6 +51,14 @@ public class WebControllerConfiguration {
 	// property field
 	public void setShibAttrKeys(List<String> shibAttrKeys) {
 		this.shibAttrKeys = shibAttrKeys;
+	}
+
+	public List<String> getUserHiddenAttrs() {
+		return userHiddenAttrs;
+	}
+
+	public void setUserHiddenAttrs(List<String> userHiddenAttrs) {
+		this.userHiddenAttrs = userHiddenAttrs;
 	}
 	
 
