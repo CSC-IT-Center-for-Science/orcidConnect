@@ -12,12 +12,42 @@ public class WebControllerConfiguration {
 	
 	// Spring will initialise this automatically
 	// based on ConfirugrationProperties-annotation
-	List<String> shibAttrKeys;
+	private List<String> shibAttrKeys;
+	
+	private String shibAttrNameIdP;
+	private String shibAttrNameEppn;
+	private String authNameOrcid;
+
+	public String getShibAttrNameIdP() {
+		return shibAttrNameIdP;
+	}
+
+	public void setShibAttrNameIdP(String shibAttrNameIdP) {
+		this.shibAttrNameIdP = shibAttrNameIdP;
+	}
+
+	public String getShibAttrNameEppn() {
+		return shibAttrNameEppn;
+	}
+
+	public void setShibAttrNameEppn(String shibAttrNameEppn) {
+		this.shibAttrNameEppn = shibAttrNameEppn;
+	}
+
+	public String getAuthNameOrcid() {
+		return authNameOrcid;
+	}
+
+	public void setAuthNameOrcid(String authNameOrcid) {
+		this.authNameOrcid = authNameOrcid;
+	}
 
 	public List<String> getShibAttrKeys() {
 		return shibAttrKeys;
 	}
 	
+	// setter is needed to initialise 
+	// property field
 	public void setShibAttrKeys(List<String> shibAttrKeys) {
 		this.shibAttrKeys = shibAttrKeys;
 	}

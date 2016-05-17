@@ -56,7 +56,9 @@ my:
       - REMOTE_USER
       - Shib-Authentication-Method
       - unscoped-affiliation
-
+    shibAttrNameIdP: Shib-Identity-Provider
+    shibAttrNameEppn: eppn 
+    authNameOrcid: orcid
 
 # Be aware with leading white space on resource
 # variables. They will cause extra characters

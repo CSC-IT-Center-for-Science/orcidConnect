@@ -33,10 +33,10 @@ import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescrip
 @RestController
 public class Controller {
 	
-	private final String attrName_idp = "Shib-Identity-Provider";
-	private final String attrName_eppn = "eppn";
+	//private final String attrName_idp = "Shib-Identity-Provider";
+	//private final String attrName_eppn = "eppn";
 	
-	private final String authName_orcid = "orcid";
+	//private final String authName_orcid = "orcid";
 
     @Autowired
     WebControllerConfiguration webConf;
@@ -76,10 +76,16 @@ public class Controller {
 		if (a.isAuthenticated()) {
 			@SuppressWarnings("unchecked")
 			HashMap<String, ?> map = (HashMap<String, ?>) a.getDetails();
-			String orcidStr = String.valueOf(map.get(authName_orcid));
-			String eppnStr = String.valueOf(req.getAttribute(attrName_eppn));
+			String orcidStr = String.valueOf(
+					map.get(webConf.getAuthNameOrcid())
+					);
+			String eppnStr = String.valueOf(
+					req.getAttribute(webConf.getShibAttrNameEppn())
+					);
 			Identifier eppnId = IdentityFactory.eppnFactory(eppnStr);
-			eppnId.setIssuer(String.valueOf(req.getAttribute(attrName_idp)));
+			eppnId.setIssuer(String.valueOf(
+					req.getAttribute(webConf.getShibAttrNameIdP()))
+					);
 			Identifier orcidId = IdentityFactory.orcidFactory(orcidStr);
 			id.addIdentifier(orcidId);
 			id.addIdentifier(eppnId);
