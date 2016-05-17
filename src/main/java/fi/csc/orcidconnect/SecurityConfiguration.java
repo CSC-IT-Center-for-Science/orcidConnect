@@ -62,7 +62,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     	LinkedHashMap<RequestMatcher, AuthenticationEntryPoint> entryPoints =
     			new LinkedHashMap<RequestMatcher, AuthenticationEntryPoint>();
     	for (String path:
-    		oauthConf.getProviders()) {
+    		oauthConf.getProviderList()) {
     		entryPoints.put(
     				getMatcher(path),
     				getEntrypoint(path));

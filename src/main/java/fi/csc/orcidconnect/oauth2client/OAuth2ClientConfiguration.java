@@ -1,11 +1,9 @@
 package fi.csc.orcidconnect.oauth2client;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -18,18 +16,10 @@ public class OAuth2ClientConfiguration {
 
 	private List<String> providerList;
 	
-	//private String[] providers;
-	
-	@Value("${my.oauth2client.providersConfStr}")
-	private String providersConfStr;
-	
-	@Value("${my.oauth2client.defaultProvider}")
 	private String defaultProvider;
 	
-	@Value("${my.oauth2client.specialCase}")
 	private String specialCase;
 
-	@Value("${my.oauth2client.callBackBase}")
 	private String callBackBase;
 
 	@Autowired
@@ -38,6 +28,17 @@ public class OAuth2ClientConfiguration {
 	@Log
 	private Logger logger;
 	
+	public void setDefaultProvider(String defaultProvider) {
+		this.defaultProvider = defaultProvider;
+	}
+
+	public void setSpecialCase(String specialCase) {
+		this.specialCase = specialCase;
+	}
+
+	public void setCallBackBase(String callBackBase) {
+		this.callBackBase = callBackBase;
+	}
 	
 	public OAuth2ClientConfiguration() {
 	}
@@ -49,15 +50,6 @@ public class OAuth2ClientConfiguration {
 	public List<String> getProviderList() {
 		return providerList;
 	}
-	
-	public String[] getProviders() {
-		return (String[]) providerList.toArray();
-	}
-	
-	//@Override
-	//public void afterPropertiesSet() throws Exception {
-	//	this.providers = providersConfStr.split(",");
-	//}
 	
 	public String getDefaultProvider() {
 		return defaultProvider;
