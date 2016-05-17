@@ -100,3 +100,4 @@ orcidSandbox:
   authUriStr: 'http://sandbox.orcid.org/oauth/authorize'
   scope: '/authenticate'
   userInfoUri: 'https://api.sandbox.orcid.org/orcid_id'
+  showLogin: true

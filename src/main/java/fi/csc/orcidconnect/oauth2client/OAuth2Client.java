@@ -38,7 +38,7 @@ import com.nimbusds.oauth2.sdk.token.RefreshToken;
 public class OAuth2Client {
 
 
-        private static Logger logger = Logger.getLogger(OAuth2Client.class);
+	private static Logger logger = Logger.getLogger(OAuth2Client.class);
 
 
 	public static URI authorizationRequest(OAuth2ClientConfiguration conf, String provider) {
@@ -94,9 +94,9 @@ public class OAuth2Client {
 		try {
 		    URI uri = request.toURI();
 		    URIBuilder uBuilder = new URIBuilder(uri);
-		    // TODO: parametrise
-		    // TODO: this is special setup for Orcid only. What about other providers?
-		    uBuilder.addParameter("show_login", "true");
+		    if (conf.isShowlogin(provider)) {
+		    	uBuilder.addParameter("show_login", "true");
+		    }
 		    requestURI = uBuilder.build();
 		} catch (SerializeException | URISyntaxException e) {
 		    e.printStackTrace();

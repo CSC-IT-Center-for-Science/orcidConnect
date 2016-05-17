@@ -102,6 +102,10 @@ public class OAuth2ClientConfiguration {
 		return env.getProperty(provider + ".userInfoUri");
 	}
 	
+	public boolean isShowlogin(String provider) {
+		return env.getProperty(provider + ".showLogin") != null;
+	}
+	
 	public String getScope(String provider) {
 		return env.getProperty(provider + ".scope");
 	}
