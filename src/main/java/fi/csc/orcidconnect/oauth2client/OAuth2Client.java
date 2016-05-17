@@ -94,6 +94,10 @@ public class OAuth2Client {
 		try {
 		    URI uri = request.toURI();
 		    URIBuilder uBuilder = new URIBuilder(uri);
+		    // show_login HTTP query attribute
+		    // is needed on ORCID OAuth2 API
+		    // if registration form should be hidden
+		    // https://members.orcid.org/api/get-oauthauthorize
 		    if (conf.isShowlogin(provider)) {
 		    	uBuilder.addParameter("show_login", "true");
 		    }

@@ -22,6 +22,8 @@ public class OAuth2ClientConfiguration {
 	private String specialCase;
 	private String callBackBase;
 	private String shibSignInPath;
+	
+	private final String providerConfigPrefix = "my.oauth2client.providerConfig"; 
 
 	@Autowired
 	private Environment env;
@@ -73,22 +75,36 @@ public class OAuth2ClientConfiguration {
 		return retStr;
 	}
 	
+	private String getConfigString(String key, String provider) {
+		return env.getProperty(providerConfigPrefix +
+				"." + provider + "." + key
+				);
+	}
+	
 	public String getAuthUriStr(String provider) {
-		return env.getProperty(provider + ".authUriStr");
+		return getConfigString("authUriStr", provider);
 	}
 
 	public String getClientIdStr(String provider) {
-		return env.getProperty(provider + ".clientId");
+		return getConfigString("clientId", provider);
 	}
 
 	public String getClientSecretStr(String provider) {
-		return env.getProperty(provider + ".clientSecret");
+		return getConfigString("clientSecret", provider);
 	}
 
 	public String getTokenUriStr(String provider) {
-		return env.getProperty(provider + ".tokenUriStr");
+		return getConfigString("tokenUriStr", provider);
 	}
 
+	public String getUserInfoUriStr(String provider) {
+		return getConfigString("userInfoUri", provider);
+	}
+
+	public String getScope(String provider) {
+		return getConfigString("scope", provider);
+	}
+	
 	public String getCallBackURI(String provider) {
 		String uriStr = callBackBase + 
 				specialCase(provider)+ "login";
@@ -98,16 +114,8 @@ public class OAuth2ClientConfiguration {
 		return uriStr;
 	}
 	
-	public String getUserInfoUriStr(String provider) {
-		return env.getProperty(provider + ".userInfoUri");
-	}
-	
 	public boolean isShowlogin(String provider) {
 		return env.getProperty(provider + ".showLogin") != null;
-	}
-	
-	public String getScope(String provider) {
-		return env.getProperty(provider + ".scope");
 	}
 	
 	public String getSpecialCase() {

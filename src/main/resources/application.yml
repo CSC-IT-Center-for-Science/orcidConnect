@@ -20,6 +20,16 @@ my:
     callBackBase: 'https://orcid-connect01.csc.fi:4443/app/'
     shibSignInPath: 'shib'
     # callBackBase: http://localhost:8080/app/
+    providerConfig:
+      orcidSandbox:
+        clientId: '${orcidSandboxClientId}'
+        clientSecret: '${orcidSandboxClientSecret}'
+        tokenUriStr: 'https://api.sandbox.orcid.org/oauth/token'
+        authUriStr: 'http://sandbox.orcid.org/oauth/authorize'
+        scope: '/authenticate'
+        userInfoUri: 'https://api.sandbox.orcid.org/orcid_id'
+        showLogin: true
+      
   pushInterfaces:
     - uniarts
     - hakaTest
