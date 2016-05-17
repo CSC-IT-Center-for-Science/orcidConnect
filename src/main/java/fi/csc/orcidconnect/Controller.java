@@ -38,25 +38,8 @@ public class Controller {
 	
 	private final String authName_orcid = "orcid";
 
-    private final String[] shibAttrKeys = { 
-    		attrName_idp,
-    		"Shib-Application-ID",
-    		attrName_eppn,
-    		"persistent-id",
-    		"Shib-Session-ID",
-    		"Shib-AuthnContext-Decl",
-    		"Shib-Authentication-Instant",
-    		"entitlement",
-    		"Shib-Assertion-Count",
-    		"Shib-Session-Index",
-    		"targeted-id",
-    		"Shib-AuthnContext-Class",
-    		"Shib-Cookie-Name",
-    		"affiliation",
-    		"REMOTE_USER",
-    		"Shib-Authentication-Method",
-    		"unscoped-affiliation"
-    };
+    @Autowired
+    WebControllerConfiguration webConf;
     
 	@Autowired
 	RequestMappingHandlerMapping handlerMapping;
@@ -206,7 +189,7 @@ public class Controller {
     @RequestMapping(value = "/shib/user", method = RequestMethod.GET)
     public HashMap<String, String> shibUser(HttpServletRequest req) {
 	HashMap<String, String> attrs = new HashMap<String, String>();
-	for(String k: shibAttrKeys) {
+	for(String k: webConf.getShibAttrKeys()) {
 	    attrs.put(k, String.valueOf(req.getAttribute(k)));
 	}
 	return attrs;
