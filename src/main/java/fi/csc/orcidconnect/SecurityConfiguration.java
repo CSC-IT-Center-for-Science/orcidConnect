@@ -39,8 +39,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         	.exceptionHandling()
         		.authenticationEntryPoint(authEntryPoint())
     	.and().authorizeRequests()
-	    .antMatchers("/", "/**/isAuthenticated", "/**/favicon.ico", "/*login", "/logout",
-	    		"/shib/user")
+	    .antMatchers("/",
+	    		"/**/isAuthenticated",
+	    		"/**/favicon.ico",
+	    		"/*login",
+	    		"/logout",
+	    		"/" + oauthConf.getShibSignInPath() + "/user")
 	    	.permitAll()
 	    .regexMatchers("/((" + 
 	    	oauthConf.getOauthProviderMatcherString() +
