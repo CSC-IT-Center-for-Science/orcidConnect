@@ -45,7 +45,7 @@ public class Controller {
 	@Autowired
 	IdentitiesRelayerConfiguration idRelConf;
 	
-	@RequestMapping("/shib/env.json")
+	@RequestMapping("/${my.oauth2client.shibSignInPath}/env.json")
 	public Map<String, String> printEnv() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		for (Iterator<?> i =
@@ -88,12 +88,12 @@ public class Controller {
 		return id;
 	}
 	
-	@RequestMapping("/shib/iddescriptor.{xml|json}")
+	@RequestMapping("/${my.oauth2client.shibSignInPath}/iddescriptor.{xml|json}")
 	public IdentityDescriptor idDescriptor (Authentication a, HttpServletRequest req) {
 		return getIdDescr(a, req);
 	}
 	
-	@RequestMapping("/shib/trigpush")
+	@RequestMapping("/${my.oauth2client.shibSignInPath}/trigpush")
 	public List<String> trigPush(Authentication a, HttpServletRequest req) {
 		IdentityDescriptor id = getIdDescr(a, req);
 		if (id.getIdentifier().isEmpty()) {
@@ -173,7 +173,7 @@ public class Controller {
     }
     
     @SuppressWarnings("serial")
-    @RequestMapping(value= "/shib/isAuthenticated", method = RequestMethod.GET)
+    @RequestMapping(value= "/${my.oauth2client.shibSignInPath}/isAuthenticated", method = RequestMethod.GET)
     public HashMap<String, String> isShibAuthenticated(HttpServletRequest req) {
     	if (req.getAttribute("eppn") == null || 
     			((String) req.getAttribute("eppn")).isEmpty()) {
@@ -187,7 +187,7 @@ public class Controller {
     	}
     }
 
-    @RequestMapping(value = "/shib/user", method = RequestMethod.GET)
+    @RequestMapping(value = "/${my.oauth2client.shibSignInPath}/user", method = RequestMethod.GET)
     public HashMap<String, String> shibUser(HttpServletRequest req) {
 	HashMap<String, String> attrs = new HashMap<String, String>();
 	for(String k: webConf.getShibAttrKeys()) {
@@ -196,7 +196,7 @@ public class Controller {
 	return attrs;
     }
     
-    @RequestMapping(value= "/{pathVar:git|google|orcidSandbox|shib}/signin")
+    @RequestMapping(value= "/{pathVar:git|google|orcidSandbox|${my.oauth2client.shibSignInPath}}/signin")
     public void redirectSigned(HttpServletResponse resp) {
     	try {
 			resp.sendRedirect("/app/");
