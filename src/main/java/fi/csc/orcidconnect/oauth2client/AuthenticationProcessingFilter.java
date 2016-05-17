@@ -135,6 +135,10 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 		}
 		OAuth2Token token = OAuth2Client.tokenRequest(conf, provider, req.getParameter("code"));
 		if (token != null) {
+			// in ORCID API special case id is available
+			// with access token
+			// no need for another userinfo request
+			// this is indicated by token object
 		    Map<String, Object> map;
 		    if (token.hasDetails()) {
 		    	map = token.getDetails(); 
