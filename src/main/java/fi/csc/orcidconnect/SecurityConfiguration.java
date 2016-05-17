@@ -56,11 +56,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	    	.authenticated()
 	    .antMatchers("/" + 
 	    	oauthConf.getShibSignInPath() + "/env.json",
-    		"/auth")
+    		"/auth",
+    		"/mappings")
 	    	.hasAuthority("ROLE_ADMIN")
         .and().authorizeRequests()
                 .antMatchers(
-                		"/mappings", 
                 		"/" + oauthConf.getShibSignInPath() + "/trigpush",
                 		"/" + oauthConf.getShibSignInPath() + "/iddescriptor.xml",
                 		"/" + oauthConf.getShibSignInPath() + "/iddescriptor.json")
