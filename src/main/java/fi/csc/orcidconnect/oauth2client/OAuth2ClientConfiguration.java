@@ -20,6 +20,7 @@ public class OAuth2ClientConfiguration implements InitializingBean {
 	
 	private String[] providers;
 	
+	@Value("${my.oauth2client.providersConfStr}")
 	private String providersConfStr;
 	
 	@Value("${my.oauth2client.defaultProvider}")
