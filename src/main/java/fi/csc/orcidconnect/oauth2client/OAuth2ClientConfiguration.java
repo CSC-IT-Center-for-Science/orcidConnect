@@ -23,6 +23,7 @@ public class OAuth2ClientConfiguration {
 	private String callBackBase;
 	private String shibSignInPath;
 	private String limitLoginRounds;
+	private String loginFilterPathMatcher;
 	
 	private final String providerConfigPrefix = "my.oauth2client.providerConfig"; 
 
@@ -61,6 +62,14 @@ public class OAuth2ClientConfiguration {
 	
 	public void setLimitLoginRounds(String limitLoginRounds) {
 		this.limitLoginRounds = limitLoginRounds;
+	}
+	
+	public String getLoginFilterPathMatcher() {
+		return loginFilterPathMatcher;
+	}
+
+	public void setLoginFilterPathMatcher(String loginFilterPathMatcher) {
+		this.loginFilterPathMatcher = loginFilterPathMatcher;
 	}
 
 	public List<String> getProviderList() {

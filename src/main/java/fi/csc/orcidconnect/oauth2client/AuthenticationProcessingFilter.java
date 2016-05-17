@@ -33,6 +33,8 @@ import com.github.vbauer.herald.annotation.Log;
 @ConfigurationProperties(prefix="my")
 public class AuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
+	private final String loginRoundAttrName = "loginRounds";
+	
 	@Autowired
 	OAuth2ClientConfiguration conf;
 	
@@ -71,18 +73,17 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 	
 	private boolean redirectCheck(HttpServletRequest req) {
 		int loginRounds;
-		String attrName = "loginRounds";
-		if (req.getSession().getAttribute(attrName) != null) {
+		if (req.getSession().getAttribute(loginRoundAttrName) != null) {
 			loginRounds = 
-					(int) req.getSession().getAttribute(attrName);
+					(int) req.getSession().getAttribute(loginRoundAttrName);
 			loginRounds++;
-			req.getSession().setAttribute(attrName, loginRounds);
+			req.getSession().setAttribute(loginRoundAttrName, loginRounds);
 		} else {
 			loginRounds = 0;
-			req.getSession().setAttribute(attrName, loginRounds);
+			req.getSession().setAttribute(loginRoundAttrName, loginRounds);
 		}
 		if (loginRounds > conf.getLoginRoundLimit()) {
-			req.getSession().setAttribute(attrName, 0);
+			req.getSession().setAttribute(loginRoundAttrName, 0);
 			throw new AuthenticationServiceException("login loop or too many " + 
 					"subsequent login attempts - limit set to " +
 					conf.getLoginRoundLimit() +
