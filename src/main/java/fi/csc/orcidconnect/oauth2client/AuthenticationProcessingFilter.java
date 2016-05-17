@@ -153,6 +153,7 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 		    if (isAdmin(map)) {
 		    	authList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
 		    }
+		    // TODO: add provider attribute to authMap
 			OAuth2AuthenticationToken auth = new OAuth2AuthenticationToken(
 					authList,
 					map);
