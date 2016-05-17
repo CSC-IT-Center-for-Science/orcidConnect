@@ -95,7 +95,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private LoginUrlAuthenticationEntryPoint getEntrypoint(String path) {
     	return new LoginUrlAuthenticationEntryPoint("/" + 
     			specialCase(path)
-    			+ "login");
+    			+ oauthConf.getLoginFilterPathMatcher());
     }
 
     
