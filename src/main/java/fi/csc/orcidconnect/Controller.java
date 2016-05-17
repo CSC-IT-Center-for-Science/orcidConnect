@@ -33,11 +33,6 @@ import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescrip
 @RestController
 public class Controller {
 	
-	//private final String attrName_idp = "Shib-Identity-Provider";
-	//private final String attrName_eppn = "eppn";
-	
-	//private final String authName_orcid = "orcid";
-
     @Autowired
     WebControllerConfiguration webConf;
     
