@@ -102,7 +102,7 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 		String reqUri = req.getRequestURI();
 		
 		String ctxPath = req.getContextPath();
-		String pattern = ctxPath + "/(\\w*)login";
+		String pattern = ctxPath + "/(\\w*)" + conf.getLoginFilterPathMatcher();
 		Pattern p = Pattern.compile(pattern);
 		Matcher m = p.matcher(reqUri);
 		logger.debug("uri: " + reqUri);
@@ -128,6 +128,8 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 
 	private Authentication auth(HttpServletRequest req) {
 		String provider = providerSelector(req);
+		// assume special provider is used
+		// if provider string is empty
 		if (provider.isEmpty()) { 
 		    provider = conf.getSpecialCase();
 		}
