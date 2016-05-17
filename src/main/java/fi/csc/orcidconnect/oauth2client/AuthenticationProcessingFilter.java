@@ -35,7 +35,6 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 
 	private final String loginRoundAttrName = "loginRounds";
 	
-	@Autowired
 	OAuth2ClientConfiguration conf;
 	
 	@Log
@@ -43,8 +42,10 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 	
 	private List<String> orcidAdminList;
 	
-	public AuthenticationProcessingFilter() {
-		super (new AntPathRequestMatcher("/*login"));
+	@Autowired
+	public AuthenticationProcessingFilter(OAuth2ClientConfiguration conf) {
+		super (new AntPathRequestMatcher("/*" + conf.getLoginFilterPathMatcher()));
+		this.conf = conf;
 		setAuthenticationManager(new NoopAuthenticationManager());
 	}
 	
