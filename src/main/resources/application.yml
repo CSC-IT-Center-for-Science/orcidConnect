@@ -37,7 +37,6 @@ my:
       authPass: 'test'
   orcidAdminList:
     - '0000-0003-0833-4032'
-  controllerConfig:
   shibAttrKeys:
     - Shib-Identity-Provider
     - eppn
