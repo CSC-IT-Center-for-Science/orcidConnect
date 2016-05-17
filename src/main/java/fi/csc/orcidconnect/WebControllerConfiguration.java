@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix="my")
+@ConfigurationProperties(prefix="my.controllerConfig")
 public class WebControllerConfiguration {
 	
 	
@@ -16,6 +16,10 @@ public class WebControllerConfiguration {
 
 	public List<String> getShibAttrKeys() {
 		return shibAttrKeys;
+	}
+	
+	public void setShibAttrKeys(List<String> shibAttrKeys) {
+		this.shibAttrKeys = shibAttrKeys;
 	}
 	
 
