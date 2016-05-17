@@ -38,24 +38,24 @@ my:
   orcidAdminList:
     - '0000-0003-0833-4032'
   controllerConfig:
-    shibAttrKeys:
-      - Shib-Identity-Provider
-      - eppn
-      - Shib-Application-ID
-      - persistent-id
-      - Shib-Session-ID
-      - Shib-AuthnContext-Decl
-      - Shib-Authentication-Instant
-      - entitlement
-      - Shib-Assertion-Count
-      - Shib-Session-Index
-      - targeted-id
-      - Shib-AuthnContext-Class
-      - Shib-Cookie-Name
-      - affiliation
-      - REMOTE_USER
-      - Shib-Authentication-Method
-      - unscoped-affiliation
+  shibAttrKeys:
+    - Shib-Identity-Provider
+    - eppn
+    - Shib-Application-ID
+    - persistent-id
+    - Shib-Session-ID
+    - Shib-AuthnContext-Decl
+    - Shib-Authentication-Instant
+    - entitlement
+    - Shib-Assertion-Count
+    - Shib-Session-Index
+    - targeted-id
+    - Shib-AuthnContext-Class
+    - Shib-Cookie-Name
+    - affiliation
+    - REMOTE_USER
+    - Shib-Authentication-Method
+    - unscoped-affiliation
 
 
 # Be aware with leading white space on resource
@@ -77,7 +77,8 @@ git:
   clientSecret: '${gitClientSecret}'
   tokenUriStr: 'https://github.com/login/oauth/access_token'
   authUriStr: 'https://github.com/login/oauth/authorize'
-  # only read access when scope is not defined
+  # only read access when 
+  # scope is not defined
   scope: 'user'
   userInfoUri: 'https://api.github.com/user'
 
