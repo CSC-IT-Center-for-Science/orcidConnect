@@ -8,7 +8,7 @@ public class OAuth2Token {
 	
 	AccessToken myAt;
 	RefreshToken myRt;
-        Map<String, Object> details;
+    Map<String, Object> details;
 
 	public OAuth2Token (AccessToken at, RefreshToken rt) {
 		this.myAt = at;
@@ -36,12 +36,12 @@ public class OAuth2Token {
 		return myRt;
 	}
 	
-        public Map<String, Object> getDetails() {
-	    return this.details;
-        }
-    
-        public boolean hasDetails() {
-	    return this.details != null;
-        }
+    public Map<String, Object> getDetails() {
+    	return this.details;
+    }
+
+    public boolean hasDetails() {
+    	return this.details != null;
+    }
 
 }
