@@ -127,7 +127,7 @@ public class Controller {
 		return lis;
 	}
     
-	@RequestMapping(value = {"/{pathVar:git|google|orcidSandbox}/user", "/user"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"/{pathVar:${my.controllerConfig.userMatcherString}}/user", "/user"}, method = RequestMethod.GET)
 	public Map<String, String> auth(Authentication a) {
 		HashMap<String, String> m = new HashMap<String, String>();
 		List<String> dontShow = Arrays.asList(

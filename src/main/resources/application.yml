@@ -62,6 +62,7 @@ my:
     shibAttrNameIdP: Shib-Identity-Provider
     shibAttrNameEppn: eppn 
     authNameOrcid: orcid
+    userMatcherString: git|google|orcidSandbox
 
 # Be aware with leading white space on resource
 # variables. They will cause extra characters
