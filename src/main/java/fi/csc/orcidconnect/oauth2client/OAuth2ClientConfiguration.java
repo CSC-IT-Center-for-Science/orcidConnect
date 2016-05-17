@@ -22,6 +22,7 @@ public class OAuth2ClientConfiguration {
 	private String specialCase;
 	private String callBackBase;
 	private String shibSignInPath;
+	private String limitLoginRounds;
 	
 	private final String providerConfigPrefix = "my.oauth2client.providerConfig"; 
 
@@ -58,6 +59,10 @@ public class OAuth2ClientConfiguration {
 		this.providerList = providerList;
 	}
 	
+	public void setLimitLoginRounds(String limitLoginRounds) {
+		this.limitLoginRounds = limitLoginRounds;
+	}
+
 	public List<String> getProviderList() {
 		return providerList;
 	}
@@ -112,6 +117,10 @@ public class OAuth2ClientConfiguration {
 		logger.debug("provider: " + provider);
 		logger.debug("specialCase: " + specialCase);
 		return uriStr;
+	}
+	
+	public int getLoginRoundLimit() {
+		return Integer.parseInt(limitLoginRounds);
 	}
 	
 	public boolean isShowlogin(String provider) {

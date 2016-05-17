@@ -19,6 +19,7 @@ my:
     specialCase: 'orcidSandbox'
     callBackBase: 'https://orcid-connect01.csc.fi:4443/app/'
     shibSignInPath: 'shib'
+    limitLoginRounds: 1
     # callBackBase: http://localhost:8080/app/
     providerConfig:
     # Be aware with leading white space on resource

@@ -81,10 +81,12 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 			loginRounds = 0;
 			req.getSession().setAttribute(attrName, loginRounds);
 		}
-		if (loginRounds > 3) {
+		if (loginRounds > conf.getLoginRoundLimit()) {
 			req.getSession().setAttribute(attrName, 0);
 			throw new AuthenticationServiceException("login loop or too many " + 
-					"subsequent login attempts");
+					"subsequent login attempts - limit set to " +
+					conf.getLoginRoundLimit() +
+					" current count " + loginRounds);
 		}
 		if (returning(req)) {
 			return false;
