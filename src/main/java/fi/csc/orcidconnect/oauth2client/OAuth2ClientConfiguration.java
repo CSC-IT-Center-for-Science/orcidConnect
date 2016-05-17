@@ -1,20 +1,25 @@
 package fi.csc.orcidconnect.oauth2client;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.github.vbauer.herald.annotation.Log;
 
 @Component
+@ConfigurationProperties(prefix="my.oauth2client")
 public class OAuth2ClientConfiguration implements InitializingBean {
 
+	private List<String> providerList;
+	
 	private String[] providers;
 	
-	@Value("${my.oauth2client.providerList}")
 	private String providersConfStr;
 	
 	@Value("${my.oauth2client.defaultProvider}")
@@ -34,6 +39,14 @@ public class OAuth2ClientConfiguration implements InitializingBean {
 	
 	
 	public OAuth2ClientConfiguration() {
+	}
+	
+	public void setProviderList(List<String> providerList) {
+		this.providerList = providerList;
+	}
+	
+	public List<String> getProviderList() {
+		return providerList;
 	}
 	
 	@Override
