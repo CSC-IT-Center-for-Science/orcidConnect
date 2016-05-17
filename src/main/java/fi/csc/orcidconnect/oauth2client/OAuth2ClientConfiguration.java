@@ -16,17 +16,21 @@ public class OAuth2ClientConfiguration {
 
 	private List<String> providerList;
 	
+	// automatically initialized properties
+	// setters needed
 	private String defaultProvider;
-	
 	private String specialCase;
-
 	private String callBackBase;
+	private String shibSignInPath;
 
 	@Autowired
 	private Environment env;
 	
 	@Log
 	private Logger logger;
+	
+	public OAuth2ClientConfiguration() {
+	}
 	
 	public void setDefaultProvider(String defaultProvider) {
 		this.defaultProvider = defaultProvider;
@@ -40,9 +44,14 @@ public class OAuth2ClientConfiguration {
 		this.callBackBase = callBackBase;
 	}
 	
-	public OAuth2ClientConfiguration() {
+	public void setShibSignInPath(String shibSignInPath) {
+		this.shibSignInPath = shibSignInPath;
 	}
-	
+
+	public String getShibSignInPath() {
+		return shibSignInPath;
+	}
+
 	public void setProviderList(List<String> providerList) {
 		this.providerList = providerList;
 	}
@@ -53,6 +62,15 @@ public class OAuth2ClientConfiguration {
 	
 	public String getDefaultProvider() {
 		return defaultProvider;
+	}
+	
+	public String getOauthProviderMatcherString() {
+		String retStr = "";
+		for (String str: providerList) {
+			retStr += str + "|";
+		}
+		retStr += shibSignInPath;
+		return retStr;
 	}
 	
 	public String getAuthUriStr(String provider) {

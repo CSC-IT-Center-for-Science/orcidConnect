@@ -25,7 +25,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	OAuth2ClientConfiguration oauthConf;
-
+	
 	@Override
     protected void configure(HttpSecurity security) throws Exception {
         security
@@ -42,12 +42,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	    .antMatchers("/", "/**/isAuthenticated", "/**/favicon.ico", "/*login", "/logout",
 	    		"/shib/user")
 	    	.permitAll()
-	    .regexMatchers("/((git|google|orcidSandbox|shib)/){0,1}user").authenticated()
-	    .regexMatchers("/(git|google|orcidSandbox|shib)/signin").authenticated()
+	    .regexMatchers("/((" + 
+	    	oauthConf.getOauthProviderMatcherString() +
+	    	")/){0,1}user")
+	    	.authenticated()
+	    .regexMatchers("/(" +
+	    	oauthConf.getOauthProviderMatcherString() +
+	    	")/signin")
+	    	.authenticated()
 	    .antMatchers("/shib/env.json").hasAuthority("ROLE_ADMIN")
         .and().authorizeRequests()
-                .antMatchers("/auth", "/mappings", "/shib/trigpush",
-                		"/shib/iddescriptor.xml", "/shib/iddescriptor.json").authenticated()
+                .antMatchers(
+                		"/auth",
+                		"/mappings", 
+                		"/" + oauthConf.getShibSignInPath() + "/trigpush",
+                		"/" + oauthConf.getShibSignInPath() + "/iddescriptor.xml",
+                		"/" + oauthConf.getShibSignInPath() + "/iddescriptor.json")
+                	.authenticated()
                 .anyRequest().denyAll()
     	;
         
