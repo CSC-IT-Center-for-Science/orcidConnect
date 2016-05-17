@@ -3,7 +3,6 @@ package fi.csc.orcidconnect;
 import java.util.LinkedHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,9 +25,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	OAuth2ClientConfiguration oauthConf;
-
-	@Value("${my.oauth2client.specialCase}")
-	private String specialCase;
 
 	@Override
     protected void configure(HttpSecurity security) throws Exception {
@@ -95,7 +91,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      * @return empty string for special case, otherwise regular provider selection path
      */
 	private String specialCase(String provider) {
-		if (provider.equals(specialCase)) {
+		if (provider.equals(oauthConf.getSpecialCase())) {
 			return "";
 		} else {
 			return provider;
