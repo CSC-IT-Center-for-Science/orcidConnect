@@ -50,7 +50,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	    	oauthConf.getOauthProviderMatcherString() +
 	    	")/signin")
 	    	.authenticated()
-	    .antMatchers("/shib/env.json").hasAuthority("ROLE_ADMIN")
+	    .antMatchers("/" + 
+	    	oauthConf.getShibSignInPath() + "/env.json")
+	    	.hasAuthority("ROLE_ADMIN")
         .and().authorizeRequests()
                 .antMatchers(
                 		"/auth",
