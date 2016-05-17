@@ -137,15 +137,15 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 		if (token != null) {
 		    Map<String, Object> map;
 		    if (token.hasDetails()) {
-			map = token.getDetails(); 
+		    	map = token.getDetails(); 
 		    } else {
-			RestTemplate restTemplate = new RestTemplate();
-			String result = restTemplate.getForObject(
-					conf.getUserInfoUriStr(provider) +
-					"?access_token=" 
-					+ token.getAt(), String.class);
-			JacksonJsonParser parser = new JacksonJsonParser();
-			map = parser.parseMap(result);
+				RestTemplate restTemplate = new RestTemplate();
+				String result = restTemplate.getForObject(
+						conf.getUserInfoUriStr(provider) +
+						"?access_token=" 
+						+ token.getAt(), String.class);
+				JacksonJsonParser parser = new JacksonJsonParser();
+				map = parser.parseMap(result);
 		    }
 		    List<SimpleGrantedAuthority> authList = 
 		    		new ArrayList<SimpleGrantedAuthority>();

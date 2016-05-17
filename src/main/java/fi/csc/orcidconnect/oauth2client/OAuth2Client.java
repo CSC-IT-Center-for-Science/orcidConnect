@@ -135,6 +135,9 @@ public class OAuth2Client {
 
 			HTTPResponse httpResponse = req.send();
 
+			// in ORCID API special case id is available
+			// with access token
+			// no need for another userinfo request
 			if (provider.equals(conf.getSpecialCase())) {
 			    logger.debug("response: " + httpResponse.getContent());
 			    return getToken(httpResponse, true);
