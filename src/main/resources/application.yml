@@ -21,6 +21,9 @@ my:
     shibSignInPath: 'shib'
     # callBackBase: http://localhost:8080/app/
     providerConfig:
+    # Be aware with leading white space on resource
+    # variables. They will cause extra characters
+    # on oauth ids and authentication will fail
       orcidSandbox:
         clientId: '${orcidSandboxClientId}'
         clientSecret: '${orcidSandboxClientSecret}'
@@ -29,7 +32,22 @@ my:
         scope: '/authenticate'
         userInfoUri: 'https://api.sandbox.orcid.org/orcid_id'
         showLogin: true
-      
+      google:
+        clientId: '${clientId}'
+        clientSecret: '${clientSecret}'
+        tokenUriStr: 'https://accounts.google.com/o/oauth2/token'
+        authUriStr: 'https://accounts.google.com/o/oauth2/auth'
+        scope: 'profile'
+        userInfoUri: 'https://www.googleapis.com/userinfo/v2/me'
+      git:
+        clientId: '${gitClientId}'
+        clientSecret: '${gitClientSecret}'
+        tokenUriStr: 'https://github.com/login/oauth/access_token'
+        authUriStr: 'https://github.com/login/oauth/authorize'
+        # only read access when 
+        # scope is not defined
+        scope: 'user'
+        userInfoUri: 'https://api.github.com/user'
   pushInterfaces:
     - uniarts
     - hakaTest
@@ -78,36 +96,3 @@ my:
     shibAttrNameEppn: eppn 
     authNameOrcid: orcid
     userMatcherString: git|google|orcidSandbox
-
-# Be aware with leading white space on resource
-# variables. They will cause extra characters
-# on oauth ids and authentication will fail
-
-# Google OAuth2 settings
-google:
-  clientId: '${clientId}'
-  clientSecret: '${clientSecret}'
-  tokenUriStr: 'https://accounts.google.com/o/oauth2/token'
-  authUriStr: 'https://accounts.google.com/o/oauth2/auth'
-  scope: 'profile'
-  userInfoUri: 'https://www.googleapis.com/userinfo/v2/me'
-
-# Git OAuth2 settings
-git:
-  clientId: '${gitClientId}'
-  clientSecret: '${gitClientSecret}'
-  tokenUriStr: 'https://github.com/login/oauth/access_token'
-  authUriStr: 'https://github.com/login/oauth/authorize'
-  # only read access when 
-  # scope is not defined
-  scope: 'user'
-  userInfoUri: 'https://api.github.com/user'
-
-orcidSandbox:
-  clientId: '${orcidSandboxClientId}'
-  clientSecret: '${orcidSandboxClientSecret}'
-  tokenUriStr: 'https://api.sandbox.orcid.org/oauth/token'
-  authUriStr: 'http://sandbox.orcid.org/oauth/authorize'
-  scope: '/authenticate'
-  userInfoUri: 'https://api.sandbox.orcid.org/orcid_id'
-  showLogin: true
