@@ -74,6 +74,7 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 	
 	private boolean redirectCheck(HttpServletRequest req) {
 		int loginRounds;
+		// TODO: final class constants with uppercase separated with underscore
 		if (req.getSession().getAttribute(loginRoundAttrName) != null) {
 			loginRounds = 
 					(int) req.getSession().getAttribute(loginRoundAttrName);
@@ -134,6 +135,10 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 		// assume special provider is used
 		// if provider string is empty
 		OAuth2Token token = OAuth2Client.tokenRequest(conf, provider, req.getParameter("code"));
+		
+		// TODO: does nimbus actually check state parameter when user is
+		// returning from authentication provider?
+		
 		if (token != null) {
 			// in ORCID API special case id is available
 			// with access token
@@ -145,6 +150,10 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 		    	logger.debug("----- provider to map: " +providerSelector(req));
 		    } else {
 				RestTemplate restTemplate = new RestTemplate();
+				// TODO: would stream be more efficient way of handling
+				// and storing the result
+				// google for better solution
+				// this solution could cause weird encoding issues
 				String result = restTemplate.getForObject(
 						conf.getUserInfoUriStr(provider) +
 						"?access_token=" 
@@ -156,6 +165,7 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 		    List<SimpleGrantedAuthority> authList = 
 		    		new ArrayList<SimpleGrantedAuthority>();
 		    authList.add(new SimpleGrantedAuthority("ROLE_USER"));
+		    // TODO: parametrise ROLE_ADMIN -string (e.g. final field in this class)
 		    if (isAdmin(map)) {
 		    	authList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
 		    }

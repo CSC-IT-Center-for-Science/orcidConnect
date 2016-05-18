@@ -29,6 +29,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
     protected void configure(HttpSecurity security) throws Exception {
         security
+        // TODO: voiko laittaa csrf:n takaisin päälle?
         .csrf().disable()
 	    .logout()
 	        .logoutUrl("/logout")
@@ -44,6 +45,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	    		"/**/favicon.ico",
 	    		"/*login",
 	    		"/logout",
+	    		// TODO: user-endpoint -address could be parametrised
 	    		"/" + oauthConf.getShibSignInPath() + "/user")
 	    	.permitAll()
 	    .regexMatchers("/((" + 
@@ -58,6 +60,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	    	oauthConf.getShibSignInPath() + "/env.json",
     		"/auth",
     		"/mappings")
+	    	// TODO: parametrise (see AuthenticationProcessingFilter)
 	    	.hasAuthority("ROLE_ADMIN")
         .and().authorizeRequests()
                 .antMatchers(

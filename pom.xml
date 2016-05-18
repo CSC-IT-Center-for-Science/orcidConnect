@@ -8,6 +8,12 @@
 	<version>0.0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
+
+	<!--  18.5.2017 Code review:
+		Notes are embedded in the code in this commit.
+	 -->
+
+
 	<name>orcidconnect</name>
 	<description>Demo project for Spring Boot</description>
 
@@ -55,6 +61,7 @@
 	    <artifactId>spring-boot-starter-web</artifactId>
 	  </dependency>
 	  <dependency>
+	  <!-- TODO: is this needed? -->
 	    <groupId>org.springframework.security.oauth</groupId>
 	    <artifactId>spring-security-oauth2</artifactId>
 	  </dependency>

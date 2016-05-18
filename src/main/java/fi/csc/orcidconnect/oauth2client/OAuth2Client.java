@@ -39,6 +39,11 @@ public class OAuth2Client {
 
 
 	private static Logger logger = Logger.getLogger(OAuth2Client.class);
+	
+	/* General note about ORCID API OAuth implementation
+	 * OpenId Connect would specify and generalize implementations
+	 * Is OIDC in the roadmap of ORCID?
+	 */
 
 
 	public static URI authorizationRequest(OAuth2ClientConfiguration conf, String provider) {
@@ -100,6 +105,11 @@ public class OAuth2Client {
 		    // https://members.orcid.org/api/get-oauthauthorize
 		    logger.debug("----- showLogin provider:" + provider);
 		    logger.debug("----- isShowLogin: " + conf.isShowlogin(provider));
+		    
+		    // TODO: design globally logging patterns more efficiently
+		    // use modern logger and inject values with pattern:
+		    // logger.debug("message: {}", variable);
+		    
 		    if (conf.isShowlogin(provider)) {
 		    	uBuilder.addParameter("show_login", "true");
 		    }

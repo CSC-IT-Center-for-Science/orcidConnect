@@ -6,6 +6,8 @@ import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescrip
 
 public interface IdentitiesRelayer {
 	
+	
+	// TODO: document, document (javadco)!!!
 	public boolean relay(IdentityDescriptor idDescr);
 	public String[] getConfStrs();
 	public void setConfig(Map<String, String> confMap);

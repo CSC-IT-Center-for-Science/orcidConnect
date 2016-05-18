@@ -100,6 +100,10 @@ public class Controller {
 			return Arrays.asList("empty identity");
 		} else {
 			if (idRelConf != null) {
+				// NOTE: consider storing configuration and state information more 
+				// in IdentityDescriptor object rather than bouncing separate
+				// status and configuration objects back and forth from 
+				// business logic implementation classes
 				IdentitiesRelayer relayer = idRelConf.implPicker(id);
 				if (relayer == null) {
 					return Arrays.asList("relayerimplementation not found");
@@ -157,6 +161,7 @@ public class Controller {
     	if (auth != null) {
 	    	boolean isAuth = auth.isAuthenticated();
 	    	return new HashMap<String, String>() {
+	    		// TODO: isAuthenticated string could be parametrised (e.g. as final String in this class)
 				{ put("isAuthenticated", 
 	    				String.valueOf(isAuth)); }
 	    	};
@@ -184,11 +189,12 @@ public class Controller {
 
     @RequestMapping(value = "/${my.oauth2client.shibSignInPath}/user", method = RequestMethod.GET)
     public HashMap<String, String> shibUser(HttpServletRequest req) {
-	HashMap<String, String> attrs = new HashMap<String, String>();
-	for(String k: webConf.getShibAttrKeys()) {
-	    attrs.put(k, String.valueOf(req.getAttribute(k)));
-	}
-	return attrs;
+    	// NOTE: make note about new convention in specifying and initializing (local) fields
+		final HashMap<String, String> attrs = new HashMap<String, String>();
+		for(String k: webConf.getShibAttrKeys()) {
+		    attrs.put(k, String.valueOf(req.getAttribute(k)));
+		}
+		return attrs;
     }
     
     @RequestMapping(value= "/{pathVar:${my.controllerConfig.userMatcherString}|${my.oauth2client.shibSignInPath}}/signin")
