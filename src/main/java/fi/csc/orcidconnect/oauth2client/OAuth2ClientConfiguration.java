@@ -133,7 +133,7 @@ public class OAuth2ClientConfiguration {
 	}
 	
 	public boolean isShowlogin(String provider) {
-		return env.getProperty(provider + ".showLogin") != null;
+		return getConfigString("showLogin", provider) != null;
 	}
 	
 	public String getSpecialCase() {
