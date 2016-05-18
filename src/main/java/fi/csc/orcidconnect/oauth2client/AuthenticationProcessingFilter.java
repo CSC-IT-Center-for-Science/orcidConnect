@@ -115,6 +115,9 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 			provider = conf.getDefaultProvider();
 			logger.debug(e.getMessage() + ". Using default provider.");
 		}
+		if (provider.isEmpty()) {
+			provider = conf.getSpecialCase();
+		}
 		return provider;
 	}
 	
@@ -130,9 +133,6 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 		String provider = providerSelector(req);
 		// assume special provider is used
 		// if provider string is empty
-		if (provider.isEmpty()) { 
-		    provider = conf.getSpecialCase();
-		}
 		OAuth2Token token = OAuth2Client.tokenRequest(conf, provider, req.getParameter("code"));
 		if (token != null) {
 			// in ORCID API special case id is available
