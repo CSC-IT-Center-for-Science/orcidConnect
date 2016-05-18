@@ -142,6 +142,7 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 		    Map<String, Object> map;
 		    if (token.hasDetails()) {
 		    	map = token.getDetails(); 
+		    	logger.debug("----- provider to map: " +providerSelector(req));
 		    } else {
 				RestTemplate restTemplate = new RestTemplate();
 				String result = restTemplate.getForObject(
@@ -150,6 +151,7 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 						+ token.getAt(), String.class);
 				JacksonJsonParser parser = new JacksonJsonParser();
 				map = parser.parseMap(result);
+		    	logger.debug("----- provider to map: " +providerSelector(req));
 		    }
 		    List<SimpleGrantedAuthority> authList = 
 		    		new ArrayList<SimpleGrantedAuthority>();
