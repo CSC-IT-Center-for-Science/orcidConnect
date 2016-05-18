@@ -105,9 +105,9 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 		String pattern = ctxPath + "/(\\w*)" + conf.getLoginFilterPathMatcher();
 		Pattern p = Pattern.compile(pattern);
 		Matcher m = p.matcher(reqUri);
-		logger.debug("uri: " + reqUri);
-		logger.debug("matches: " + String.valueOf(m.matches()));
-		logger.debug("context: " + ctxPath);
+		logger.debug("providerSelector uri: " + reqUri);
+		logger.debug("providerSelector matches: " + String.valueOf(m.matches()));
+		logger.debug("providerSelector context: " + ctxPath);
 		String provider;
 		try {
 			provider = m.group(1);

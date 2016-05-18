@@ -98,6 +98,8 @@ public class OAuth2Client {
 		    // is needed on ORCID OAuth2 API
 		    // if registration form should be hidden
 		    // https://members.orcid.org/api/get-oauthauthorize
+		    logger.debug("----- showLogin provider:" + provider);
+		    logger.debug("----- isShowLogin: " + conf.isShowlogin(provider));
 		    if (conf.isShowlogin(provider)) {
 		    	uBuilder.addParameter("show_login", "true");
 		    }
@@ -139,7 +141,7 @@ public class OAuth2Client {
 			// with access token
 			// no need for another userinfo request
 			if (provider.equals(conf.getSpecialCase())) {
-			    logger.debug("response: " + httpResponse.getContent());
+			    logger.debug("tokenrequest response: " + httpResponse.getContent());
 			    return getToken(httpResponse, true);
 			}
 
