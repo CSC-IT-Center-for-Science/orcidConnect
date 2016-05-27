@@ -5,29 +5,40 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Status {
 	
-	private String status;
+	private String statusStr;
+
+	// false indicates failure
+	private boolean failStatus = false;
 
 	public String getStatus() {
-		return status;
+		return statusStr;
 	}
 
 	public void setStatus(String status) {
-		this.status = status;
+		this.statusStr = status;
 	}
 	
 	public boolean status() {
-		if (status == null) {
+		if (statusStr == null) {
 			return false;
 		}
-		return status.equals("identities stored");
+		return statusStr.equals("identities stored");
+	}
+	
+	public boolean isFailure() {
+		return failStatus;
+	}
+	
+	public void setFailStatus(boolean failStatus) {
+		this.failStatus = failStatus;
 	}
 	
 	@Override
 	public String toString() {
-		if (status == null) {
+		if (statusStr == null) {
 			return "";
 		} else {
-			return status;
+			return statusStr;
 		}
 	}
 	

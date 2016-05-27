@@ -94,11 +94,13 @@ public class RestJsonClient implements IdentitiesRelayer {
 						new MappingJackson2HttpMessageConverter())
 				);
 		
-		//rt.setErrorHandler(new LocalResponseErrorHandler());
+		final boolean failStatus = new Boolean(true);
+		rt.setErrorHandler(new LocalResponseErrorHandler(failStatus));
 
 		Status stat = rt.postForObject(
 				config.get(restUrl),
 				idDescr, Status.class);
+		stat.setFailStatus(failStatus);
 		return stat;
 	}
 	
@@ -125,15 +127,24 @@ public class RestJsonClient implements IdentitiesRelayer {
 	}	
 	
 	class LocalResponseErrorHandler implements ResponseErrorHandler {
-
+		
+		private boolean failStatus;
+		
+		public LocalResponseErrorHandler (boolean failstatus) {
+			this.failStatus = failstatus;
+		}
+		
 		@Override
 		public boolean hasError(ClientHttpResponse response) throws IOException {
-			return RestUtil.isError(response.getStatusCode());
+			this.failStatus = RestUtil.isError(response.getStatusCode()); 
+			return failStatus;
 		}
 
 		@Override
 		public void handleError(ClientHttpResponse response) throws IOException {
-			// TODO Auto-generated method stub
+			// no need to do anything
+			// failStatus delivers error status
+			// Status object delivers error message
 			
 		}
 		
