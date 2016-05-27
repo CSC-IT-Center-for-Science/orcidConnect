@@ -11,7 +11,7 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -87,7 +87,7 @@ public class RestJsonClient implements IdentitiesRelayer {
 			return false;
 		}
 		HttpComponentsClientHttpRequestFactory reqFac = 
-				new LocalRequestFactory(new HttpHost(url.getHost()));
+				new LocalRequestFactory();
 		reqFac.setHttpClient(httpClient);
 
 		RestTemplate rt = new RestTemplate(reqFac);
@@ -103,28 +103,18 @@ public class RestJsonClient implements IdentitiesRelayer {
 	}
 	
 	class LocalRequestFactory extends HttpComponentsClientHttpRequestFactory {
-		
-		HttpHost host;
-		
-		public LocalRequestFactory (HttpHost host) {
-			super();
-			this.host = host;
-		}
-		
+				
+		@SuppressWarnings("deprecation")
 		@Override
 		protected BasicHttpContext createHttpContext (HttpMethod httpMethod, URI uri) {
-			return createContext();
-		}
-		
-		private BasicHttpContext createContext() {
-		       AuthCache authCache = new BasicAuthCache();
-		        BasicScheme basicAuth = new BasicScheme();
-		        authCache.put(host, basicAuth);
+			AuthCache authCache = new BasicAuthCache();
+			BasicScheme basicAuth = new BasicScheme();
+			HttpHost targetHost = new HttpHost(uri.getHost(), uri.getPort());
+			authCache.put(targetHost, basicAuth);
 		 
-		        // Add AuthCache to the execution context
-		        BasicHttpContext localcontext = new BasicHttpContext();
-		        localcontext.setAttribute(HttpClientContext.AUTH_CACHE, authCache);
-		        return localcontext;			
+			BasicHttpContext localcontext = new BasicHttpContext();
+			localcontext.setAttribute(ClientContext.AUTH_CACHE, authCache);
+			return localcontext;			
 		}
 		
 	}
