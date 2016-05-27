@@ -111,6 +111,7 @@ public class RestJsonClient implements IdentitiesRelayer {
 			this.host = host;
 		}
 		
+		@Override
 		protected BasicHttpContext createHttpContext (HttpMethod httpMethod, URI uri) {
 			return createContext();
 		}
