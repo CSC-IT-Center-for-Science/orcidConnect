@@ -1,23 +1,31 @@
 package fi.csc.orcidconnect.push.rest;
 
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.net.URI;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
 
+import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.AuthState;
+import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.ExecutionContext;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.protocol.HttpCoreContext;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -76,18 +84,12 @@ public class RestJsonClient implements IdentitiesRelayer {
 		
 		CloseableHttpClient httpClient = HttpClients.custom()
 				.setDefaultCredentialsProvider(crProv)
+				.addInterceptorFirst(new PreemptiveAuthInterceptor())
 				.build();
 		
-		URL url;
-		try {
-			url = new URL(config.get(restUrl));
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
+		
 		HttpComponentsClientHttpRequestFactory reqFac = 
-				new LocalRequestFactory();
+				new PreemptiveRequestFactory();
 		reqFac.setHttpClient(httpClient);
 
 		RestTemplate rt = new RestTemplate(reqFac);
@@ -102,9 +104,30 @@ public class RestJsonClient implements IdentitiesRelayer {
 		return stat.status();
 	}
 	
-	class LocalRequestFactory extends HttpComponentsClientHttpRequestFactory {
+	static class PreemptiveAuthInterceptor implements HttpRequestInterceptor {
+
+		// source: http://stackoverflow.com/a/11868040/2413070
+		
+	    public void process(final HttpRequest request, final HttpContext context) throws HttpException, IOException {
+	        AuthState authState = (AuthState) context.getAttribute(HttpClientContext.TARGET_AUTH_STATE);
+
+	        // If no auth scheme avaialble yet, try to initialize it
+	        // preemptively
+	        if (authState.getAuthScheme() == null) {
+	            CredentialsProvider credsProvider = (CredentialsProvider) context.getAttribute(HttpClientContext.CREDS_PROVIDER);
+	            HttpHost targetHost = (HttpHost) context.getAttribute(HttpCoreContext.HTTP_TARGET_HOST);
+	            Credentials creds = credsProvider.getCredentials(new AuthScope(targetHost.getHostName(), targetHost.getPort()));
+	            if (creds == null)
+	                throw new HttpException("No credentials for preemptive authentication");
+	            authState.update(new BasicScheme(), creds);
+	        }
+
+	    }
+
+	}	
+	
+	class PreemptiveRequestFactory extends HttpComponentsClientHttpRequestFactory {
 				
-		@SuppressWarnings("deprecation")
 		@Override
 		protected BasicHttpContext createHttpContext (HttpMethod httpMethod, URI uri) {
 			AuthCache authCache = new BasicAuthCache();
@@ -125,7 +148,7 @@ public class RestJsonClient implements IdentitiesRelayer {
 			System.out.println("----- " + uri.getHost().toString() + " : " + String.valueOf(port));
 		 
 			BasicHttpContext localcontext = new BasicHttpContext();
-			localcontext.setAttribute(ClientContext.AUTH_CACHE, authCache);
+			localcontext.setAttribute(HttpClientContext.AUTH_CACHE, authCache);
 			return localcontext;			
 		}
 		
