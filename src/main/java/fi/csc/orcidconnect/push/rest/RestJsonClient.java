@@ -89,7 +89,7 @@ public class RestJsonClient implements IdentitiesRelayer {
 		
 		
 		HttpComponentsClientHttpRequestFactory reqFac = 
-				new PreemptiveRequestFactory();
+				new HttpComponentsClientHttpRequestFactory();
 		reqFac.setHttpClient(httpClient);
 
 		RestTemplate rt = new RestTemplate(reqFac);
@@ -126,6 +126,7 @@ public class RestJsonClient implements IdentitiesRelayer {
 
 	}	
 	
+	/* leave this here for future use
 	class PreemptiveRequestFactory extends HttpComponentsClientHttpRequestFactory {
 				
 		@Override
@@ -152,6 +153,6 @@ public class RestJsonClient implements IdentitiesRelayer {
 			return localcontext;			
 		}
 		
-	}
+	}*/
 
 }
