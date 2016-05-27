@@ -7,8 +7,8 @@ public class Status {
 	
 	private String statusStr;
 
-	// false indicates failure
-	private boolean failStatus = false;
+	// true indicates failure
+	private boolean isError = false;
 
 	public String getStatus() {
 		return statusStr;
@@ -25,12 +25,12 @@ public class Status {
 		return statusStr.equals("identities stored");
 	}
 	
-	public boolean isFailure() {
-		return failStatus;
+	public boolean getIsError() {
+		return isError;
 	}
 	
-	public void setFailStatus(boolean failStatus) {
-		this.failStatus = failStatus;
+	public void setIsError(boolean failStatus) {
+		this.isError = failStatus;
 	}
 	
 	@Override

@@ -123,7 +123,7 @@ public class Controller {
 			}
 			Status stat = relayer.relay(id);
 			retMap.put(statusStr, successStr);
-			retMap.put(descrStr, stat.getStatus());
+			retMap.put(descrStr, String.valueOf(stat.getIsError()));
 		}
 		return retMap;
 	}

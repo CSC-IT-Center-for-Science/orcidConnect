@@ -100,7 +100,7 @@ public class RestJsonClient implements IdentitiesRelayer {
 		Status stat = rt.postForObject(
 				config.get(restUrl),
 				idDescr, Status.class);
-		stat.setFailStatus(failStatus);
+		stat.setIsError(failStatus);
 		return stat;
 	}
 	
