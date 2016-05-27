@@ -1,7 +1,6 @@
 package fi.csc.orcidconnect.push.rest;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -13,22 +12,19 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.AuthState;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpCoreContext;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 import fi.csc.orcidconnect.IdentitiesRelayer;
@@ -68,7 +64,7 @@ public class RestJsonClient implements IdentitiesRelayer {
 	}
 	
 	@Override
-	public boolean relay(IdentityDescriptor idDescr) {
+	public Status relay(IdentityDescriptor idDescr) {
 
 		if (!checkConfig()) {
     		throw new IllegalStateException("Inadequate config");
@@ -97,11 +93,13 @@ public class RestJsonClient implements IdentitiesRelayer {
 				Arrays.asList(
 						new MappingJackson2HttpMessageConverter())
 				);
+		
+		//rt.setErrorHandler(new LocalResponseErrorHandler());
 
 		Status stat = rt.postForObject(
 				config.get(restUrl),
 				idDescr, Status.class);
-		return stat.status();
+		return stat;
 	}
 	
 	static class PreemptiveAuthInterceptor implements HttpRequestInterceptor {
@@ -125,6 +123,29 @@ public class RestJsonClient implements IdentitiesRelayer {
 	    }
 
 	}	
+	
+	class LocalResponseErrorHandler implements ResponseErrorHandler {
+
+		@Override
+		public boolean hasError(ClientHttpResponse response) throws IOException {
+			return RestUtil.isError(response.getStatusCode());
+		}
+
+		@Override
+		public void handleError(ClientHttpResponse response) throws IOException {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
+	static class RestUtil {
+		public static boolean isError (HttpStatus status) {
+			HttpStatus.Series series = status.series();
+			return (HttpStatus.Series.CLIENT_ERROR.equals(series) ||
+					HttpStatus.Series.SERVER_ERROR.equals(series));
+		}
+	}
 	
 	/* leave this here for future use
 	class PreemptiveRequestFactory extends HttpComponentsClientHttpRequestFactory {

@@ -26,6 +26,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import fi.csc.orcidconnect.push.rest.Status;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.Identifier;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescriptor;
 
@@ -108,10 +109,12 @@ public class Controller {
 				if (relayer == null) {
 					return Arrays.asList("relayerimplementation not found");
 				}
-				if (relayer.relay(id)) {
+				Status stat = relayer.relay(id);
+				if (stat.status()) {
 					return Arrays.asList("success");
 				} else {
-					return Arrays.asList("generic error");
+					return Arrays.asList("generic error",
+							stat.getStatus());
 				}
 			} else {
 				return Arrays.asList("missing configuration");
