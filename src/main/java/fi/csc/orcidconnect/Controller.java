@@ -95,31 +95,37 @@ public class Controller {
 	}
 	
 	@RequestMapping("/${my.oauth2client.shibSignInPath}/trigpush")
-	public List<String> trigPush(Authentication a, HttpServletRequest req) {
+	public HashMap<String, String> trigPush(Authentication a, HttpServletRequest req) {
+		final String statusStr = "status";
+		final String descrStr = "description";
+		final String errorStr = "error";
+		final String successStr = "success";
+		final HashMap<String, String> retMap = new HashMap<String, String>();
 		IdentityDescriptor id = getIdDescr(a, req);
 		if (id.getIdentifier().isEmpty()) {
-			return Arrays.asList("empty identity");
+			retMap.put(statusStr, "error");
+			retMap.put(descrStr, "empty identity");
 		} else {
-			if (idRelConf != null) {
-				// NOTE: consider storing configuration and state information more 
-				// in IdentityDescriptor object rather than bouncing separate
-				// status and configuration objects back and forth from 
-				// business logic implementation classes
-				IdentitiesRelayer relayer = idRelConf.implPicker(id);
-				if (relayer == null) {
-					return Arrays.asList("relayerimplementation not found");
-				}
-				Status stat = relayer.relay(id);
-				if (stat.status()) {
-					return Arrays.asList("success");
-				} else {
-					return Arrays.asList("generic error",
-							stat.getStatus());
-				}
-			} else {
-				return Arrays.asList("missing configuration");
+			if (idRelConf == null) {
+				retMap.put(statusStr, errorStr);
+				retMap.put(descrStr, "missing configuration");
+				return retMap;
 			}
+			// NOTE: consider storing configuration and state information more 
+			// in IdentityDescriptor object rather than bouncing separate
+			// status and configuration objects back and forth from 
+			// business logic implementation classes
+			IdentitiesRelayer relayer = idRelConf.implPicker(id);
+			if (relayer == null) {
+				retMap.put(statusStr, errorStr);
+				retMap.put(descrStr, "relayerimplementation not found");
+				return retMap;
+			}
+			Status stat = relayer.relay(id);
+			retMap.put(statusStr, successStr);
+			retMap.put(descrStr, stat.getStatus());
 		}
+		return retMap;
 	}
 
 	@RequestMapping("/mappings")
