@@ -1,7 +1,7 @@
 package fi.csc.orcidconnect.push.rest;
 
-import java.text.DateFormat;
-import java.time.LocalTime;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Status {
 	
 	private String statusStr;
-	private LocalTime latestErrorChange = LocalTime.now();
+	private LocalDate latestErrorChange = LocalDate.now();
 
 	// true indicates failure
 	private boolean isError = false;
@@ -35,11 +35,11 @@ public class Status {
 	
 	public void setIsError(boolean failStatus) {
 		this.isError = failStatus;
-		latestErrorChange = LocalTime.now();
+		latestErrorChange = LocalDate.now();
 	}
 	
 	public String getErrorChangeDate() {
-		DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
+		DateTimeFormatter df = DateTimeFormatter.RFC_1123_DATE_TIME;
 		return df.format(latestErrorChange);
 	}
 	
