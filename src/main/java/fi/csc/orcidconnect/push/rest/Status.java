@@ -39,7 +39,8 @@ public class Status {
 	}
 	
 	public String getErrorChangeDate() {
-		return DateFormat.getDateInstance().format(latestErrorChange);
+		DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
+		return df.format(latestErrorChange);
 	}
 	
 	@Override
