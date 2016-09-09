@@ -248,10 +248,13 @@ $(function () {
 	isShibSession();
 });
 
-$('#acceptBox').on('click', function(event) {
-    $('#saveData').prop('disabled', false);
+$('#acceptBox').on('change', function(event) {
+    if ($('#acceptBox:checked').length > 0) {
+        $('#saveData').prop('disabled', false);
+    } else {
+        $('#saveData').prop('disabled', true);
+    }
 });
-
 $('#saveData').on('click', function(event) {
     event.preventDefault();
     if ($('#acceptBox:checked').length > 0) {
