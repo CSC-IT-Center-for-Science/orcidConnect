@@ -57,9 +57,9 @@ my:
     uniarts:
       idp: 'https://idp.testshib.org/idp/shibboleth'
       relayerImplClass: 'fi.csc.orcidconnect.push.rest.RestJsonClient'
-      restUrl: 'https://demo9650738.mockable.io/identities'
-      authUser: 'user'
-      authPass: 'pass'
+      restUrl: 'https://orquidea.uniarts.fi/v1/orcid'
+      authUser: '${uniArtsRestUser}'
+      authPass: '${uniArtsRestPass}'
     hakaTest:
       idp: 'https://testidp.funet.fi/idp/shibboleth'
       relayerImplClass: 'fi.csc.orcidconnect.push.soap.MockSoapClient'
