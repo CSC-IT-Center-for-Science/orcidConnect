@@ -99,6 +99,7 @@ public class Controller {
 		final String statusStr = "isError";
 		final String descrStr = "description";
 		final String errorStr = "true";
+		final String timeStampField = "timeStamp";
 		final HashMap<String, String> retMap = new HashMap<String, String>();
 		IdentityDescriptor id = getIdDescr(a, req);
 		if (id.getIdentifier().isEmpty()) {
@@ -123,6 +124,7 @@ public class Controller {
 			Status stat = relayer.relay(id);
 			retMap.put(statusStr, String.valueOf(stat.getIsError()));
 			retMap.put(descrStr, stat.getStatus());
+			retMap.put(timeStampField, stat.getErrorChangeDate());
 		}
 		return retMap;
 	}

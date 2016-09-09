@@ -1,11 +1,15 @@
 package fi.csc.orcidconnect.push.rest;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Status {
 	
 	private String statusStr;
+	private Date latestErrorChange = new Date();
 
 	// true indicates failure
 	private boolean isError = false;
@@ -31,6 +35,11 @@ public class Status {
 	
 	public void setIsError(boolean failStatus) {
 		this.isError = failStatus;
+		latestErrorChange = new Date();
+	}
+	
+	public String getErrorChangeDate() {
+		return DateFormat.getDateInstance().format(latestErrorChange);
 	}
 	
 	@Override
