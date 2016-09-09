@@ -158,33 +158,4 @@ public class RestJsonClient implements IdentitiesRelayer {
 		}
 	}
 	
-	/* leave this here for future use
-	class PreemptiveRequestFactory extends HttpComponentsClientHttpRequestFactory {
-				
-		@Override
-		protected BasicHttpContext createHttpContext (HttpMethod httpMethod, URI uri) {
-			AuthCache authCache = new BasicAuthCache();
-			BasicScheme basicAuth = new BasicScheme();
-			int port;
-			if (uri.getPort() < 0) {
-				if (uri.getScheme().equals("http")) {
-					port = 80;
-				} else {
-					port = 443;
-				}
-			} else {
-				port = uri.getPort();
-			}
-			HttpHost targetHost = new HttpHost(uri.getHost(), port);
-			authCache.put(targetHost, basicAuth);
-			
-			System.out.println("----- " + uri.getHost().toString() + " : " + String.valueOf(port));
-		 
-			BasicHttpContext localcontext = new BasicHttpContext();
-			localcontext.setAttribute(HttpClientContext.AUTH_CACHE, authCache);
-			return localcontext;			
-		}
-		
-	}*/
-
 }
