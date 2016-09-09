@@ -136,8 +136,8 @@ public class RestJsonClient implements IdentitiesRelayer {
 		
 		@Override
 		public boolean hasError(ClientHttpResponse response) throws IOException {
-		    this.failStatus = response.getRawStatusCode() != 200;
-			return failStatus;
+		    this.failStatus = RestUtil.isError(response.getStatusCode());
+		    return failStatus;
 		}
 
 		@Override
