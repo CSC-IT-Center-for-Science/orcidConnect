@@ -39,7 +39,7 @@ public class Status {
 	}
 	
 	public String getErrorChangeDate() {
-		DateTimeFormatter df = DateTimeFormatter.RFC_1123_DATE_TIME;
+	    DateTimeFormatter df = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 		return df.format(latestErrorChange);
 	}
 	

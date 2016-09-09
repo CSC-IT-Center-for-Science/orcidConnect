@@ -270,7 +270,7 @@ $('#saveData').on('click', function(event) {
 	btn.button('loading');
 
 	$.getJSON('/app/shib/trigpush', function (jsonReply) {
-		if (jsonReply.isError) {
+		if (jsonReply.isError == 'true') {
 		    btn.empty();
 		    btn.append('Tapahtui virhe');
 		    $('#acceptBox').parent().parent().empty();

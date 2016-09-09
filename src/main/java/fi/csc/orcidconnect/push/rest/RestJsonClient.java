@@ -94,13 +94,13 @@ public class RestJsonClient implements IdentitiesRelayer {
 						new MappingJackson2HttpMessageConverter())
 				);
 		
-		final boolean failStatus = new Boolean(true);
-		rt.setErrorHandler(new LocalResponseErrorHandler(failStatus));
+		LocalResponseErrorHandler errHandler = new LocalResponseErrorHandler(false); 
+		rt.setErrorHandler(errHandler);
 
 		Status stat = rt.postForObject(
 				config.get(restUrl),
 				idDescr, Status.class);
-		stat.setIsError(failStatus);
+		stat.setIsError(errHandler.failStatus);
 		return stat;
 	}
 	
@@ -136,7 +136,7 @@ public class RestJsonClient implements IdentitiesRelayer {
 		
 		@Override
 		public boolean hasError(ClientHttpResponse response) throws IOException {
-			this.failStatus = RestUtil.isError(response.getStatusCode()); 
+		    this.failStatus = response.getRawStatusCode() != 200;
 			return failStatus;
 		}
 
