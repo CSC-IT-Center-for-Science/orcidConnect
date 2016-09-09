@@ -96,10 +96,9 @@ public class Controller {
 	
 	@RequestMapping("/${my.oauth2client.shibSignInPath}/trigpush")
 	public HashMap<String, String> trigPush(Authentication a, HttpServletRequest req) {
-		final String statusStr = "status";
+		final String statusStr = "isError";
 		final String descrStr = "description";
-		final String errorStr = "error";
-		final String successStr = "success";
+		final String errorStr = "true";
 		final HashMap<String, String> retMap = new HashMap<String, String>();
 		IdentityDescriptor id = getIdDescr(a, req);
 		if (id.getIdentifier().isEmpty()) {
@@ -122,8 +121,8 @@ public class Controller {
 				return retMap;
 			}
 			Status stat = relayer.relay(id);
-			retMap.put(statusStr, successStr);
-			retMap.put(descrStr, String.valueOf(stat.getIsError()));
+			retMap.put(statusStr, String.valueOf(stat.getIsError()));
+			retMap.put(descrStr, stat.getStatus());
 		}
 		return retMap;
 	}

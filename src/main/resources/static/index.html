@@ -263,14 +263,25 @@ $('#saveData').on('click', function(event) {
 	btn.button('loading');
 
 	$.getJSON('/app/shib/trigpush', function (jsonReply) {
-	    btn.empty();
-	    btn.append('Siirto valmis');
-	    $('#acceptBox').parent().parent().empty();
-	    $('#initial').toggle(false);
-	    $('#shibId').toggle(false);
-	    $('#waitingRelay').toggle(false);
-	    $('#done').toggle(true);
-	    $('#saveData').prop('disabled', 'true');
+		if (jsonReply.isError) {
+		    btn.empty();
+		    btn.append('Tapahtui virhe');
+		    $('#acceptBox').parent().parent().empty();
+		    $('#initial').toggle(false);
+		    $('#shibId').toggle(false);
+		    $('#waitingRelay').toggle(false);
+		    $('#done').toggle(true);
+		    $('#saveData').prop('disabled', 'true');
+		} else {
+		    btn.empty();
+		    btn.append('Siirto valmis');
+		    $('#acceptBox').parent().parent().empty();
+		    $('#initial').toggle(false);
+		    $('#shibId').toggle(false);
+		    $('#waitingRelay').toggle(false);
+		    $('#done').toggle(true);
+		    $('#saveData').prop('disabled', 'true');
+		}
 	});
     } else {
 	alert("Tietojen lähettäminen ei onnistu ilman käyttäjän hyväksyntää.")
