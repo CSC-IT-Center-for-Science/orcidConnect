@@ -125,7 +125,7 @@
 				<div id='errorBlock' class='col-md-12 alert alert-danger' style='display:none;'>
 				  <p><span class='glyphicon glyphicon-alert'></span> <strong>Organisaatiosi rajapinta ilmoitti virheestä!</strong></p>
 				  <p><blockquote id='errorDescr'></blockquote></p>
-				  <p><blockquote id='errorTimeStamp'></blockquote></p>
+				  <p><blockquote id='errorTimestamp'></blockquote></p>
 				  <p>Ilmoita virheestä kotiorganisaatiollesi. Lisää virheilmoitukseen edellä mainittu virheilmoitus ja kellonaika.
 				  Lisätietoja <a href='https://wiki.eduuni.fi/display/cscorcidinfo/Connect+virhe'>tästä linkistä</a>.</p>
 				</div>
@@ -280,7 +280,7 @@ $('#saveData').on('click', function(event) {
 		    $('#done').toggle(true);
 		    $('#saveData').prop('disabled', 'true');
 		    $('#errorDescr').append(jsonReply.description);
-		    $('#errorDescr').append(jsonReply.timeStamp);
+		    $('#errorTimestamp').append(jsonReply.timeStamp);
 		    $('#errorBlock').toggle(true);
 		} else {
 		    btn.empty();
