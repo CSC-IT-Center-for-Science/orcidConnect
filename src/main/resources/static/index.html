@@ -122,6 +122,13 @@
 						</tr>
 					</table>
 				</div>
+				<div id='errorBlock' class='col-md-12 alert alert-danger' style='display:none;'>
+				  <p><span class='glyphicon glyphicon-alert'></span> <strong>Organisaatiosi rajapinta ilmoitti virheestä!</strong></p>
+				  <p><blockquote id='errorDescr'></blockquote></p>
+				  <p><blockquote id='errorTimeStamp'></blockquote></p>
+				  <p>Ilmoita virheestä kotiorganisaatiollesi. Lisää virheilmoitukseen edellä mainittu virheilmoitus ja kellonaika.
+				  Lisätietoja <a href='https://wiki.eduuni.fi/display/cscorcidinfo/Connect+virhe'>tästä linkistä</a>.</p>
+				</div>
 				<div id='confirmBlock' class='col-md-12' style='display: none;'>
 				  <div class='form-group'>
 				    <div class='checkbox'>
@@ -272,6 +279,9 @@ $('#saveData').on('click', function(event) {
 		    $('#waitingRelay').toggle(false);
 		    $('#done').toggle(true);
 		    $('#saveData').prop('disabled', 'true');
+		    $('#errorDescr').append(jsonReply.description);
+		    $('#errorDescr').append(jsonReply.timeStamp);
+		    $('#errorBlock').toggle(true);
 		} else {
 		    btn.empty();
 		    btn.append('Siirto valmis');
