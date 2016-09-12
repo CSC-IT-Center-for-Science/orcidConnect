@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="urn:oasis:names:tc:DSML:2:0:core" xmlns:ns1="urn:oasis:names:tc:DSML:2:0:core">
+  <xs:element name="batchResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ns1:errorResponse"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="errorResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ns1:message"/>
+        <xs:element ref="ns1:detail"/>
+      </xs:sequence>
+      <xs:attribute name="requestID" use="required" type="xs:NCName"/>
+      <xs:attribute name="type" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="message" type="xs:string"/>
+  <xs:element name="detail" type="xs:NCName"/>
+</xs:schema>

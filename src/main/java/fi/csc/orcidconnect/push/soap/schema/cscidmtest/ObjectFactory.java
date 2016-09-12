@@ -34,7 +34,29 @@ import javax.xml.namespace.QName;
 public class ObjectFactory {
 
     private final static QName _Value_QNAME = new QName("", "value");
+    private final static QName _Message_QNAME = new QName("urn:oasis:names:tc:DSML:2:0:core", "message");
+    private final static QName _Detail_QNAME = new QName("urn:oasis:names:tc:DSML:2:0:core", "detail");
 
+    public BatchResponse createBatchResponse() {
+        return new BatchResponse();
+    }
+    
+    public ErrorResponse createErrorResponse() {
+        return new ErrorResponse();
+    }
+    
+    
+    @XmlElementDecl(namespace = "urn:oasis:names:tc:DSML:2:0:core", name = "message")
+    public JAXBElement<String> createMessage(String value) {
+        return new JAXBElement<String>(_Message_QNAME, String.class, null, value);
+    }
+    
+    @XmlElementDecl(namespace = "urn:oasis:names:tc:DSML:2:0:core", name = "detail")
+    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+    public JAXBElement<String> createDetail(String value) {
+        return new JAXBElement<String>(_Detail_QNAME, String.class, null, value);
+    }    
+    
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: fi.csc.orcidconnect.push.soap.schema.cscidmtest
      * 
