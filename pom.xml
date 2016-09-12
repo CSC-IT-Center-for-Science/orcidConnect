@@ -131,7 +131,7 @@
 	      </configuration>
 	    </plugin>
 
-<!--  	    
+ <!--  	    
         <plugin>
             <groupId>org.jvnet.jaxb2.maven2</groupId>
             <artifactId>maven-jaxb2-plugin</artifactId>
@@ -149,6 +149,7 @@
 				<schemaDirectory>src/main/resources</schemaDirectory>
 				<schemaIncludes>
 				    <include>batchresponse.xsd</include>
+				    <include>modify.xsd</include>
 				</schemaIncludes>
 		        <generatePackage>fi.csc.orcidconnect.push.soap.schema.cscidmtest</generatePackage>
 
@@ -156,7 +157,7 @@
 			</configuration>
 
         </plugin>
- --> 
+-->  
 	  </plugins>
  
    	  <filters>
