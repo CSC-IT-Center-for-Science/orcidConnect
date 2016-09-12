@@ -1,6 +1,9 @@
 package fi.csc.orcidconnect.push.soap;
 
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 import javax.xml.transform.stream.StreamResult;
@@ -8,9 +11,12 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.FaultMessageResolver;
@@ -94,45 +100,56 @@ public class MockSoapClient implements IdentitiesRelayer {
 		CredentialsProvider crProv = new BasicCredentialsProvider();
 		crProv.setCredentials(AuthScope.ANY, creds);
 		
-        CloseableHttpClient httpclient = HttpClients.custom()
-        		.setDefaultCredentialsProvider(crProv)
-        		// fix for annoying bug
-        		// (see John Rix's answer: 
-        		// http://stackoverflow.com/questions/3332370/content-length-header-already-present )
-        		.addInterceptorFirst(new HttpComponentsMessageSender.RemoveSoapHeadersInterceptor())
-        		.build();
-        
-        messageSender.setHttpClient(httpclient);
-        wsTempl.setMessageSender(messageSender);
-        
-    	Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-    	marshaller.setPackagesToScan(config.get(schemaPackage));
-
-    	wsTempl.setDefaultUri(config.get(soapUrl));
-    	wsTempl.setMarshaller(marshaller);
-    	wsTempl.setUnmarshaller(marshaller);
-    	
-    	wsTempl.setFaultMessageResolver(new FaultMessageResolver() {
-			
-			@Override
-			public void resolveFault(WebServiceMessage message) throws IOException {
-				StreamResult res = (StreamResult) message.getPayloadResult();
-				System.out.println("----- Fault: " + res.getWriter());
+		SSLContextBuilder sslBuilder = new SSLContextBuilder();
+		try {
+			sslBuilder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
+		
+	        CloseableHttpClient httpclient = HttpClients.custom()
+	        		.setDefaultCredentialsProvider(crProv)
+	        		.setSSLContext(sslBuilder.build())
+	        		// fix for annoying bug
+	        		// (see John Rix's answer: 
+	        		// http://stackoverflow.com/questions/3332370/content-length-header-already-present )
+	        		.addInterceptorFirst(new HttpComponentsMessageSender.RemoveSoapHeadersInterceptor())
+	        		.build();
+	        
+	        messageSender.setHttpClient(httpclient);
+	        wsTempl.setMessageSender(messageSender);
+	        
+	    	Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+	    	marshaller.setPackagesToScan(config.get(schemaPackage));
+	
+	    	wsTempl.setDefaultUri(config.get(soapUrl));
+	    	wsTempl.setMarshaller(marshaller);
+	    	wsTempl.setUnmarshaller(marshaller);
+	    	
+	    	wsTempl.setFaultMessageResolver(new FaultMessageResolver() {
 				
-			}
-		});
-    	
-    	ObjectFactory objf = new ObjectFactory();
-    	ReceiveRequest req = new ReceiveRequest();
-    	req.setArg0(objf.createReceiveRequestArg0(eppnStr));
-    	req.setArg1(objf.createReceiveRequestArg1(orcidStr));
-    	
-    	wsTempl.marshalSendAndReceive(req, new WebServiceMessageCallback() {
-    	    public void doWithMessage(WebServiceMessage message) {
-    	    	SoapMessage msg = ((SoapMessage)message);
-    	        msg.setSoapAction(config.get(soapAction));
-    	    }
-    	});    	
-    }	
+				@Override
+				public void resolveFault(WebServiceMessage message) throws IOException {
+					StreamResult res = (StreamResult) message.getPayloadResult();
+					System.out.println("----- Fault: " + res.getWriter());
+					
+				}
+			});
+	    	
+	    	ObjectFactory objf = new ObjectFactory();
+	    	ReceiveRequest req = new ReceiveRequest();
+	    	req.setArg0(objf.createReceiveRequestArg0(eppnStr));
+	    	req.setArg1(objf.createReceiveRequestArg1(orcidStr));
+	    	
+	    	wsTempl.marshalSendAndReceive(req, new WebServiceMessageCallback() {
+	    	    public void doWithMessage(WebServiceMessage message) {
+	    	    	SoapMessage msg = ((SoapMessage)message);
+	    	        msg.setSoapAction(config.get(soapAction));
+	    	    }
+	    	});    	
+
+		} catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}	
 	
 }
