@@ -3,6 +3,9 @@ package fi.csc.orcidconnect.push.rest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -19,7 +22,8 @@ public class Status {
 	}
 
 	public void setStatus(String status) {
-		this.statusStr = status;
+		PolicyFactory policy = Sanitizers.FORMATTING;
+		this.statusStr = policy.sanitize(status);
 	}
 	
 	public boolean status() {
