@@ -28,6 +28,7 @@ import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 import fi.csc.orcidconnect.IdentitiesRelayer;
+import fi.csc.orcidconnect.IdentitiesRelayStatus;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescriptor;
 
 public class RestJsonClient implements IdentitiesRelayer {
@@ -64,7 +65,7 @@ public class RestJsonClient implements IdentitiesRelayer {
 	}
 	
 	@Override
-	public Status relay(IdentityDescriptor idDescr) {
+	public IdentitiesRelayStatus relay(IdentityDescriptor idDescr) {
 
 		if (!checkConfig()) {
     		throw new IllegalStateException("Inadequate config");
@@ -97,9 +98,9 @@ public class RestJsonClient implements IdentitiesRelayer {
 		LocalResponseErrorHandler errHandler = new LocalResponseErrorHandler(false); 
 		rt.setErrorHandler(errHandler);
 
-		Status stat = rt.postForObject(
+		IdentitiesRelayStatus stat = rt.postForObject(
 				config.get(restUrl),
-				idDescr, Status.class);
+				idDescr, IdentitiesRelayStatus.class);
 		stat.setIsError(errHandler.failStatus);
 		return stat;
 	}

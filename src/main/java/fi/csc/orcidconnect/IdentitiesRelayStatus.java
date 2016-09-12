@@ -1,4 +1,4 @@
-package fi.csc.orcidconnect.push.rest;
+package fi.csc.orcidconnect;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,7 +9,7 @@ import org.owasp.html.Sanitizers;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Status {
+public class IdentitiesRelayStatus {
 	
 	private String statusStr;
 	private LocalDateTime latestErrorChange = LocalDateTime.now();

@@ -26,7 +26,6 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import fi.csc.orcidconnect.push.rest.Status;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.Identifier;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescriptor;
 
@@ -121,7 +120,7 @@ public class Controller {
 				retMap.put(descrStr, "relayerimplementation not found");
 				return retMap;
 			}
-			Status stat = relayer.relay(id);
+			IdentitiesRelayStatus stat = relayer.relay(id);
 			retMap.put(statusStr, String.valueOf(stat.getIsError()));
 			retMap.put(descrStr, stat.getStatus());
 			retMap.put(timeStampField, stat.getErrorChangeDate());

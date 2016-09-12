@@ -26,7 +26,7 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 
 import fi.csc.orcidconnect.IdentitiesRelayer;
-import fi.csc.orcidconnect.push.rest.Status;
+import fi.csc.orcidconnect.IdentitiesRelayStatus;
 import fi.csc.orcidconnect.push.soap.schema.cscidmtest.AddValue;
 import fi.csc.orcidconnect.push.soap.schema.cscidmtest.Association;
 import fi.csc.orcidconnect.push.soap.schema.cscidmtest.BatchResponse;
@@ -77,7 +77,7 @@ public class MockSoapClient implements IdentitiesRelayer {
 	}
 	
 	@Override
-	public Status relay(IdentityDescriptor idDescr) {
+	public IdentitiesRelayStatus relay(IdentityDescriptor idDescr) {
 
 		if (!checkConfig()) {
     		throw new IllegalStateException("Inadequate config");
@@ -89,7 +89,7 @@ public class MockSoapClient implements IdentitiesRelayer {
 			idDescr.findFirstIdentifierWithFn(
 				Identifier.orcidFrName).getIdentifierValue());
 		
-		Status retStatus = new Status();
+		IdentitiesRelayStatus retStatus = new IdentitiesRelayStatus();
 		retStatus.setIsError(
 				!resp.getErrorResponse().getDetail().equals("success"));
 		retStatus.setStatus(
