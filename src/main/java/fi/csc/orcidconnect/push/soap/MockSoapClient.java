@@ -29,6 +29,7 @@ import fi.csc.orcidconnect.IdentitiesRelayer;
 import fi.csc.orcidconnect.push.rest.Status;
 import fi.csc.orcidconnect.push.soap.schema.cscidmtest.AddValue;
 import fi.csc.orcidconnect.push.soap.schema.cscidmtest.Association;
+import fi.csc.orcidconnect.push.soap.schema.cscidmtest.BatchResponse;
 import fi.csc.orcidconnect.push.soap.schema.cscidmtest.Modify;
 import fi.csc.orcidconnect.push.soap.schema.cscidmtest.ModifyAttr;
 import fi.csc.orcidconnect.push.soap.schema.cscidmtest.ObjectFactory;
@@ -82,16 +83,21 @@ public class MockSoapClient implements IdentitiesRelayer {
     		throw new IllegalStateException("Inadequate config");
 		}
     	
-		this.send(
+		BatchResponse resp = this.send(
 			idDescr.findFirstIdentifierWithFn(
 				Identifier.eppnFrName).getIdentifierValue(),
 			idDescr.findFirstIdentifierWithFn(
 				Identifier.orcidFrName).getIdentifierValue());
-		// TODO: dummy return object
-		return new Status();
+		
+		Status retStatus = new Status();
+		retStatus.setIsError(
+				!resp.getErrorResponse().getDetail().equals("success"));
+		retStatus.setStatus(
+				resp.getErrorResponse().getDetail());
+		return retStatus;
 	}	
 	
-    private void send (String eppnStr, String orcidStr) {
+    private BatchResponse send (String eppnStr, String orcidStr) {
     	
     	WebServiceTemplate wsTempl = new WebServiceTemplate();
     	
@@ -152,16 +158,24 @@ public class MockSoapClient implements IdentitiesRelayer {
 	    	addVal.setValue(orcidStr);
 	    	modAttr.setAddValue(addVal);
 	    	
-	    	wsTempl.marshalSendAndReceive(mod, new WebServiceMessageCallback() {
+	    	Object unmarsh = wsTempl.marshalSendAndReceive(mod, new WebServiceMessageCallback() {
 	    	    public void doWithMessage(WebServiceMessage message) {
 	    	    	SoapMessage msg = ((SoapMessage)message);
 	    	        msg.setSoapAction(config.get(soapAction));
 	    	    }
-	    	});    	
+	    	});
+	    	
+	    	if (BatchResponse.class.isInstance(unmarsh)) {
+	    		return (BatchResponse) unmarsh;
+	    	} else {
+	    		return null;
+	    	}
+	    	
 
 		} catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
 		
 	}	
