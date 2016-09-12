@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modify class-name="User">
+    <association state="associated">teppo@yliopisto.fi</association>
+    <modify-attr attr-name="eduPersonOrcid">
+        <remove-all-values/>
+        <add-value>
+            <value>0000-0003-0833-4032</value>
+        </add-value>
+    </modify-attr>
+</modify>

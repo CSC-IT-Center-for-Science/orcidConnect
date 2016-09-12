@@ -12,7 +12,6 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -28,8 +27,12 @@ import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 
 import fi.csc.orcidconnect.IdentitiesRelayer;
 import fi.csc.orcidconnect.push.rest.Status;
-import fi.csc.orcidconnect.push.soap.schema.csc.ObjectFactory;
-import fi.csc.orcidconnect.push.soap.schema.csc.ReceiveRequest;
+import fi.csc.orcidconnect.push.soap.schema.cscidmtest.AddValue;
+import fi.csc.orcidconnect.push.soap.schema.cscidmtest.Association;
+import fi.csc.orcidconnect.push.soap.schema.cscidmtest.Modify;
+import fi.csc.orcidconnect.push.soap.schema.cscidmtest.ModifyAttr;
+import fi.csc.orcidconnect.push.soap.schema.cscidmtest.ObjectFactory;
+import fi.csc.orcidconnect.push.soap.schema.cscidmtest.RemoveAllValues;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.Identifier;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescriptor;
 
@@ -136,11 +139,20 @@ public class MockSoapClient implements IdentitiesRelayer {
 			});
 	    	
 	    	ObjectFactory objf = new ObjectFactory();
-	    	ReceiveRequest req = new ReceiveRequest();
-	    	req.setArg0(objf.createReceiveRequestArg0(eppnStr));
-	    	req.setArg1(objf.createReceiveRequestArg1(orcidStr));
+	    	Modify mod = objf.createModify();
+	    	mod.setClassName("User");
+	    	Association ass = objf.createAssociation();
+	    	ass.setContent(eppnStr);
+	    	ass.setState("associated");
+	    	mod.setAssociation(ass);
+	    	ModifyAttr modAttr = objf.createModifyAttr();
+	    	modAttr.setAttrName("eduPersonOrcid");
+	    	modAttr.setRemoveAllValues(new RemoveAllValues());
+	    	AddValue addVal = objf.createAddValue();
+	    	addVal.setValue(orcidStr);
+	    	modAttr.setAddValue(addVal);
 	    	
-	    	wsTempl.marshalSendAndReceive(req, new WebServiceMessageCallback() {
+	    	wsTempl.marshalSendAndReceive(mod, new WebServiceMessageCallback() {
 	    	    public void doWithMessage(WebServiceMessage message) {
 	    	    	SoapMessage msg = ((SoapMessage)message);
 	    	        msg.setSoapAction(config.get(soapAction));
