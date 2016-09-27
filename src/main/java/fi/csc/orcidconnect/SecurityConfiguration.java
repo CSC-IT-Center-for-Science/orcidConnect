@@ -43,7 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	    .antMatchers("/",
 	    		"/**/isAuthenticated",
 	    		"/**/favicon.ico",
-	    		"/*login",
+	    		"/*" + oauthConf.getLoginFilterPathMatcher(),
 	    		"/logout",
 	    		// TODO: user-endpoint -address could be parametrised
 	    		"/" + oauthConf.getShibSignInPath() + "/user")
