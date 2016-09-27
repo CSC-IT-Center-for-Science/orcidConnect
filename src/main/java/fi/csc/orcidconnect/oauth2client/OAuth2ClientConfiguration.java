@@ -95,6 +95,11 @@ public class OAuth2ClientConfiguration {
 				);
 	}
 	
+	public boolean getIsProviderOneLegged(String provider) {
+		return getConfigString("isOneLegged", provider)
+				.equals("true");
+	}
+	
 	public String getAuthUriStr(String provider) {
 		return getConfigString("authUriStr", provider);
 	}

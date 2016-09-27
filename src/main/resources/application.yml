@@ -17,10 +17,11 @@ my:
       - orcidSandbox
     defaultProvider: 'orcidSandbox'
     specialCase: 'orcidSandbox'
-    callBackBase: 'https://orcid-connect01.csc.fi:4443/app/'
+    #callBackBase: 'https://orcid-connect01.csc.fi:4443/app/'
+    callBackBase: 'https://connect-dev.tutkijatunniste.fi/app/'
     shibSignInPath: 'shib'
     limitLoginRounds: 3
-    loginFilterPathMatcher: login
+    loginFilterPathMatcher: Login #login
     # callBackBase: http://localhost:8080/app/
     providerConfig:
     # Be aware with leading white space on resource
@@ -34,6 +35,7 @@ my:
         scope: '/authenticate'
         userInfoUri: 'https://api.sandbox.orcid.org/orcid_id'
         showLogin: true
+        isOneLegged: true
       google:
         clientId: '${clientId}'
         clientSecret: '${clientSecret}'
@@ -41,6 +43,7 @@ my:
         authUriStr: 'https://accounts.google.com/o/oauth2/auth'
         scope: 'profile'
         userInfoUri: 'https://www.googleapis.com/userinfo/v2/me'
+        isOneLegged: false
       git:
         clientId: '${gitClientId}'
         clientSecret: '${gitClientSecret}'
@@ -50,6 +53,7 @@ my:
         # scope is not defined
         scope: 'user'
         userInfoUri: 'https://api.github.com/user'
+        isOneLegged: true
   pushInterfaces:
     - uniarts
     - hakaTest
