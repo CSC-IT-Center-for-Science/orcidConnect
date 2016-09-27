@@ -121,7 +121,7 @@ public class OAuth2ClientConfiguration {
 	
 	public String getCallBackURI(String provider) {
 		String uriStr = callBackBase + 
-				specialCase(provider)+ "login";
+				specialCase(provider) + loginFilterPathMatcher;
 		logger.debug("uriStr: " + uriStr);
 		logger.debug("provider: " + provider);
 		logger.debug("specialCase: " + specialCase);
