@@ -33,7 +33,9 @@ import com.github.vbauer.herald.annotation.Log;
 @ConfigurationProperties(prefix="my")
 public class AuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
-	private final String loginRoundAttrName = "loginRounds";
+	private final static String LOGINROUNDATTRNAME = "loginRounds";
+	private final static String ROLEUSER = "ROLE_USER";
+	private final static String ROLEADMIN = "ROLE_ADMIN";
 	
 	OAuth2ClientConfiguration conf;
 	
@@ -75,17 +77,17 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 	private boolean redirectCheck(HttpServletRequest req) {
 		int loginRounds;
 		// TODO: final class constants with uppercase separated with underscore
-		if (req.getSession().getAttribute(loginRoundAttrName) != null) {
+		if (req.getSession().getAttribute(LOGINROUNDATTRNAME) != null) {
 			loginRounds = 
-					(int) req.getSession().getAttribute(loginRoundAttrName);
+					(int) req.getSession().getAttribute(LOGINROUNDATTRNAME);
 			loginRounds++;
-			req.getSession().setAttribute(loginRoundAttrName, loginRounds);
+			req.getSession().setAttribute(LOGINROUNDATTRNAME, loginRounds);
 		} else {
 			loginRounds = 0;
-			req.getSession().setAttribute(loginRoundAttrName, loginRounds);
+			req.getSession().setAttribute(LOGINROUNDATTRNAME, loginRounds);
 		}
 		if (loginRounds > conf.getLoginRoundLimit()) {
-			req.getSession().setAttribute(loginRoundAttrName, 0);
+			req.getSession().setAttribute(LOGINROUNDATTRNAME, 0);
 			throw new AuthenticationServiceException("login loop or too many " + 
 					"subsequent login attempts - limit set to " +
 					conf.getLoginRoundLimit() +
@@ -176,10 +178,9 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 	    	}
 		    List<SimpleGrantedAuthority> authList = 
 		    		new ArrayList<SimpleGrantedAuthority>();
-		    authList.add(new SimpleGrantedAuthority("ROLE_USER"));
-		    // TODO: parametrise ROLE_ADMIN -string (e.g. final field in this class)
+		    authList.add(new SimpleGrantedAuthority(ROLEUSER));
 		    if (isAdmin(map)) {
-		    	authList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+		    	authList.add(new SimpleGrantedAuthority(ROLEADMIN));
 		    }
 			OAuth2AuthenticationToken auth = new OAuth2AuthenticationToken(
 					authList,
