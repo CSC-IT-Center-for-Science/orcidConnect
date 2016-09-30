@@ -10,6 +10,12 @@ spring:
       enabled: 'false'
 
 my:
+  eppnFrName: eduPersonPrincipalName
+  eppnOid: "urn:oid:1.3.6.1.4.1.5923.1.1.1.6"
+  orcidFrName: eduPersonOrcid
+  orcidOid: "urn:oid:1.3.6.1.4.1.5923.1.1.1.16"
+  attrNameFormat: "urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
+  mediatorId: "https://connect.tutkijatunniste.fi"
   oauth2client:
     providerList:
       - google

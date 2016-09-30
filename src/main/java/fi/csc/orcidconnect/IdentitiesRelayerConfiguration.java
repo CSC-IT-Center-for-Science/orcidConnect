@@ -71,7 +71,7 @@ public class IdentitiesRelayerConfiguration {
 	
 	private static String getEppnIssuer (IdentityDescriptor idDescr) {
 		Identifier id =
-				idDescr.findFirstIdentifierWithFn(Identifier.eppnFrName);
+				idDescr.findFirstIdentifierWithFn(Identifier.EPPNFRNAME);
 		return id.getIssuer();
 	}
 	

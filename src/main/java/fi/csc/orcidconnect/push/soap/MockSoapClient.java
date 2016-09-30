@@ -80,9 +80,9 @@ public class MockSoapClient implements IdentitiesRelayer {
     	
 		BatchResponse resp = this.send(
 			idDescr.findFirstIdentifierWithFn(
-				Identifier.eppnFrName).getIdentifierValue(),
+				Identifier.EPPNFRNAME).getIdentifierValue(),
 			idDescr.findFirstIdentifierWithFn(
-				Identifier.orcidFrName).getIdentifierValue());
+				Identifier.ORCIDFRNAME).getIdentifierValue());
 		
 		IdentitiesRelayStatus retStatus = new IdentitiesRelayStatus();
 		retStatus.setIsError(

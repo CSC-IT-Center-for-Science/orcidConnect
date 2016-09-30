@@ -15,6 +15,8 @@ import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.namespace.QName;
 
+import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.Identifier;
+
 
 /**
  * This object contains factory methods for each 
@@ -53,7 +55,7 @@ public class ObjectFactory {
     	ass.setState("associated");
     	mod.setAssociation(ass);
     	ModifyAttr modAttr = objf.createModifyAttr();
-    	modAttr.setAttrName("eduPersonOrcid");
+    	modAttr.setAttrName(Identifier.ORCIDFRNAME);
     	modAttr.setRemoveAllValues(new RemoveAllValues());
     	AddValue addVal = objf.createAddValue();
     	addVal.setValue(orcidStr);

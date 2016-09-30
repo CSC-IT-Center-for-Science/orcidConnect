@@ -44,6 +44,9 @@ public class Controller {
 	RequestMappingHandlerMapping handlerMapping;
 	
 	@Autowired
+	IdentityFactoryComponent idFactory;
+	
+	@Autowired
 	Environment env;
 	
 	@Autowired
@@ -81,11 +84,11 @@ public class Controller {
 			String eppnStr = String.valueOf(
 					req.getAttribute(webConf.getShibAttrNameEppn())
 					);
-			Identifier eppnId = IdentityFactory.eppnFactory(eppnStr);
+			Identifier eppnId = idFactory.eppnFactory(eppnStr);
 			eppnId.setIssuer(String.valueOf(
 					req.getAttribute(webConf.getShibAttrNameIdP()))
 					);
-			Identifier orcidId = IdentityFactory.orcidFactory(orcidStr);
+			Identifier orcidId = idFactory.orcidFactory(orcidStr);
 			id.addIdentifier(orcidId);
 			id.addIdentifier(eppnId);
 		}
