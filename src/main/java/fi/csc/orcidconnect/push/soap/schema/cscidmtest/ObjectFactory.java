@@ -43,6 +43,23 @@ public class ObjectFactory {
      */
     public ObjectFactory() {
     }
+    
+    public static Modify modifyFactory (String eppnStr, String orcidStr) {
+    	ObjectFactory objf = new ObjectFactory();
+    	Modify mod = objf.createModify();
+    	mod.setClassName("User");
+    	Association ass = objf.createAssociation();
+    	ass.setContent(eppnStr);
+    	ass.setState("associated");
+    	mod.setAssociation(ass);
+    	ModifyAttr modAttr = objf.createModifyAttr();
+    	modAttr.setAttrName("eduPersonOrcid");
+    	modAttr.setRemoveAllValues(new RemoveAllValues());
+    	AddValue addVal = objf.createAddValue();
+    	addVal.setValue(orcidStr);
+    	modAttr.setAddValue(addVal);
+    	return mod;
+	}
 
     /**
      * Create an instance of {@link BatchResponse }

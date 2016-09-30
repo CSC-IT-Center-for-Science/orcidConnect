@@ -3,7 +3,6 @@ package fi.csc.orcidconnect;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +25,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import fi.csc.orcidconnect.push.soap.schema.cscidmtest.Modify;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.Identifier;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescriptor;
 
@@ -91,6 +91,15 @@ public class Controller {
 	@RequestMapping("/${my.oauth2client.shibSignInPath}/iddescriptor.{xml|json}")
 	public IdentityDescriptor idDescriptor (Authentication a, HttpServletRequest req) {
 		return getIdDescr(a, req);
+	}
+	
+	@RequestMapping("/${my.oauth2client.shibSignInPath}/modify.{xml|json}")
+	public Modify modifyObject (Authentication a, HttpServletRequest req) {
+		IdentityDescriptor id = getIdDescr(a, req); 
+		return fi.csc.orcidconnect.push.soap.schema.cscidmtest
+					.ObjectFactory.modifyFactory(
+							id.findFirstIdentifierWithFn("eduPersonPrincipalName").getIdentifierValue(),
+							id.findFirstIdentifierWithFn("eduPersonOrcid").getIdentifierValue());
 	}
 	
 	@RequestMapping("/${my.oauth2client.shibSignInPath}/trigpush")
