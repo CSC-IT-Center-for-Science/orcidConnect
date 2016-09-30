@@ -51,10 +51,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
 public class Identifier {
 	
 	public final static String EPPNFRNAME = "eduPersonPrincipalName";
-	public final static String EPPNOID = "urn:oid:1.3.6.1.4.1.5923.1.1.1.6";
+//	public final static String EPPNOID = "urn:oid:1.3.6.1.4.1.5923.1.1.1.6";
 	public final static String ORCIDFRNAME = "eduPersonOrcid";
-	public final static String ORCIDOID = "urn:oid:1.3.6.1.4.1.5923.1.1.1.16";
-	public final static String ATTRNAMEFORMAT = "urn:oasis:names:tc:SAML:2.0:attrname-format:uri";
+//	public final static String ORCIDOID = "urn:oid:1.3.6.1.4.1.5923.1.1.1.16";
+//	public final static String ATTRNAMEFORMAT = "urn:oasis:names:tc:SAML:2.0:attrname-format:uri";
 
     @XmlElement(name = "Name", required = true)
     protected String name;

@@ -46,7 +46,7 @@ public class ObjectFactory {
     public ObjectFactory() {
     }
     
-    public static Modify modifyFactory (String eppnStr, String orcidStr) {
+/*    public static Modify modifyFactory (String eppnStr, String orcidStr) {
     	ObjectFactory objf = new ObjectFactory();
     	Modify mod = objf.createModify();
     	mod.setClassName("User");
@@ -63,7 +63,7 @@ public class ObjectFactory {
     	mod.setModifyAttr(modAttr);
     	return mod;
 	}
-
+*/
     /**
      * Create an instance of {@link BatchResponse }
      * 

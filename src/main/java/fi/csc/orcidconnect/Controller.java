@@ -102,11 +102,9 @@ public class Controller {
 	
 	@RequestMapping("/${my.oauth2client.shibSignInPath}/modify.{xml|json}")
 	public Modify modifyObject (Authentication a, HttpServletRequest req) {
-		IdentityDescriptor id = getIdDescr(a, req); 
-		return fi.csc.orcidconnect.push.soap.schema.cscidmtest
-					.ObjectFactory.modifyFactory(
-							id.findFirstIdentifierWithFn("eduPersonPrincipalName").getIdentifierValue(),
-							id.findFirstIdentifierWithFn("eduPersonOrcid").getIdentifierValue());
+		IdentityDescriptor id = getIdDescr(a, req);
+		// TODO: attribute names from configuration
+		return idFactory.modifyFactory(id);
 	}
 	
 	@RequestMapping("/${my.oauth2client.shibSignInPath}/trigpush")

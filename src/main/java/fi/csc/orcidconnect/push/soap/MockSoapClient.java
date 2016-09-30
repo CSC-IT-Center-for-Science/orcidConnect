@@ -27,9 +27,9 @@ import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 
 import fi.csc.orcidconnect.IdentitiesRelayStatus;
 import fi.csc.orcidconnect.IdentitiesRelayer;
+import fi.csc.orcidconnect.IdentityFactoryComponent;
 import fi.csc.orcidconnect.push.soap.schema.cscidmtest.BatchResponse;
 import fi.csc.orcidconnect.push.soap.schema.cscidmtest.Modify;
-import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.Identifier;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescriptor;
 
 
@@ -40,6 +40,7 @@ public class MockSoapClient implements IdentitiesRelayer {
 	private final static String soapAction = "soapAction"; 
 	private final static String authUser = "authUser"; 
 	private final static String authPass = "authPass"; 
+	private static IdentityFactoryComponent idFactory;
 	
 	private static final String[] confStrs = {
 			schemaPackage,
@@ -78,11 +79,7 @@ public class MockSoapClient implements IdentitiesRelayer {
     		throw new IllegalStateException("Inadequate config");
 		}
     	
-		BatchResponse resp = this.send(
-			idDescr.findFirstIdentifierWithFn(
-				Identifier.EPPNFRNAME).getIdentifierValue(),
-			idDescr.findFirstIdentifierWithFn(
-				Identifier.ORCIDFRNAME).getIdentifierValue());
+		BatchResponse resp = this.send(idDescr);
 		
 		IdentitiesRelayStatus retStatus = new IdentitiesRelayStatus();
 		retStatus.setIsError(
@@ -92,7 +89,7 @@ public class MockSoapClient implements IdentitiesRelayer {
 		return retStatus;
 	}	
 	
-    private BatchResponse send (String eppnStr, String orcidStr) {
+    private BatchResponse send (IdentityDescriptor id) {
     	
     	WebServiceTemplate wsTempl = new WebServiceTemplate();
     	
@@ -139,8 +136,7 @@ public class MockSoapClient implements IdentitiesRelayer {
 				}
 			});
 	    	
-	    	Modify mod = fi.csc.orcidconnect.push.soap.schema.cscidmtest.ObjectFactory
-	    			.modifyFactory(eppnStr, orcidStr);
+	    	Modify mod = idFactory.modifyFactory(id);
 	    	
 	    	Object unmarsh = wsTempl.marshalSendAndReceive(mod, new WebServiceMessageCallback() {
 	    	    public void doWithMessage(WebServiceMessage message) {
@@ -162,6 +158,11 @@ public class MockSoapClient implements IdentitiesRelayer {
 			return null;
 		}
 		
+	}
+
+	@Override
+	public void setIdFactory(IdentityFactoryComponent idFactory) {
+		MockSoapClient.idFactory = idFactory;
 	}	
 	
 }

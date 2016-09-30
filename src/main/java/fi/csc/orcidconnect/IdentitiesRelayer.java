@@ -11,6 +11,7 @@ public interface IdentitiesRelayer {
 	public IdentitiesRelayStatus relay(IdentityDescriptor idDescr);
 	public String[] getConfStrs();
 	public void setConfig(Map<String, String> confMap);
+	public void setIdFactory(IdentityFactoryComponent idFactory);
 	
 
 }

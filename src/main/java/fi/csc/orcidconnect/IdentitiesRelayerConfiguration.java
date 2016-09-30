@@ -26,6 +26,9 @@ public class IdentitiesRelayerConfiguration {
 	
 	@Autowired
 	private Environment env;
+	
+	@Autowired
+	private IdentityFactoryComponent idFactory;
 
 	public List<String> getPushInterfaces() {
 		return pushInterfaces;
@@ -46,6 +49,7 @@ public class IdentitiesRelayerConfiguration {
 				confMap.put(key, getConfigString(idDescr, key));
 			}
 			i.setConfig(confMap);
+			i.setIdFactory(idFactory);
 			return i;
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			e.printStackTrace();

@@ -8,6 +8,12 @@ import javax.xml.datatype.DatatypeFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import fi.csc.orcidconnect.push.soap.schema.cscidmtest.AddValue;
+import fi.csc.orcidconnect.push.soap.schema.cscidmtest.Association;
+import fi.csc.orcidconnect.push.soap.schema.cscidmtest.Modify;
+import fi.csc.orcidconnect.push.soap.schema.cscidmtest.ModifyAttr;
+import fi.csc.orcidconnect.push.soap.schema.cscidmtest.ObjectFactory;
+import fi.csc.orcidconnect.push.soap.schema.cscidmtest.RemoveAllValues;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.Identifier;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescriptor;
 
@@ -22,6 +28,24 @@ public class IdentityFactoryComponent {
 	private String attrNameFormat;
 	private String mediatorId;
 	private String issuerStr;
+	
+    public Modify modifyFactory (IdentityDescriptor id) {
+    	ObjectFactory objf = new ObjectFactory();
+    	Modify mod = objf.createModify();
+    	mod.setClassName("User");
+    	Association ass = objf.createAssociation();
+    	ass.setContent(id.findFirstIdentifierWithFn(eppnFrName).getIdentifierValue());
+    	ass.setState("associated");
+    	mod.setAssociation(ass);
+    	ModifyAttr modAttr = objf.createModifyAttr();
+    	modAttr.setAttrName(orcidFrName);
+    	modAttr.setRemoveAllValues(new RemoveAllValues());
+    	AddValue addVal = objf.createAddValue();
+    	addVal.setValue(id.findFirstIdentifierWithFn(orcidFrName).getIdentifierValue());
+    	modAttr.setAddValue(addVal);
+    	mod.setModifyAttr(modAttr);
+    	return mod;
+	}
 	
 	public Identifier eppnFactory (String eppnStr) {
 		Identifier id = new Identifier();
@@ -51,7 +75,7 @@ public class IdentityFactoryComponent {
 	
 	private void setBasics(Identifier id) {
 		id.setMediator(mediatorId);
-		id.setNameFormat(Identifier.ATTRNAMEFORMAT);
+		id.setNameFormat(attrNameFormat);
 		try {
 			id.setMediationInstant(
 					DatatypeFactory.newInstance().newXMLGregorianCalendar(

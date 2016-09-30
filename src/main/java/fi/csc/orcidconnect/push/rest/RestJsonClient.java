@@ -65,6 +65,11 @@ public class RestJsonClient implements IdentitiesRelayer {
 	}
 	
 	@Override
+	public void setIdFactory(fi.csc.orcidconnect.IdentityFactoryComponent idFactory) {
+		// not needed
+	};
+	
+	@Override
 	public IdentitiesRelayStatus relay(IdentityDescriptor idDescr) {
 
 		if (!checkConfig()) {
