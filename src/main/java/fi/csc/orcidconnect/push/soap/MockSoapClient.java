@@ -88,7 +88,7 @@ public class MockSoapClient implements IdentitiesRelayer {
 		retStatus.setIsError(
 				!resp.getErrorResponse().getDetail().equals("success"));
 		retStatus.setStatus(
-				resp.getErrorResponse().getDetail());
+				resp.getErrorResponse().getMessage());
 		return retStatus;
 	}	
 	
