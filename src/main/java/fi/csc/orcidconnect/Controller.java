@@ -34,6 +34,8 @@ import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescrip
 @RestController
 public class Controller {
 	
+	public final static String ISAUTH_STR = "isAuthenticated";
+	
     @Autowired
     WebControllerConfiguration webConf;
     
@@ -179,24 +181,23 @@ public class Controller {
   	}
     
     @SuppressWarnings("serial")
-    @RequestMapping(value = "/isAuthenticated", method = RequestMethod.GET)
+    @RequestMapping(value = "/" + ISAUTH_STR, method = RequestMethod.GET)
     public HashMap<String, String> isAuthenticated(Authentication auth) {
     	if (auth != null) {
 	    	boolean isAuth = auth.isAuthenticated();
 	    	return new HashMap<String, String>() {
-	    		// TODO: isAuthenticated string could be parametrised (e.g. as final String in this class)
-				{ put("isAuthenticated", 
+				{ put(ISAUTH_STR, 
 	    				String.valueOf(isAuth)); }
 	    	};
     	} else {
     		return new HashMap<String, String>() {
-    			{ put("isAuthenticated", "false"); }
+    			{ put(ISAUTH_STR, "false"); }
     		};
     	}
     }
     
     @SuppressWarnings("serial")
-    @RequestMapping(value= "/${my.oauth2client.shibSignInPath}/isAuthenticated", method = RequestMethod.GET)
+    @RequestMapping(value= "/${my.oauth2client.shibSignInPath}/" + ISAUTH_STR, method = RequestMethod.GET)
     public HashMap<String, String> isShibAuthenticated(HttpServletRequest req) {
     	if (req.getAttribute("eppn") == null || 
     			((String) req.getAttribute("eppn")).isEmpty()) {
