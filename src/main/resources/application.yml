@@ -86,6 +86,7 @@ my:
       authPass: '${cscAuthPass}'
   orcidAdminList:
     - '0000-0003-0833-4032'
+    - 'https://sandbox.orcid.org/0000-0002-1260-232X'
   controllerConfig:
     shibAttrKeys:
       - Shib-Identity-Provider
