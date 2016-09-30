@@ -152,10 +152,10 @@ public class OAuth2Client {
 			// no need for another userinfo request
 			if (conf.getIsProviderOneLegged(provider)) {
 			    logger.debug("tokenrequest response: " + httpResponse.getContent());
-			    return getToken(httpResponse, true);
+			    return getToken(httpResponse, provider, true);
 			}
 
-			return getToken(httpResponse);
+			return getToken(httpResponse, provider);
 			
 		} catch (URISyntaxException | SerializeException | IOException e) {
 			e.printStackTrace();
@@ -164,7 +164,7 @@ public class OAuth2Client {
 
 	}
 	
-	private static OAuth2Token getToken(HTTPResponse httpResponse) {
+	private static OAuth2Token getToken(HTTPResponse httpResponse, String provider) {
 		try {
 			TokenResponse tokenResponse = TokenResponse.parse(httpResponse);
 			if (! tokenResponse.indicatesSuccess()) {
@@ -177,7 +177,7 @@ public class OAuth2Client {
 			// Get the access token, the server may also return a refresh token
 			AccessToken accessToken = successResponse.getAccessToken();
 			RefreshToken refreshToken = successResponse.getRefreshToken();	
-			return new OAuth2Token(accessToken, refreshToken);
+			return new OAuth2Token(accessToken, refreshToken, provider);
 
 		} catch (ParseException | ClassCastException e) {
 			logger.error(httpResponse.getContent());
@@ -186,7 +186,7 @@ public class OAuth2Client {
 		
 	}
 	
-    private static OAuth2Token getToken (HTTPResponse httpResponse, boolean detailCase) {
+    private static OAuth2Token getToken (HTTPResponse httpResponse, String provider, boolean detailCase) {
 	try {
 	    TokenResponse tokenResponse = TokenResponse.parse(httpResponse);
 	    if (! tokenResponse.indicatesSuccess()) {
@@ -203,7 +203,7 @@ public class OAuth2Client {
 	    JacksonJsonParser parser = new JacksonJsonParser();
 	    Map<String, Object> map = parser.parseMap(httpResponse.getContent());
 	    
-	    return new OAuth2Token(accessToken, refreshToken, map);
+	    return new OAuth2Token(accessToken, refreshToken, provider, map);
 
 	} catch (ParseException | ClassCastException e) {
 	    logger.error(httpResponse.getContent());

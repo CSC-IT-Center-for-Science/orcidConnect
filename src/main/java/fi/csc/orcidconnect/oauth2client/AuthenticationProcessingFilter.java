@@ -146,7 +146,7 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 			// this is indicated by token object
 		    Map<String, Object> map;
 		    if (token.hasDetails()) {
-		    	map = token.getDetails(); 
+		    	map = token.getDetails();
 		    	logger.debug("----- provider to map: " +providerSelector(req));
 		    } else {
 				RestTemplate restTemplate = new RestTemplate();
@@ -162,6 +162,18 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 				map = parser.parseMap(result);
 		    	logger.debug("----- provider to map: " +providerSelector(req));
 		    }
+	    	map.put("provider", provider);
+	    	// if provider is ORCiD-based, add prefix
+	    	// and build ORCiD attribute
+	    	if (map.containsKey("orcid")) {
+	    		map.put(
+	    				conf.getOrcidAttrName(),
+	    				buildOrcidAttrValue(
+	    						String.valueOf(map.get(
+	    								OAuth2AuthenticationToken.ORCIDKEYSTR)),
+	    						provider)
+	    				);
+	    	}
 		    List<SimpleGrantedAuthority> authList = 
 		    		new ArrayList<SimpleGrantedAuthority>();
 		    authList.add(new SimpleGrantedAuthority("ROLE_USER"));
@@ -177,6 +189,11 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 		} else {
 			throw new AuthenticationServiceException("OAuth token error");
 		}
+	}
+	
+	private String buildOrcidAttrValue (String orcidStr, String provider) {
+		return conf.getOrcidAttrPrefix(provider) +
+				orcidStr;
 	}
 	
 	private boolean isAdmin (Map<String, Object> authMap) {

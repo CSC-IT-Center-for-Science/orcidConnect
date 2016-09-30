@@ -25,6 +25,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import fi.csc.orcidconnect.oauth2client.OAuth2ClientConfiguration;
 import fi.csc.orcidconnect.push.soap.schema.cscidmtest.Modify;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.Identifier;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescriptor;
@@ -35,6 +36,9 @@ public class Controller {
 	
     @Autowired
     WebControllerConfiguration webConf;
+    
+    @Autowired
+    OAuth2ClientConfiguration oauthConf;
     
 	@Autowired
 	RequestMappingHandlerMapping handlerMapping;
@@ -72,7 +76,7 @@ public class Controller {
 			@SuppressWarnings("unchecked")
 			HashMap<String, ?> map = (HashMap<String, ?>) a.getDetails();
 			String orcidStr = String.valueOf(
-					map.get(webConf.getAuthNameOrcid())
+					map.get(oauthConf.getOrcidAttrName())
 					);
 			String eppnStr = String.valueOf(
 					req.getAttribute(webConf.getShibAttrNameEppn())

@@ -24,7 +24,16 @@ public class OAuth2ClientConfiguration {
 	private String shibSignInPath;
 	private String limitLoginRounds;
 	private String loginFilterPathMatcher;
+	private String orcidAttrName;
 	
+	public String getOrcidAttrName() {
+		return orcidAttrName;
+	}
+
+	public void setOrcidAttrName(String orcidAttrName) {
+		this.orcidAttrName = orcidAttrName;
+	}
+
 	private final String providerConfigPrefix = "my.oauth2client.providerConfig"; 
 
 	@Autowired
@@ -122,6 +131,10 @@ public class OAuth2ClientConfiguration {
 
 	public String getScope(String provider) {
 		return getConfigString("scope", provider);
+	}
+	
+	public String getOrcidAttrPrefix (String provider) {
+		return getConfigString("orcidPrefix", provider);
 	}
 	
 	public String getCallBackURI(String provider) {

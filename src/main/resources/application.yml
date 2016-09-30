@@ -21,8 +21,8 @@ my:
     callBackBase: 'https://connect-dev.tutkijatunniste.fi/app/'
     shibSignInPath: 'shib'
     limitLoginRounds: 3
-    loginFilterPathMatcher: Login #login
-    # callBackBase: http://localhost:8080/app/
+    loginFilterPathMatcher: Login
+    orcidAttrName: eduPersonOrcid
     providerConfig:
     # Be aware with leading white space on resource
     # variables. They will cause extra characters
@@ -36,6 +36,7 @@ my:
         userInfoUri: 'https://api.sandbox.orcid.org/orcid_id'
         showLogin: true
         isOneLegged: true
+        orcidPrefix: https://sandbox.orcid.org/
       google:
         clientId: '${clientId}'
         clientSecret: '${clientSecret}'
@@ -104,5 +105,5 @@ my:
       - expires_in
     shibAttrNameIdP: Shib-Identity-Provider
     shibAttrNameEppn: eppn 
-    authNameOrcid: orcid
+    #authNameOrcid: orcid
     userMatcherString: git|google|orcidSandbox

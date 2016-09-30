@@ -16,14 +16,15 @@ public class OAuth2AuthenticationToken extends AbstractAuthenticationToken {
 	 * 
 	 */
 	private Map<String, Object> authMap;
+	public static final String ORCIDKEYSTR = "orcid";
 
 	public OAuth2AuthenticationToken(
 			Collection<? extends GrantedAuthority> authorities, 
 			Map<String, Object> authMap) {
 		super(authorities);
 		this.authMap = authMap;
-		if (this.authMap.containsKey("orcid")) {
-		    this.authMap.put("id", this.authMap.get("orcid"));
+		if (this.authMap.containsKey(ORCIDKEYSTR)) {
+		    this.authMap.put("id", this.authMap.get(ORCIDKEYSTR));
 		}
 	}
 
