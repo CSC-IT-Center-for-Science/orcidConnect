@@ -66,7 +66,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                 		"/" + oauthConf.getShibSignInPath() + "/trigpush",
                 		"/" + oauthConf.getShibSignInPath() + "/iddescriptor.xml",
-                		"/" + oauthConf.getShibSignInPath() + "/iddescriptor.json")
+                		"/" + oauthConf.getShibSignInPath() + "/iddescriptor.json",
+        				"/" + oauthConf.getShibSignInPath() + "/modify.json",
+						"/" + oauthConf.getShibSignInPath() + "/modify.xml")
                 	.authenticated()
                 .anyRequest().denyAll()
     	;
