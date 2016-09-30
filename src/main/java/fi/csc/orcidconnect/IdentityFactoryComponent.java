@@ -96,6 +96,9 @@ public class IdentityFactoryComponent {
 		this.issuerStr = issuerStr;
 	}
 
-	
+	public String getOrcidFrName() {
+		return orcidFrName;
+	}
+
 	
 }

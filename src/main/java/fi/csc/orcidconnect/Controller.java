@@ -79,7 +79,7 @@ public class Controller {
 			@SuppressWarnings("unchecked")
 			HashMap<String, ?> map = (HashMap<String, ?>) a.getDetails();
 			String orcidStr = String.valueOf(
-					map.get(oauthConf.getOrcidAttrName())
+					map.get(idFactory.getOrcidFrName())
 					);
 			String eppnStr = String.valueOf(
 					req.getAttribute(webConf.getShibAttrNameEppn())

@@ -17,8 +17,6 @@ public class WebControllerConfiguration {
 	
 	private String shibAttrNameIdP;
 	private String shibAttrNameEppn;
-	private String authNameOrcid;
-
 	public String getShibAttrNameIdP() {
 		return shibAttrNameIdP;
 	}
@@ -33,14 +31,6 @@ public class WebControllerConfiguration {
 
 	public void setShibAttrNameEppn(String shibAttrNameEppn) {
 		this.shibAttrNameEppn = shibAttrNameEppn;
-	}
-
-	public String getAuthNameOrcid() {
-		return authNameOrcid;
-	}
-
-	public void setAuthNameOrcid(String authNameOrcid) {
-		this.authNameOrcid = authNameOrcid;
 	}
 
 	public List<String> getShibAttrKeys() {
