@@ -153,7 +153,6 @@ public class MockSoapClient implements IdentitiesRelayer {
 	    	
 
 		} catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}

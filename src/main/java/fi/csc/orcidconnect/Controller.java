@@ -214,7 +214,7 @@ public class Controller {
     	}
     }
 
-    @RequestMapping(value = "/${my.oauth2client.shibSignInPath}/user", method = RequestMethod.GET)
+    @RequestMapping(value = "/${my.oauth2client.shibSignInPath}/" + USER_ENDPOINT, method = RequestMethod.GET)
     public HashMap<String, String> shibUser(HttpServletRequest req) {
     	// NOTE: make note about new convention in specifying and initializing (local) fields
 		final HashMap<String, String> attrs = new HashMap<String, String>();
