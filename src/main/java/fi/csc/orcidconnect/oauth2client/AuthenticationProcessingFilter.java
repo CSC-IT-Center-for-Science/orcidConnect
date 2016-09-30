@@ -36,6 +36,7 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 	private final static String LOGINROUNDATTRNAME = "loginRounds";
 	private final static String ROLEUSER = "ROLE_USER";
 	private final static String ROLEADMIN = "ROLE_ADMIN";
+	private final static String CODESTR = "code";
 	
 	OAuth2ClientConfiguration conf;
 	
@@ -125,8 +126,8 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 	}
 	
 	private boolean returning (HttpServletRequest req) {
-		if (req.getParameter("code") != null
-				&& !req.getParameter("code").isEmpty()) {
+		if (req.getParameter(CODESTR) != null
+				&& !req.getParameter(CODESTR).isEmpty()) {
 			return true;
 		}
 		return false;
@@ -167,7 +168,7 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 	    	map.put("provider", provider);
 	    	// if provider is ORCiD-based, add prefix
 	    	// and build ORCiD attribute
-	    	if (map.containsKey("orcid")) {
+	    	if (map.containsKey(OAuth2AuthenticationToken.ORCIDKEYSTR)) {
 	    		map.put(
 	    				conf.getOrcidAttrName(),
 	    				buildOrcidAttrValue(
@@ -198,10 +199,12 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 	
 	private boolean isAdmin (Map<String, Object> authMap) {
 	    if (orcidAdminList != null && 
-	    		authMap.containsKey("orcid")) {
+	    		authMap.containsKey(
+	    				OAuth2AuthenticationToken.ORCIDKEYSTR)) {
 			for (Iterator<String> it = orcidAdminList.iterator(); it.hasNext(); ) {
 				String adminId = (String) it.next();
-	    		if (authMap.get("orcid").equals(adminId)) {
+	    		if (authMap.get(
+	    				OAuth2AuthenticationToken.ORCIDKEYSTR).equals(adminId)) {
 	    	    	return true;
 	    		}
 			}
