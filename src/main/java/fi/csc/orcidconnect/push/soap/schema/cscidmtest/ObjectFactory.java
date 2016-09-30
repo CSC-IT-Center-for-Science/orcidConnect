@@ -58,6 +58,7 @@ public class ObjectFactory {
     	AddValue addVal = objf.createAddValue();
     	addVal.setValue(orcidStr);
     	modAttr.setAddValue(addVal);
+    	mod.setModifyAttr(modAttr);
     	return mod;
 	}
 

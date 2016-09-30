@@ -25,15 +25,10 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 
-import fi.csc.orcidconnect.IdentitiesRelayer;
 import fi.csc.orcidconnect.IdentitiesRelayStatus;
-import fi.csc.orcidconnect.push.soap.schema.cscidmtest.AddValue;
-import fi.csc.orcidconnect.push.soap.schema.cscidmtest.Association;
+import fi.csc.orcidconnect.IdentitiesRelayer;
 import fi.csc.orcidconnect.push.soap.schema.cscidmtest.BatchResponse;
 import fi.csc.orcidconnect.push.soap.schema.cscidmtest.Modify;
-import fi.csc.orcidconnect.push.soap.schema.cscidmtest.ModifyAttr;
-import fi.csc.orcidconnect.push.soap.schema.cscidmtest.ObjectFactory;
-import fi.csc.orcidconnect.push.soap.schema.cscidmtest.RemoveAllValues;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.Identifier;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescriptor;
 
@@ -144,19 +139,8 @@ public class MockSoapClient implements IdentitiesRelayer {
 				}
 			});
 	    	
-	    	ObjectFactory objf = new ObjectFactory();
-	    	Modify mod = objf.createModify();
-	    	mod.setClassName("User");
-	    	Association ass = objf.createAssociation();
-	    	ass.setContent(eppnStr);
-	    	ass.setState("associated");
-	    	mod.setAssociation(ass);
-	    	ModifyAttr modAttr = objf.createModifyAttr();
-	    	modAttr.setAttrName("eduPersonOrcid");
-	    	modAttr.setRemoveAllValues(new RemoveAllValues());
-	    	AddValue addVal = objf.createAddValue();
-	    	addVal.setValue(orcidStr);
-	    	modAttr.setAddValue(addVal);
+	    	Modify mod = fi.csc.orcidconnect.push.soap.schema.cscidmtest.ObjectFactory
+	    			.modifyFactory(eppnStr, orcidStr);
 	    	
 	    	Object unmarsh = wsTempl.marshalSendAndReceive(mod, new WebServiceMessageCallback() {
 	    	    public void doWithMessage(WebServiceMessage message) {
