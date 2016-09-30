@@ -35,7 +35,7 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
 
 	private final static String LOGINROUND_ATTRNAME = "loginRounds";
 	private final static String ROLE_USER = "ROLE_USER";
-	private final static String ROLE_ADMIN = "ROLE_ADMIN";
+	public final static String ROLE_ADMIN = "ROLE_ADMIN";
 	private final static String CODESTR = "code";
 	
 	OAuth2ClientConfiguration conf;

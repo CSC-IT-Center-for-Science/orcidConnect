@@ -34,7 +34,8 @@ import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescrip
 @RestController
 public class Controller {
 	
-	public final static String ISAUTH_STR = "isAuthenticated";
+	public final static String ISAUTH_ENDPOINT = "isAuthenticated";
+	public final static String USER_ENDPOINT = "user";
 	
     @Autowired
     WebControllerConfiguration webConf;
@@ -156,7 +157,9 @@ public class Controller {
 		return lis;
 	}
     
-	@RequestMapping(value = {"/{pathVar:${my.controllerConfig.userMatcherString}}/user", "/user"}, method = RequestMethod.GET)
+	@RequestMapping(value = 
+		{"/{pathVar:${my.controllerConfig.userMatcherString}}/" + USER_ENDPOINT,
+				"/" + USER_ENDPOINT}, method = RequestMethod.GET)
 	public Map<String, String> auth(Authentication a) {
 		HashMap<String, String> m = new HashMap<String, String>();
 		List<String> dontShow = webConf.getUserHiddenAttrs();
@@ -181,23 +184,23 @@ public class Controller {
   	}
     
     @SuppressWarnings("serial")
-    @RequestMapping(value = "/" + ISAUTH_STR, method = RequestMethod.GET)
+    @RequestMapping(value = "/" + ISAUTH_ENDPOINT, method = RequestMethod.GET)
     public HashMap<String, String> isAuthenticated(Authentication auth) {
     	if (auth != null) {
 	    	boolean isAuth = auth.isAuthenticated();
 	    	return new HashMap<String, String>() {
-				{ put(ISAUTH_STR, 
+				{ put(ISAUTH_ENDPOINT, 
 	    				String.valueOf(isAuth)); }
 	    	};
     	} else {
     		return new HashMap<String, String>() {
-    			{ put(ISAUTH_STR, "false"); }
+    			{ put(ISAUTH_ENDPOINT, "false"); }
     		};
     	}
     }
     
     @SuppressWarnings("serial")
-    @RequestMapping(value= "/${my.oauth2client.shibSignInPath}/" + ISAUTH_STR, method = RequestMethod.GET)
+    @RequestMapping(value= "/${my.oauth2client.shibSignInPath}/" + ISAUTH_ENDPOINT, method = RequestMethod.GET)
     public HashMap<String, String> isShibAuthenticated(HttpServletRequest req) {
     	if (req.getAttribute("eppn") == null || 
     			((String) req.getAttribute("eppn")).isEmpty()) {

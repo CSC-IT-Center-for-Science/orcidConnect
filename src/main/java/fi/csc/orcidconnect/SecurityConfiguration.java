@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import fi.csc.orcidconnect.oauth2client.AuthenticationProcessingFilter;
 import fi.csc.orcidconnect.oauth2client.OAuth2ClientConfiguration;
 
 @Configuration
@@ -41,12 +42,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         		.authenticationEntryPoint(authEntryPoint())
     	.and().authorizeRequests()
 	    .antMatchers("/",
-	    		"/**/isAuthenticated",
+	    		"/**/" + Controller.ISAUTH_ENDPOINT,
 	    		"/**/favicon.ico",
 	    		"/*" + oauthConf.getLoginFilterPathMatcher(),
 	    		"/logout",
-	    		// TODO: user-endpoint -address could be parametrised
-	    		"/" + oauthConf.getShibSignInPath() + "/user")
+	    		"/" + oauthConf.getShibSignInPath() + "/" + Controller.USER_ENDPOINT)
 	    	.permitAll()
 	    .regexMatchers("/((" + 
 	    	oauthConf.getOauthProviderMatcherString() +
@@ -60,8 +60,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	    	oauthConf.getShibSignInPath() + "/env.json",
     		"/auth",
     		"/mappings")
-	    	// TODO: parametrise (see AuthenticationProcessingFilter)
-	    	.hasAuthority("ROLE_ADMIN")
+	    	.hasAuthority(AuthenticationProcessingFilter.ROLE_ADMIN)
         .and().authorizeRequests()
                 .antMatchers(
                 		"/" + oauthConf.getShibSignInPath() + "/trigpush",
