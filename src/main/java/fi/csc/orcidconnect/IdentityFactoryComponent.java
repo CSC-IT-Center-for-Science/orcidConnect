@@ -5,7 +5,6 @@ import java.util.GregorianCalendar;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -24,25 +23,6 @@ public class IdentityFactoryComponent {
 	private String mediatorId;
 	private String issuerStr;
 	
-	@Autowired
-	public IdentityFactoryComponent (
-			String eppnFrName,
-			String eppnOid,
-			String orcidFrName,
-			String orcidOid,
-			String attrNameFormat,
-			String mediatorId,
-			String issuerStr
-			) {
-		this.eppnFrName = eppnFrName;
-		this.eppnOid = eppnOid;
-		this.orcidFrName = orcidFrName;
-		this.orcidOid = orcidOid;
-		this.attrNameFormat = attrNameFormat;
-		this.mediatorId = mediatorId; 
-		this.issuerStr = issuerStr;
-	}
-
 	public Identifier eppnFactory (String eppnStr) {
 		Identifier id = new Identifier();
 		id.setIdentifierValue(eppnStr);
@@ -87,5 +67,35 @@ public class IdentityFactoryComponent {
 	public String getIssuerStr() {
 		return issuerStr;
 	}
+
+	public void setEppnFrName(String eppnFrName) {
+		this.eppnFrName = eppnFrName;
+	}
+
+	public void setEppnOid(String eppnOid) {
+		this.eppnOid = eppnOid;
+	}
+
+	public void setOrcidFrName(String orcidFrName) {
+		this.orcidFrName = orcidFrName;
+	}
+
+	public void setOrcidOid(String orcidOid) {
+		this.orcidOid = orcidOid;
+	}
+
+	public void setAttrNameFormat(String attrNameFormat) {
+		this.attrNameFormat = attrNameFormat;
+	}
+
+	public void setMediatorId(String mediatorId) {
+		this.mediatorId = mediatorId;
+	}
+
+	public void setIssuerStr(String issuerStr) {
+		this.issuerStr = issuerStr;
+	}
+
+	
 	
 }
