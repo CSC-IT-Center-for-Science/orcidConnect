@@ -78,6 +78,7 @@ public class Controller {
 		if (a.isAuthenticated()) {
 			@SuppressWarnings("unchecked")
 			HashMap<String, ?> map = (HashMap<String, ?>) a.getDetails();
+			// TODO: this functionality could be moved to IdentityFactoryComponent
 			String orcidStr = String.valueOf(
 					map.get(idFactory.getOrcidFrName())
 					);
@@ -103,7 +104,6 @@ public class Controller {
 	@RequestMapping("/${my.oauth2client.shibSignInPath}/modify.{xml|json}")
 	public Modify modifyObject (Authentication a, HttpServletRequest req) {
 		IdentityDescriptor id = getIdDescr(a, req);
-		// TODO: attribute names from configuration
 		return idFactory.modifyFactory(id);
 	}
 	

@@ -15,8 +15,6 @@ import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.namespace.QName;
 
-import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.Identifier;
-
 
 /**
  * This object contains factory methods for each 
@@ -46,24 +44,6 @@ public class ObjectFactory {
     public ObjectFactory() {
     }
     
-/*    public static Modify modifyFactory (String eppnStr, String orcidStr) {
-    	ObjectFactory objf = new ObjectFactory();
-    	Modify mod = objf.createModify();
-    	mod.setClassName("User");
-    	Association ass = objf.createAssociation();
-    	ass.setContent(eppnStr);
-    	ass.setState("associated");
-    	mod.setAssociation(ass);
-    	ModifyAttr modAttr = objf.createModifyAttr();
-    	modAttr.setAttrName(Identifier.ORCIDFRNAME);
-    	modAttr.setRemoveAllValues(new RemoveAllValues());
-    	AddValue addVal = objf.createAddValue();
-    	addVal.setValue(orcidStr);
-    	modAttr.setAddValue(addVal);
-    	mod.setModifyAttr(modAttr);
-    	return mod;
-	}
-*/
     /**
      * Create an instance of {@link BatchResponse }
      * 
