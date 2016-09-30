@@ -5,6 +5,7 @@ import java.util.GregorianCalendar;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +24,7 @@ public class IdentityFactoryComponent {
 	private String mediatorId;
 	private String issuerStr;
 	
+	@Autowired
 	public IdentityFactoryComponent (
 			String eppnFrName,
 			String eppnOid,
