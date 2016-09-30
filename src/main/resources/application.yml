@@ -16,7 +16,7 @@ my:
       - git
       - orcidSandbox
     defaultProvider: 'orcidSandbox'
-    specialCase: 'orcidSandbox'
+    specialCase: 'none'
     #callBackBase: 'https://orcid-connect01.csc.fi:4443/app/'
     callBackBase: 'https://connect-dev.tutkijatunniste.fi/app/'
     shibSignInPath: 'shib'
@@ -62,12 +62,12 @@ my:
     uniarts:
       idp: 'https://idp.testshib.org/idp/shibboleth'
       relayerImplClass: 'fi.csc.orcidconnect.push.rest.RestJsonClient'
-      #restUrl: 'https://orquidea.uniarts.fi/v1/orcid'
-      restUrl: 'https://demo9650738.mockable.io/identities'
-      #authUser: '${uniArtsRestUser}'
-      #authPass: '${uniArtsRestPass}'
-      authUser: 'user'
-      authPass: 'pass'
+      restUrl: '${uniArtsRestUrl}'
+      #restUrl: 'https://demo9650738.mockable.io/identities'
+      authUser: '${uniArtsRestUser}'
+      authPass: '${uniArtsRestPass}'
+      #authUser: 'user'
+      #authPass: 'pass'
     hakaTest:
       idp: 'https://testidp.funet.fi/idp/shibboleth'
       relayerImplClass: 'fi.csc.orcidconnect.push.soap.MockSoapClient'

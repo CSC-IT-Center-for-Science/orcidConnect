@@ -227,9 +227,9 @@ $(function () {
 		    $('#oauthId').empty();
 		    $.getJSON('/app/user', function (jsonReply) {
 			$('#oauthId').append(
-			    "<a href='http://sandbox.orcid.org/" + jsonReply.id + "'>" +
+			    "<a href='" + jsonReply.eduPersonOrcid + "'>" +
 				"<img src='/favicon.ico'> " +
-				"http://sandbox.orcid.org/" + jsonReply.id + "</a>");
+				jsonReply.eduPersonOrcid + "</a>");
 			$('#oauthName').append(jsonReply.name);
 		    });
 		    if (showMappings) {
