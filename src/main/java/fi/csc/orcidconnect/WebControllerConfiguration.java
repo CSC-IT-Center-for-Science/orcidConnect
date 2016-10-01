@@ -17,6 +17,7 @@ public class WebControllerConfiguration {
 	
 	private String shibAttrNameIdP;
 	private String shibAttrNameEppn;
+
 	public String getShibAttrNameIdP() {
 		return shibAttrNameIdP;
 	}

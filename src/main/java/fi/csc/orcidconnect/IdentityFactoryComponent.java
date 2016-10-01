@@ -123,6 +123,10 @@ public class IdentityFactoryComponent {
 	public String getOrcidFrName() {
 		return orcidFrName;
 	}
+	
+	public String getEppnFrName() {
+		return eppnFrName;
+	}
 
 	
 }

@@ -81,7 +81,6 @@ public class Controller {
 		if (a.isAuthenticated()) {
 			@SuppressWarnings("unchecked")
 			HashMap<String, ?> map = (HashMap<String, ?>) a.getDetails();
-			// TODO: this functionality could be moved to IdentityFactoryComponent
 			String orcidStr = String.valueOf(
 					map.get(idFactory.getOrcidFrName())
 					);
