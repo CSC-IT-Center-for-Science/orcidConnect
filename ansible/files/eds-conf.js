@@ -21,12 +21,12 @@ var wayf_sp_entityID = "https://orcid-poc.csc.fi/shibboleth";
 // Shibboleth Service Provider handler URL
 // Examples: "https://point.switch.ch/Shibboleth.sso", "https://rr.aai.switch.ch/aaitest/Shibboleth.sso"
 // [Mandatory, if wayf_use_discovery_service = false]
-var wayf_sp_handlerURL = "https://orcid-connect01.csc.fi:4443/Shibboleth.sso";
+var wayf_sp_handlerURL = "https://connect-dev-local.tutkijatunniste.fi/Shibboleth.sso";
 
 // URL on this resource that the user shall be returned to after authentication
 // Examples: "https://econf.switch.ch/aai/home", "https://olat.uzh.ch/my/courses"
 // [Mandatory]
-var wayf_return_url = "https://orcid-connect01.csc.fi:4443/app/";
+var wayf_return_url = "https://connect-dev-local.tutkijatunniste.fi/app/";
 
 
 //////////////////// RECOMMENDED SETTINGS ////////////////////
