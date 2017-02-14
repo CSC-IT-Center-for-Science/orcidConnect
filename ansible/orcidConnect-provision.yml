@@ -1,0 +1,126 @@
+---
+
+- hosts: connect-dev
+  
+  tasks:
+  
+    - name: add shibboleth repo
+      become: yes
+      yum_repository:
+        name: shibboleth
+        description: Shibboleth SAML software
+        baseurl: http://download.opensuse.org/repositories/security:/shibboleth/CentOS_7/
+        gpgkey: http://download.opensuse.org/repositories/security:/shibboleth/CentOS_7//repodata/repomd.xml.key
+      
+    - name: add epel
+      become: yes
+      yum: name=epel-release state=present
+      
+    - name: initial packages
+      become: yes
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - emacs-nox
+        - emacs-yaml-mode
+        - yamllint
+        - java-1.8.0-openjdk
+        - java-1.8.0-openjdk-devel
+        - httpd
+        - mod_ssl
+        - mod_proxy_html
+        - shibboleth
+        - git
+        - maven
+        - policycoreutils-python
+        - wget
+      
+    - name: selinux permissive
+      become: yes
+      lineinfile:
+        dest: /etc/selinux/config
+        regexp: '^SELINUX='
+        line: 'SELINUX=permissive'
+
+    - name: copy config files # template OSLT would be better
+      become: yes
+      file:
+        path: "/var/www/html/{{ item }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: apache
+      with_items:
+        - ds
+        - img
+        
+    - become: yes
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+      with_items:
+        - { src: "files/shibboleth2.xml", dest: "/etc/shibboleth/shibboleth2.xml" }
+        - { src: "files/spring.service", dest: "/etc/systemd/system/spring.service" }
+        - { src: "files/spring.conf", dest: "/etc/httpd/conf.d/spring.conf" }
+        - { src: "files/ssl.conf", dest: "/etc/httpd/conf.d/ssl.conf" }
+        - { src: "files/eds-conf.js", dest: "/var/www/html/ds/eds-conf.js" }
+      notify: [restart shibd, restart httpd]
+
+    - become: yes
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: shibd
+      with_items:
+        - { src: "../../ansible-data/orcidConnect/orcid-saml.key", dest: "/etc/pki/tls/private/orcid-saml.key" }
+        - { src: "../../ansible-data/orcidConnect/orcid-saml.pem", dest: "/etc/pki/tls/certs/orcid-saml.pem" }
+      notify: restart shibd
+      
+    - name: fetch haka test metadata signing key
+      become: yes
+      get_url:
+        url: https://wiki.eduuni.fi/download/attachments/27297785/haka_testi_2015_sha2.crt
+        dest: /etc/pki/tls/certs/
+      
+    - name: fetch images
+      become: yes
+      get_url:
+        url: https://orcid-connect01.csc.fi/favicon.ico  
+        dest: /var/www/html/
+
+    - command: wget --no-check-certificate -r --no-parent --reject "*.html" https://orcid-connect01.csc.fi/img/
+    - shell: "mv /home/{{ ansible_user }}/orcid-connect01.csc.fi/img/*.png /var/www/html/img/"
+    - shell: "mv /home/{{ ansible_user }}/orcid-connect01.csc.fi/img/*.gif /var/www/html/img/"
+    - file: path=/home/{{ ansible_user }}/orcid-connect01.csc.fi/ state=absent
+    
+    - name: clone repository
+      git:
+        accept_hostkey: yes
+        repo: https://github.com/CSC-IT-Center-for-Science/orcidConnect.git
+        dest: "/home/{{ ansible_user }}/orcidConnect/"
+        version: push
+        
+    - copy: 
+        src: "../../ansible-data/orcidConnect/private.properties"
+        dest: "orcidConnect/src/main/resources/"
+    
+    - name: package jar
+      shell: "cd orcidConnect && mvn package"  
+
+    - name: enable and start services
+      become: yes
+      service: name="{{ item }}" state=started enabled=yes
+      with_items:
+        - spring
+        - shibd
+        - httpd
+            
+  handlers:
+    - name: restart shibd
+      become: yes
+      service: name=shibd state=restarted
+      
+    - name: restart httpd
+      become: yes
+      service: name=httpd state=restarted      

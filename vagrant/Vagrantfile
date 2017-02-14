@@ -1,6 +1,17 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# https://github.com/mitchellh/vagrant/issues/992
+# provision usable ssh-keys
+private_key_path = File.join(Dir.home, ".ssh", "id_rsa")
+public_key_path = File.join(Dir.home, ".ssh", "id_rsa.pub")
+insecure_key_path = File.join(Dir.home, ".vagrant.d", "insecure_private_key")
+
+private_key = IO.read(private_key_path)
+public_key = IO.read(public_key_path)
+
+
+
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
@@ -22,8 +33,15 @@ Vagrant.configure(2) do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
-  config.vm.network "forwarded_port", guest: 80, host: 8181
-  config.vm.network "forwarded_port", guest: 443, host: 4443
+  config.vm.network "private_network", ip:"192.168.18.22"
+  
+  config.vm.hostname = "orcid-poc"
+  
+  config.ssh.insert_key = false
+  config.ssh.private_key_path = [
+    private_key_path,
+    insecure_key_path # to provision the first time
+  ]
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -69,5 +87,34 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get update
   #   sudo apt-get install -y apache2
   # SHELL
-  config.vm.provision :shell, path: "bootstrap.sh"
+  # provision usable ssh keys (see above)
+  config.vm.provision :shell, :inline => <<-SCRIPT
+    set -e
+
+    echo '#{private_key}' > /home/vagrant/.ssh/id_rsa
+    chmod 600 /home/vagrant/.ssh/id_rsa
+
+    echo '#{public_key}' > /home/vagrant/.ssh/authorized_keys
+    chmod 600 /home/vagrant/.ssh/authorized_keys
+  SCRIPT
+  
+  # allow acces to the host while provisioner is running
+  config.vm.provision "shell", 
+  	inline: "sudo ifdown eth1 && sudo ifup eth1" 
+
+  # and only then use ansible provisioner
+  # 'cos if it fails, keys are still in place
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "../ansible/orcidConnect-provision.yml"
+    ansible.groups = {
+      "connect-dev" => ["default"]
+    }
+  end
+    
+  # reload so that selinux permissive role takes effect
+  # https://github.com/aidanns/vagrant-reload
+  config.vm.provision :reload
+
+
+
 end
