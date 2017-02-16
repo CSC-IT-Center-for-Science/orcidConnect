@@ -62,6 +62,7 @@
         - { src: "files/shibboleth2.xml", dest: "/etc/shibboleth/shibboleth2.xml" }
         - { src: "files/spring.service", dest: "/etc/systemd/system/spring.service" }
         - { src: "files/spring.conf", dest: "/etc/httpd/conf.d/spring.conf" }
+        - { src: "files/shib.conf", dest: "/etc/httpd/conf.d/shib.conf" }
         - { src: "files/ssl.conf", dest: "/etc/httpd/conf.d/ssl.conf" }
         - { src: "files/eds-conf.js", dest: "/var/www/html/ds/eds-conf.js" }
       notify: [restart shibd, restart httpd]
