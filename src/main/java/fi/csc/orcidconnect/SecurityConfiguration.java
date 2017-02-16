@@ -42,11 +42,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         		.authenticationEntryPoint(authEntryPoint())
     	.and().authorizeRequests()
 	    .antMatchers("/",
-	    		"/**/" + Controller.ISAUTH_ENDPOINT,
+	    		"/**/" + Defaultcontroller.ISAUTH_ENDPOINT,
 	    		"/**/favicon.ico",
 	    		"/*" + oauthConf.getLoginFilterPathMatcher(),
 	    		"/logout",
-	    		"/" + oauthConf.getShibSignInPath() + "/" + Controller.USER_ENDPOINT)
+	    		"/" + oauthConf.getShibSignInPath() + "/" + Defaultcontroller.USER_ENDPOINT)
 	    	.permitAll()
 	    .regexMatchers("/((" + 
 	    	oauthConf.getOauthProviderMatcherString() +

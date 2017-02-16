@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 	<title>Orcid Connect</title>
 
 	<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" />
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
       type="text/css"  />
 
@@ -116,10 +116,9 @@
 						<tr><th></th><th>ORCID iD</th><th>Haka eppn</th></tr>
 						<tr><th>Id</th>
 							<td id="oauthId" style='display: none;'><a href='/app/orcidSandbox/signin' class='btn btn-default btn-signin' style='white-space: normal;' id='btnOrcid'>
-								<img src="/img/orcid_24x24.png" alt="Sign in with ORCID"> Create or Connect your ORCID SANDBOX iD</a></td>
-							<td id="hakaId"></td>
-						<tr style='display: none;'><th>Nimi</th><td id="oauthName"></td><td id="hakaName"></td>
-						</tr>
+								<img src="/img/orcid_24x24.png" alt="Sign in with ORCID" /> Create or Connect your ORCID SANDBOX iD</a></td>
+							<td id="hakaId"></td></tr>
+						<tr style='display: none;'><th>Nimi</th><td id="oauthName"></td><td id="hakaName"></td></tr>
 					</table>
 				</div>
 				<div id='errorBlock' class='col-md-12 alert alert-danger' style='display:none;'>
@@ -140,9 +139,9 @@
 				      </input></label>
 				    </div>
 				    <button disabled='true' id='saveData' type='submit' class='btn btn-primary'
-					    data-loading-text="<span class='glyphicon glyphicon-refresh glyphicon-spin' aria-hidden='true'></span>" 
-					    data-done-text="<span class='glyphicon glyphicon-ok' aria-hidden='true'></span>"
-					    data-error-text="<span class='glyphicon glyphicon-remove' aria-hidden='true'></span>"
+					    data-loading-text="&lt;span class='glyphicon glyphicon-refresh glyphicon-spin' aria-hidden='true'&gt;&lt;/span&gt;" 
+					    data-done-text="&lt;span class='glyphicon glyphicon-ok' aria-hidden='true'&gt;&lt;/span&gt;"
+					    data-error-text="&lt;span class='glyphicon glyphicon-remove' aria-hidden='true'&gt;&lt;/span&gt;"
 					    >Tallenna</button>
 				  </div>
 				</div>
@@ -157,7 +156,7 @@
 var isShibSessionBool;
 var isOAuthSessionBool;
 var showMappings = false;
-
+/*<![CDATA[*/
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -297,6 +296,8 @@ $('#saveData').on('click', function(event) {
 	alert("Tietojen lähettäminen ei onnistu ilman käyttäjän hyväksyntää.")
     }
 });
+
+/*]]>*/
 
 </script>
 

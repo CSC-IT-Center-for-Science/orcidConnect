@@ -102,6 +102,10 @@
 	    <version>20160628.1</version>
 	</dependency>
 	
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-thymeleaf</artifactId>
+	</dependency>
 	</dependencies>
 	
 	<build>
@@ -161,11 +165,11 @@
 	  <resources>
     	    <resource>
               <directory>src/main/resources</directory>
-              <includes>
+              <!-- <includes>
                 <include>application.yml</include>
                 <include>application.properties</include>
-                <include>static/*.html</include>
-              </includes>
+                <include></include>
+              </includes>-->
               <filtering>true</filtering>
       	    </resource>
     	  </resources>

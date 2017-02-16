@@ -18,9 +18,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.PropertySource;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
@@ -31,8 +32,8 @@ import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.Identifier;
 import fi.csc.orcidconnect.push.soap.schema.identitiesdescriptor.IdentityDescriptor;
 
 
-@RestController
-public class Controller {
+@Controller
+public class Defaultcontroller {
 	
 	public final static String ISAUTH_ENDPOINT = "isAuthenticated";
 	public final static String USER_ENDPOINT = "user";
@@ -55,7 +56,13 @@ public class Controller {
 	@Autowired
 	IdentitiesRelayerConfiguration idRelConf;
 	
+	@RequestMapping("/")
+	private String getRoot() {
+		return "index";
+	}
+	
 	@RequestMapping("/${my.oauth2client.shibSignInPath}/env.json")
+	@ResponseBody
 	public Map<String, String> printEnv() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		for (Iterator<?> i =
@@ -99,17 +106,20 @@ public class Controller {
 	}
 	
 	@RequestMapping("/${my.oauth2client.shibSignInPath}/iddescriptor.{xml|json}")
+	@ResponseBody
 	public IdentityDescriptor idDescriptor (Authentication a, HttpServletRequest req) {
 		return getIdDescr(a, req);
 	}
 	
 	@RequestMapping("/${my.oauth2client.shibSignInPath}/modify.{xml|json}")
+	@ResponseBody
 	public Modify modifyObject (Authentication a, HttpServletRequest req) {
 		IdentityDescriptor id = getIdDescr(a, req);
 		return idFactory.modifyFactory(id);
 	}
 	
 	@RequestMapping("/${my.oauth2client.shibSignInPath}/trigpush")
+	@ResponseBody
 	public HashMap<String, String> trigPush(Authentication a, HttpServletRequest req) {
 		final String statusStr = "isError";
 		final String descrStr = "description";
@@ -145,6 +155,7 @@ public class Controller {
 	}
 
 	@RequestMapping("/mappings")
+	@ResponseBody
 	public List<String> listMappings() {
 		ArrayList<String> lis = new ArrayList<String>();
 		Map<RequestMappingInfo, HandlerMethod> map = handlerMapping.getHandlerMethods();
@@ -159,6 +170,7 @@ public class Controller {
 	@RequestMapping(value = 
 		{"/{pathVar:${my.controllerConfig.userMatcherString}}/" + USER_ENDPOINT,
 				"/" + USER_ENDPOINT}, method = RequestMethod.GET)
+	@ResponseBody
 	public Map<String, String> auth(Authentication a) {
 		HashMap<String, String> m = new HashMap<String, String>();
 		List<String> dontShow = webConf.getUserHiddenAttrs();
@@ -178,12 +190,14 @@ public class Controller {
 	}
 	
     @RequestMapping(value = "/auth", method = RequestMethod.GET)
+	@ResponseBody
 	public Principal getUser(Principal principal) {
 		return principal;
   	}
     
     @SuppressWarnings("serial")
     @RequestMapping(value = "/" + ISAUTH_ENDPOINT, method = RequestMethod.GET)
+	@ResponseBody
     public HashMap<String, String> isAuthenticated(Authentication auth) {
     	if (auth != null) {
 	    	boolean isAuth = auth.isAuthenticated();
@@ -200,6 +214,7 @@ public class Controller {
     
     @SuppressWarnings("serial")
     @RequestMapping(value= "/${my.oauth2client.shibSignInPath}/" + ISAUTH_ENDPOINT, method = RequestMethod.GET)
+	@ResponseBody
     public HashMap<String, String> isShibAuthenticated(HttpServletRequest req) {
     	if (req.getAttribute("eppn") == null || 
     			((String) req.getAttribute("eppn")).isEmpty()) {
@@ -214,6 +229,7 @@ public class Controller {
     }
 
     @RequestMapping(value = "/${my.oauth2client.shibSignInPath}/" + USER_ENDPOINT, method = RequestMethod.GET)
+	@ResponseBody
     public HashMap<String, String> shibUser(HttpServletRequest req) {
     	// NOTE: make note about new convention in specifying and initializing (local) fields
 		final HashMap<String, String> attrs = new HashMap<String, String>();
@@ -224,6 +240,7 @@ public class Controller {
     }
     
     @RequestMapping(value= "/{pathVar:${my.controllerConfig.userMatcherString}|${my.oauth2client.shibSignInPath}}/signin")
+	@ResponseBody
     public void redirectSigned(HttpServletResponse resp) {
     	try {
 			resp.sendRedirect("/app/");
