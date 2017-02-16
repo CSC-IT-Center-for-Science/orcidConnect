@@ -15,7 +15,7 @@ my:
   orcidFrName: eduPersonOrcid
   orcidOid: "urn:oid:1.3.6.1.4.1.5923.1.1.1.16"
   attrNameFormat: "urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
-  mediatorId: "https://connect-dev.tutkijatunniste.fi"
+  mediatorId: "https://connect-dev-local.tutkijatunniste.fi"
   issuerStr: "https://sandbox.orgid.org"
   oauth2client:
     providerList:
@@ -24,8 +24,7 @@ my:
       - orcidSandbox
     defaultProvider: 'orcidSandbox'
     specialCase: 'none'
-    #callBackBase: 'https://orcid-connect01.csc.fi:4443/app/'
-    callBackBase: 'https://connect-dev.tutkijatunniste.fi/app/'
+    callBackBase: 'https://connect-dev-local.tutkijatunniste.fi/app/'
     shibSignInPath: 'shib'
     limitLoginRounds: 3
     loginFilterPathMatcher: Login

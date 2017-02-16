@@ -175,8 +175,8 @@ public class OAuth2Client {
 
 			AccessTokenResponse successResponse = (AccessTokenResponse) tokenResponse;
 			// Get the access token, the server may also return a refresh token
-			AccessToken accessToken = successResponse.getAccessToken();
-			RefreshToken refreshToken = successResponse.getRefreshToken();	
+			AccessToken accessToken = successResponse.getTokens().getAccessToken();
+			RefreshToken refreshToken = successResponse.getTokens().getRefreshToken();	
 			return new OAuth2Token(accessToken, refreshToken, provider);
 
 		} catch (ParseException | ClassCastException e) {
@@ -197,8 +197,8 @@ public class OAuth2Client {
 
 	    AccessTokenResponse successResponse = (AccessTokenResponse) tokenResponse;
 	    // Get the access token, the server may also return a refresh token
-	    AccessToken accessToken = successResponse.getAccessToken();
-	    RefreshToken refreshToken = successResponse.getRefreshToken();
+	    AccessToken accessToken = successResponse.getTokens().getAccessToken();
+	    RefreshToken refreshToken = successResponse.getTokens().getRefreshToken();
 	    
 	    JacksonJsonParser parser = new JacksonJsonParser();
 	    Map<String, Object> map = parser.parseMap(httpResponse.getContent());
