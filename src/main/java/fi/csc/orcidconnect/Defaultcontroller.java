@@ -19,6 +19,7 @@ import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.PropertySource;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -57,7 +58,9 @@ public class Defaultcontroller {
 	IdentitiesRelayerConfiguration idRelConf;
 	
 	@RequestMapping("/")
-	private String getRoot() {
+	private String getRoot(Model model) {
+		model.addAttribute("homeLink", webConf.getHomeLink());
+		model.addAttribute("infoLink", webConf.getInfoLink());
 		return "index";
 	}
 	

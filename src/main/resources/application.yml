@@ -87,6 +87,8 @@ my:
     - '0000-0003-0833-4032'
     - '0000-0002-1260-232X'
   controllerConfig:
+    homeLink: https://tutkijatunniste.fi/
+    infoLink: https://tutkijatunniste.fi/kansallinen-orcid-haka-yhdistamispalvelu/
     shibAttrKeys:
       - Shib-Identity-Provider
       - eppn

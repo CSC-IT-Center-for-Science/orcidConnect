@@ -17,6 +17,24 @@ public class WebControllerConfiguration {
 	
 	private String shibAttrNameIdP;
 	private String shibAttrNameEppn;
+	private String homeLink;
+	private String infoLink;
+
+	public void setHomeLink(String homeLink) {
+		this.homeLink = homeLink;
+	}
+
+	public void setInfoLink(String infoLink) {
+		this.infoLink = infoLink;
+	}
+
+	public String getHomeLink() {
+		return homeLink;
+	}
+
+	public String getInfoLink() {
+		return infoLink;
+	}
 
 	public String getShibAttrNameIdP() {
 		return shibAttrNameIdP;

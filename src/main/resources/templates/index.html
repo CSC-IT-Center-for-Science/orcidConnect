@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html  xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-	<title>Orcid Connect</title>
+	<title  th:text="#{home.title}">Orcid Connect</title>
 
 	<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
@@ -49,19 +49,20 @@
 	    <!-- Brand and toggle get grouped for better mobile display -->
 	    <div class="navbar-header">
 	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-	        <span class="sr-only">Toggle navigation</span>
+	        <span th:text="#{home.toggleNav}" class="sr-only">Toggle navigation</span>
 	        <span class="icon-bar"></span>
 	        <span class="icon-bar"></span>
 	        <span class="icon-bar"></span>
 	      </button>
-	      <a class="navbar-brand" href="https://tutkijatunniste.wordpress.com">Tutkijatunniste</a>
+	      <!-- TODO: parametrise link -->
+	      <a th:text="#{home.linkText}" class="navbar-brand" href="https://tutkijatunniste.wordpress.com" th:href="${homeLink}">Tutkijatunniste</a>
 	    </div>
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	      <ul class="nav navbar-nav">
-	        <li><a href="https://tutkijatunniste.wordpress.com/kansallinen-orcid-haka-yhdistamispalvelu/">Tietoa yhdistämispalvelusta</a></li>
+	        <li><a th:text="#{home.infoLinkText}" href="https://tutkijatunniste.wordpress.com/kansallinen-orcid-haka-yhdistamispalvelu/" th:href="${infoLink}">Tietoa yhdistämispalvelusta</a></li>
 	      </ul>
 	      <ul class='nav navbar-nav pull-right'>
-	    	<li id='logout' style='display: none;'><a href="/app/logout">Logout</a></li>
+	    	<li id='logout' style='display: none;'><a href="/app/logout" th:text="#{home.logout}">Logout</a></li>
 	    </ul>
 	    </div>
 	  </div>
@@ -71,28 +72,28 @@
 	        <div class='row'>
 		  <div class='col-md-offset-4 col-md-6 wellBox'>
 		    <div id='initial'>
-		      <h3>Vaihe 1/4: Aloitus</h3>
-		      <p class='well' >Yhdistämispalvelussa tutkija voi liittää oman <a href='https://orcid.org'>ORCID</a>-tunnisteensa tutkimusorganisaatioon.
+		      <h3 th:text="#{home.phase1Header}">Vaihe 1/4: Aloitus</h3>
+		      <p th:utext="#{home.phase1Description}" class='well'>Yhdistämispalvelussa tutkija voi liittää oman <a href='https://orcid.org'>ORCID</a>-tunnisteensa tutkimusorganisaatioon.
 			Löydät lisätietoa yhdistämispalvelusta <a href ='https://tutkijatunniste.wordpress.com/kansallinen-orcid-haka-yhdistamispalvelu/'>tästä linkistä</a>.
 			Tunnisteesi haetaan allaolevaan taulukkoon ensin omasta tutkimusorganisaatiostasi, jonka jälkeen voit kirjautua nykyisellä ORCID-tunnisteellasi
 			tai luoda uuden. Kun molemmat tunnisteet on haettu palveluun, voit toimittaa ne omaan organisatioosi hyväksyttyäsi tietojen välittämisen.
 			Aloita kirjautuminen valitsemalla oma organisaatiosi alla olevasta listasta.</p>
 		    </div>
 		    <div id='shibId' style='display: none'>
-		      <h3>Vaihe 2/4: eppn noudettu</h3>
-		      <p class='well'>Olet nyt kirjautunut oman tutkimusorganisaatiosi tunnuksella. Nyt voit kirjautua nykyisellä
+		      <h3 th:text="#{home.phase2Header}">Vaihe 2/4: eppn noudettu</h3>
+		      <p th:text="#{home.phase2Description}" class='well'>Olet nyt kirjautunut oman tutkimusorganisaatiosi tunnuksella. Nyt voit kirjautua nykyisellä
 			ORCID-tunnusteellasi tai luoda uuden. Jos olet aiemmin luonut ORCID-tunnusteen, huomaa, että kirjautumislomake tulee näkyville klikkaamalla
 			ORCID:n sivun keskiosasta löytyvää 'Sign in'-linkkiä.</p>
 		    </div>
 		    <div id='waitingRelay' style='display: none'>
-		      <h3>Vaihe 3/4: tunnisteet noudettu</h3>
-		      <p class='well'>Molemmat tunnisteesi on nyt noudettu. Nyt voi välittää tunnisteet omaan tutkimusorganisaatioosi,
+		      <h3 th:text="#{home.phase3Header}">Vaihe 3/4: tunnisteet noudettu</h3>
+		      <p th:text="#{home.phase3Description}" class='well'>Molemmat tunnisteesi on nyt noudettu. Nyt voi välittää tunnisteet omaan tutkimusorganisaatioosi,
 			joka vie ORCID-tunnisteesi edelleen organisaation käyttäjähakemistoon, josta se on käytettävissä esimerkiksi Haka-kirjautumisen yhteydessä.
 			Tarkemmat ohjeet, miten voit käyttää ORCID-tunnistetta saat omalta tutkimusorganisaatioltasi.</p>
 		    </div>
 		    <div id='done' style='display: none'>
-		      <h3>Vaihe 4/4: valmis</h3>
-		      <p class='well'>ORCID-tunnisteesi on nyt siirretty tutkimusorganisaatioosi. Voit nyt aloittaa tunnisteesi käyttämisen oman
+		      <h3 th:text="#{home.phase4Header}">Vaihe 4/4: valmis</h3>
+		      <p th:text="#{home.phase4Description}" class='well'>ORCID-tunnisteesi on nyt siirretty tutkimusorganisaatioosi. Voit nyt aloittaa tunnisteesi käyttämisen oman
 		        oman tutkimusorganisaatiosi ohjeiden mukaisesti. Voit nyt kirjautua ulos tästä palvelusta sivun oikeasta yläreunasta
 		        ja/tai sulkea tämän selainikkunan.</p>
 		    </div>
@@ -113,25 +114,25 @@
 			<div class="col-md-6">
 				<div class="col-md-12">
 					<table class="table">
-						<tr><th></th><th>ORCID iD</th><th>Haka eppn</th></tr>
+						<tr><th></th><th th:text="#{home.orcidHeader}">ORCID iD</th><th th:text="#{home.fedidHeader}">Haka eppn</th></tr>
 						<tr><th>Id</th>
 							<td id="oauthId" style='display: none;'><a href='/app/orcidSandbox/signin' class='btn btn-default btn-signin' style='white-space: normal;' id='btnOrcid'>
 								<img src="/img/orcid_24x24.png" alt="Sign in with ORCID" /> Create or Connect your ORCID SANDBOX iD</a></td>
 							<td id="hakaId"></td></tr>
-						<tr style='display: none;'><th>Nimi</th><td id="oauthName"></td><td id="hakaName"></td></tr>
+						<!-- <tr style='display: none;'><th>Nimi</th><td id="oauthName"></td><td id="hakaName"></td></tr> -->
 					</table>
 				</div>
 				<div id='errorBlock' class='col-md-12 alert alert-danger' style='display:none;'>
-				  <p><span class='glyphicon glyphicon-alert'></span> <strong>Organisaatiosi rajapinta ilmoitti virheestä!</strong></p>
+				  <p><span class='glyphicon glyphicon-alert'></span> <strong th:text="#{home.transferError}">Organisaatiosi rajapinta ilmoitti virheestä!</strong></p>
 				  <p><blockquote id='errorDescr'></blockquote></p>
 				  <p><blockquote id='errorTimestamp'></blockquote></p>
-				  <p>Ilmoita virheestä kotiorganisaatiollesi. Lisää virheilmoitukseen edellä mainittu virheilmoitus ja kellonaika.
+				  <p  th:utext="#{home.transferErrorInfo}">Ilmoita virheestä kotiorganisaatiollesi. Lisää virheilmoitukseen edellä mainittu virheilmoitus ja kellonaika.
 				  Lisätietoja <a href='https://wiki.eduuni.fi/display/cscorcidinfo/Connect+virhe'>tästä linkistä</a>.</p>
 				</div>
 				<div id='confirmBlock' class='col-md-12' style='display: none;'>
 				  <div class='form-group'>
 				    <div class='checkbox'>
-				      <label><input id='acceptBox' type="checkbox">
+				      <label><input id='acceptBox' type="checkbox" th:text="#{home.accept}">
 					Hyväksyn tietojen lähettämisen kotiorganisaatiooni.
 					Demopalvelussa on vasta kuvitteellisia palveluja,
 					jotka vastaanottavat kuvittellisia tietoja.
@@ -142,6 +143,7 @@
 					    data-loading-text="&lt;span class='glyphicon glyphicon-refresh glyphicon-spin' aria-hidden='true'&gt;&lt;/span&gt;" 
 					    data-done-text="&lt;span class='glyphicon glyphicon-ok' aria-hidden='true'&gt;&lt;/span&gt;"
 					    data-error-text="&lt;span class='glyphicon glyphicon-remove' aria-hidden='true'&gt;&lt;/span&gt;"
+					    th:text="#{home.sendButton}"
 					    >Tallenna</button>
 				  </div>
 				</div>
@@ -151,7 +153,7 @@
 		
 	</div>
 	
-<script>
+<script th:inline="javascript">
 
 var isShibSessionBool;
 var isOAuthSessionBool;
@@ -204,7 +206,6 @@ function isShibSession() {
 			if (getParameterByName("logout") == "true") {
 				window.location = "/Shibboleth.sso/Logout";
 			} else {
-			    //$('#hakaId').empty();
 			    $('#oauthId').toggle(true);
 			    $('#initial').toggle(false);
 			    $('#shibId').toggle(true);
@@ -247,7 +248,6 @@ $(function () {
 		    }
 		    check();
 		} else {
-			//$('#btnOrcid').toggle(true);
 			check();
 		}
 	});
@@ -271,7 +271,7 @@ $('#saveData').on('click', function(event) {
 	$.getJSON('/app/shib/trigpush', function (jsonReply) {
 		if (jsonReply.isError == 'true') {
 		    btn.empty();
-		    btn.append('Tapahtui virhe');
+		    btn.append([[#{home.errorButton}]]);
 		    $('#acceptBox').parent().parent().empty();
 		    $('#initial').toggle(false);
 		    $('#shibId').toggle(false);
@@ -293,7 +293,7 @@ $('#saveData').on('click', function(event) {
 		}
 	});
     } else {
-	alert("Tietojen lähettäminen ei onnistu ilman käyttäjän hyväksyntää.")
+	alert([[#{home.alertMsg}]])
     }
 });
 
