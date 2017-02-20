@@ -30,3 +30,5 @@ publicHtml/
 
 *.retry
 *.DS_Store
+
+._*
