@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -58,9 +59,10 @@ public class Defaultcontroller {
 	IdentitiesRelayerConfiguration idRelConf;
 	
 	@RequestMapping("/")
-	private String getRoot(Model model) {
-		model.addAttribute("homeLink", webConf.getHomeLink());
-		model.addAttribute("infoLink", webConf.getInfoLink());
+	private String getRoot(Model model,
+			Locale locale) {
+		model.addAttribute("homeLink", webConf.getHomeLink(locale.getLanguage()));
+		model.addAttribute("infoLink", webConf.getInfoLink(locale.getLanguage()));
 		return "index";
 	}
 	

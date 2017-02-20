@@ -17,23 +17,40 @@ public class WebControllerConfiguration {
 	
 	private String shibAttrNameIdP;
 	private String shibAttrNameEppn;
-	private String homeLink;
-	private String infoLink;
+	private String homeLinkEn;
+	private String infoLinkEn;
+	private String homeLinkFi;
+	private String infoLinkFi;
 
-	public void setHomeLink(String homeLink) {
-		this.homeLink = homeLink;
+	public void setHomeLinkEn(String homeLink) {
+		this.homeLinkEn = homeLink;
+	}
+	public void setInfoLinkEn(String infoLink) {
+		this.infoLinkEn = infoLink;
+	}
+	public void setHomeLinkFi(String homeLink) {
+		this.homeLinkFi = homeLink;
+	}
+	public void setInfoLinkFi(String infoLink) {
+		this.infoLinkFi = infoLink;
 	}
 
-	public void setInfoLink(String infoLink) {
-		this.infoLink = infoLink;
+	public String getHomeLink(String lang) {
+		switch (lang) {
+			case "en":
+				return homeLinkEn;
+			default:
+				return homeLinkFi;
+		}
 	}
 
-	public String getHomeLink() {
-		return homeLink;
-	}
-
-	public String getInfoLink() {
-		return infoLink;
+	public String getInfoLink(String lang) {
+		switch (lang) {
+			case "en":
+				return infoLinkEn;
+			default:
+				return infoLinkFi;
+		}
 	}
 
 	public String getShibAttrNameIdP() {
