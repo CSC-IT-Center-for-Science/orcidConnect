@@ -24,15 +24,22 @@ authentication providers as well.
 * [ Spring Framework ](https://spring.io)
 * [ Spring Boot ](http://start.spring.io)
 * [ Vagrant ](https://www.vagrantup.com)
+* [ Ansible ](https://www.ansible.com)
 * [ Maven ](http://maven.apache.org)
 
 This list is not exhaustive. Please, see details from
 the project description (*pom.xml*). 
 
+## Requirements
+
+* Java 1.8
+* Vagrant > 1.9.1
+* Ansible > 2.2.0.0
+
 ## Building and usage
 
 ~~~~
-git clone https://bitbucket.org/klaalo/orcidconnect.git
+git clone https://github.com/CSC-IT-Center-for-Science/orcidConnect.git
 # pom.xml is set to use Java 8, so in Centos7 install
 # necessary packages and set correct JAVA_HOME
 # In vagrantBox preliminaries should be handled
@@ -40,16 +47,15 @@ git clone https://bitbucket.org/klaalo/orcidconnect.git
 # export JAVA_HOME=/usr/lib/jvm/jre-1.8.0-openjdk
 #
 # You will need private properties to filter variables.
-# We'll assume that you have these on your vagrans sync
-# folder.
-# cp sync/private.properties orcidconnect/src/main/resources
-#
-cd orcidconnect
+# Ansible playbook will copy file for you.
+cd orcidConnect/vagrant
+vagrant up
+vagrant ssh
 mvn spring-boot:run
 ~~~~  
 
 ## Say again, what's that?
 
 * [ Orcid ](http://orcid.org)
-* [ Haka federation ](https://confluence.csc.fi/x/JoIUAg)
-* [ Researcher identification in Finland ](https://confluence.csc.fi/x/SqW0Ag)
+* [ Haka federation ](https://wiki.eduuni.fi/display/CSCHAKA/In+English)
+* [ researcheridentifier.fi ](https://researcheridentifier.fi)
