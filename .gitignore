@@ -27,3 +27,8 @@ vagrant.copy/
 *saml.pem
 *.png
 publicHtml/
+
+*.retry
+*.DS_Store
+
+._*

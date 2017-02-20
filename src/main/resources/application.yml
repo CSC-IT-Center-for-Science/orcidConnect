@@ -1,0 +1,121 @@
+---
+server:
+  contextPath: '/app'
+  session:
+    # to avoid castexceptions on startup
+    persistent: 'false'
+spring:
+  mvc:
+    favicon:
+      enabled: 'false'
+
+my:
+  eppnFrName: eduPersonPrincipalName
+  eppnOid: "urn:oid:1.3.6.1.4.1.5923.1.1.1.6"
+  orcidFrName: eduPersonOrcid
+  orcidOid: "urn:oid:1.3.6.1.4.1.5923.1.1.1.16"
+  attrNameFormat: "urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
+  mediatorId: "https://connect-dev-local.tutkijatunniste.fi"
+  issuerStr: "https://sandbox.orgid.org"
+  oauth2client:
+    providerList:
+      - google
+      - git
+      - orcidSandbox
+    defaultProvider: 'orcidSandbox'
+    specialCase: 'none'
+    callBackBase: 'https://connect-dev-local.tutkijatunniste.fi/app/'
+    shibSignInPath: 'shib'
+    limitLoginRounds: 3
+    loginFilterPathMatcher: Login
+    orcidAttrName: eduPersonOrcid
+    providerConfig:
+    # Be aware with leading white space on resource
+    # variables. They will cause extra characters
+    # on oauth ids and authentication will fail
+      orcidSandbox:
+        clientId: '${orcidSandboxClientId}'
+        clientSecret: '${orcidSandboxClientSecret}'
+        tokenUriStr: 'https://api.sandbox.orcid.org/oauth/token'
+        authUriStr: 'http://sandbox.orcid.org/oauth/authorize'
+        scope: '/authenticate'
+        userInfoUri: 'https://api.sandbox.orcid.org/orcid_id'
+        showLogin: true
+        isOneLegged: true
+        orcidPrefix: https://sandbox.orcid.org/
+      google:
+        clientId: '${clientId}'
+        clientSecret: '${clientSecret}'
+        tokenUriStr: 'https://accounts.google.com/o/oauth2/token'
+        authUriStr: 'https://accounts.google.com/o/oauth2/auth'
+        scope: 'profile'
+        userInfoUri: 'https://www.googleapis.com/userinfo/v2/me'
+        isOneLegged: false
+      git:
+        clientId: '${gitClientId}'
+        clientSecret: '${gitClientSecret}'
+        tokenUriStr: 'https://github.com/login/oauth/access_token'
+        authUriStr: 'https://github.com/login/oauth/authorize'
+        # only read access when 
+        # scope is not defined
+        scope: 'user'
+        userInfoUri: 'https://api.github.com/user'
+        isOneLegged: true
+  pushInterfaces:
+    - uniarts
+    - hakaTest
+  pushInterfaceSpecs:
+    uniarts:
+      idp: 'https://idp.testshib.org/idp/shibboleth'
+      relayerImplClass: 'fi.csc.orcidconnect.push.rest.RestJsonClient'
+      restUrl: '${uniArtsRestUrl}'
+      #restUrl: 'https://demo9650738.mockable.io/identities'
+      authUser: '${uniArtsRestUser}'
+      authPass: '${uniArtsRestPass}'
+      #authUser: 'user'
+      #authPass: 'pass'
+    hakaTest:
+      idp: 'https://testidp.funet.fi/idp/shibboleth'
+      relayerImplClass: 'fi.csc.orcidconnect.push.soap.MockSoapClient'
+      schemaPackage: 'fi.csc.orcidconnect.push.soap.schema.cscidmtest'
+      #soapUrl: 'https://demo9650738.mockable.io/mockProvisioningBinding'
+      #soapAction: 'http://www.novell.com/provisioning/service/receive'
+      soapUrl: '${cscSoapUrl}'
+      authUser: '${cscAuthUser}'
+      authPass: '${cscAuthPass}'
+  orcidAdminList:
+    - '0000-0003-0833-4032'
+    - '0000-0002-1260-232X'
+  controllerConfig:
+    homeLinkFi: https://tutkijatunniste.fi/
+    infoLinkFi: https://tutkijatunniste.fi/kansallinen-orcid-haka-yhdistamispalvelu/
+    homeLinkEn: https://researcheridentifier.fi/
+    infoLinkEn: https://researcheridentifier.fi/national-connect-service/
+    shibAttrKeys:
+      - Shib-Identity-Provider
+      - eppn
+      - Shib-Application-ID
+      - persistent-id
+      - Shib-Session-ID
+      - Shib-AuthnContext-Decl
+      - Shib-Authentication-Instant
+      - entitlement
+      - Shib-Assertion-Count
+      - Shib-Session-Index
+      - targeted-id
+      - Shib-AuthnContext-Class
+      - Shib-Cookie-Name
+      - affiliation
+      - REMOTE_USER
+      - Shib-Authentication-Method
+      - unscoped-affiliation
+    userHiddenAttrs:
+      - access_token
+      - refresh_token
+      - orcid
+      - scope
+      - token_type
+      - expires_in
+    shibAttrNameIdP: Shib-Identity-Provider
+    shibAttrNameEppn: eppn 
+    userMatcherString: git|google|orcidSandbox

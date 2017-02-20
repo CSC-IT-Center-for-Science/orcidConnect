@@ -3,7 +3,6 @@ package fi.csc.orcidconnect;
 import java.util.LinkedHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +14,7 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import fi.csc.orcidconnect.oauth2client.AuthenticationProcessingFilter;
 import fi.csc.orcidconnect.oauth2client.OAuth2ClientConfiguration;
 
 @Configuration
@@ -26,13 +26,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	OAuth2ClientConfiguration oauthConf;
-
-	@Value("${my.oauth2client.specialCase}")
-	private String specialCase;
-
+	
 	@Override
     protected void configure(HttpSecurity security) throws Exception {
         security
+        // TODO: voiko laittaa csrf:n takaisin päälle?
         .csrf().disable()
 	    .logout()
 	        .logoutUrl("/logout")
@@ -42,13 +40,35 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	    .authenticationProvider(oAuth2AuthenticationProvider)
         	.exceptionHandling()
         		.authenticationEntryPoint(authEntryPoint())
-        	.and()
-        	.authorizeRequests()
-	    .antMatchers("/", "/**/isAuthenticated", "/**/favicon.ico", "/*login", "/shib/*", "/logout").permitAll()
-	    .regexMatchers("/((git|google|orcidSandbox|shib)/){0,1}user").authenticated()
-	    .regexMatchers("/(git|google|orcidSandbox|shib)/signin").authenticated()
+    	.and().authorizeRequests()
+	    .antMatchers("/",
+	    		"/**/" + Defaultcontroller.ISAUTH_ENDPOINT,
+	    		"/**/favicon.ico",
+	    		"/*" + oauthConf.getLoginFilterPathMatcher(),
+	    		"/logout",
+	    		"/" + oauthConf.getShibSignInPath() + "/" + Defaultcontroller.USER_ENDPOINT)
+	    	.permitAll()
+	    .regexMatchers("/((" + 
+	    	oauthConf.getOauthProviderMatcherString() +
+	    	")/){0,1}user")
+	    	.authenticated()
+	    .regexMatchers("/(" +
+	    	oauthConf.getOauthProviderMatcherString() +
+	    	")/signin")
+	    	.authenticated()
+	    .antMatchers("/" + 
+	    	oauthConf.getShibSignInPath() + "/env.json",
+    		"/auth",
+    		"/mappings")
+	    	.hasAuthority(AuthenticationProcessingFilter.ROLE_ADMIN)
         .and().authorizeRequests()
-                .antMatchers("/auth", "/mappings").authenticated()
+                .antMatchers(
+                		"/" + oauthConf.getShibSignInPath() + "/trigpush",
+                		"/" + oauthConf.getShibSignInPath() + "/iddescriptor.xml",
+                		"/" + oauthConf.getShibSignInPath() + "/iddescriptor.json",
+        				"/" + oauthConf.getShibSignInPath() + "/modify.json",
+						"/" + oauthConf.getShibSignInPath() + "/modify.xml")
+                	.authenticated()
                 .anyRequest().denyAll()
     	;
         
@@ -59,7 +79,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     	LinkedHashMap<RequestMatcher, AuthenticationEntryPoint> entryPoints =
     			new LinkedHashMap<RequestMatcher, AuthenticationEntryPoint>();
     	for (String path:
-    		oauthConf.getProviders()) {
+    		oauthConf.getProviderList()) {
     		entryPoints.put(
     				getMatcher(path),
     				getEntrypoint(path));
@@ -67,6 +87,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     	DelegatingAuthenticationEntryPoint authEntry =
     			new DelegatingAuthenticationEntryPoint(entryPoints);
+    	authEntry.setDefaultEntryPoint(getEntrypoint(oauthConf.getDefaultProvider()));
     	return authEntry;
     }
     
@@ -78,7 +99,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private LoginUrlAuthenticationEntryPoint getEntrypoint(String path) {
     	return new LoginUrlAuthenticationEntryPoint("/" + 
     			specialCase(path)
-    			+ "login");
+    			+ oauthConf.getLoginFilterPathMatcher());
     }
 
     
@@ -91,7 +112,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      * @return empty string for special case, otherwise regular provider selection path
      */
 	private String specialCase(String provider) {
-		if (provider.equals(specialCase)) {
+		if (provider.equals(oauthConf.getSpecialCase())) {
 			return "";
 		} else {
 			return provider;

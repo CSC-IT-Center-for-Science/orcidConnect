@@ -1,0 +1,28 @@
+###
+# update
+cd ~/orcidconnect/ && git pull && mvn clean package && sudo systemctl restart spring && sudo tail -f /var/log/messages
+
+
+###
+# List entityIds of IdPs in metadata
+#
+# Blacklist IdP's from Embedded Haka DS: https://confluence.csc.fi/x/GwLcAQ
+#
+for i in \
+    $(curl -s https://rr.funet.fi/metadata/haka-test/haka-test-metadata.xml | \
+    	   xmllint --xpath "//*[local-name()='EntityDescriptor']/*[local-name()='IDPSSODescriptor']/parent::*/@entityID" -) ; do \
+    echo "$i" | sed 's/entityID=//' ; done
+
+###
+#
+# Send SOAP Request with curl
+#
+curl --data '@env-xml'  --header 'SOAPAction: http://www.novell.com/provisioning/service/receive' https://demo9650738.mockable.io/mockProvisioningBinding
+
+###
+#
+# Request a certificate
+#
+openssl req -out /home/zzz/connect-http.csr -new -newkey rsa:4096 -nodes -days 1095 \
+	-keyout private/connect-http.key -sha256 -config /home/zzz/openssl.cnf \
+	-subj '/C=FI/ST=/L=Espoo/O=CSC - IT Center for Science/OU=/CN=connect.tutkijatunniste.fi'

@@ -8,15 +8,22 @@ public class OAuth2Token {
 	
 	AccessToken myAt;
 	RefreshToken myRt;
-        Map<String, Object> details;
+    Map<String, Object> details;
+    String myProvider;
 
-	public OAuth2Token (AccessToken at, RefreshToken rt) {
+	public String getProvider() {
+		return myProvider;
+	}
+
+	public OAuth2Token (AccessToken at, RefreshToken rt, String provider) {
 		this.myAt = at;
 		this.myRt = rt;
+		this.myProvider = provider;
 	}
 	
-        public OAuth2Token (AccessToken at, RefreshToken rt, Map<String, Object> details) {
-	    this(at, rt);
+        public OAuth2Token (AccessToken at, RefreshToken rt, 
+        		String provider, Map<String, Object> details) {
+	    this(at, rt, provider);
 	    this.details = details;
 	}
 
@@ -36,12 +43,12 @@ public class OAuth2Token {
 		return myRt;
 	}
 	
-        public Map<String, Object> getDetails() {
-	    return this.details;
-        }
-    
-        public boolean hasDetails() {
-	    return this.details != null;
-        }
+    public Map<String, Object> getDetails() {
+    	return this.details;
+    }
+
+    public boolean hasDetails() {
+    	return this.details != null;
+    }
 
 }

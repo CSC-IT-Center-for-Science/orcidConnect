@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<batchResponse xmlns="urn:oasis:names:tc:DSML:2:0:core" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <errorResponse requestID="none" type="success">
+        <message>DirXMLOrcid SOAP Driver
+            (\CSC\CSC\Users\Staff\tositestaaja_set\ext_tositestaaja)Publisher</message>
+        <detail>success</detail>
+    </errorResponse>
+</batchResponse>

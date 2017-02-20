@@ -8,6 +8,7 @@ import org.springframework.boot.json.JacksonJsonParser;
 import java.util.Map;
 
 
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.log4j.Logger;
 
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -37,7 +38,12 @@ import com.nimbusds.oauth2.sdk.token.RefreshToken;
 public class OAuth2Client {
 
 
-        private static Logger logger = Logger.getLogger(OAuth2Client.class);
+	private static Logger logger = Logger.getLogger(OAuth2Client.class);
+	
+	/* General note about ORCID API OAuth implementation
+	 * OpenId Connect would specify and generalize implementations
+	 * Is OIDC in the roadmap of ORCID?
+	 */
 
 
 	public static URI authorizationRequest(OAuth2ClientConfiguration conf, String provider) {
@@ -46,7 +52,6 @@ public class OAuth2Client {
 		try {
 			authzEndpoint = new URI(conf.getAuthUriStr(provider));
 		} catch (URISyntaxException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -64,7 +69,6 @@ public class OAuth2Client {
 		try {
 			callback = new URI(conf.getCallBackURI(provider));
 		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -93,11 +97,26 @@ public class OAuth2Client {
     	// Use this URI to send the end-user's browser to the server
     	URI requestURI;
 		try {
-			requestURI = request.toURI();
-		} catch (SerializeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
+		    URI uri = request.toURI();
+		    URIBuilder uBuilder = new URIBuilder(uri);
+		    // show_login HTTP query attribute
+		    // is needed on ORCID OAuth2 API
+		    // if registration form should be hidden
+		    // https://members.orcid.org/api/get-oauthauthorize
+		    logger.debug("----- showLogin provider:" + provider);
+		    logger.debug("----- isShowLogin: " + conf.isShowlogin(provider));
+		    
+		    // TODO: design globally logging patterns more efficiently
+		    // use modern logger and inject values with pattern:
+		    // logger.debug("message: {}", variable);
+		    
+		    if (conf.isShowlogin(provider)) {
+		    	uBuilder.addParameter("show_login", "true");
+		    }
+		    requestURI = uBuilder.build();
+		} catch (SerializeException | URISyntaxException e) {
+		    e.printStackTrace();
+		    return null;
 		} 
     	
     	return requestURI;
@@ -128,22 +147,24 @@ public class OAuth2Client {
 
 			HTTPResponse httpResponse = req.send();
 
-			if (provider.equals(conf.getSpecialCase())) {
-			    logger.debug("response: " + httpResponse.getContent());
-			    return getToken(httpResponse, true);
+			// in ORCID API special case id is available
+			// with access token
+			// no need for another userinfo request
+			if (conf.getIsProviderOneLegged(provider)) {
+			    logger.debug("tokenrequest response: " + httpResponse.getContent());
+			    return getToken(httpResponse, provider, true);
 			}
 
-			return getToken(httpResponse);
+			return getToken(httpResponse, provider);
 			
 		} catch (URISyntaxException | SerializeException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
 
 	}
 	
-	private static OAuth2Token getToken(HTTPResponse httpResponse) {
+	private static OAuth2Token getToken(HTTPResponse httpResponse, String provider) {
 		try {
 			TokenResponse tokenResponse = TokenResponse.parse(httpResponse);
 			if (! tokenResponse.indicatesSuccess()) {
@@ -154,9 +175,9 @@ public class OAuth2Client {
 
 			AccessTokenResponse successResponse = (AccessTokenResponse) tokenResponse;
 			// Get the access token, the server may also return a refresh token
-			AccessToken accessToken = successResponse.getAccessToken();
-			RefreshToken refreshToken = successResponse.getRefreshToken();	
-			return new OAuth2Token(accessToken, refreshToken);
+			AccessToken accessToken = successResponse.getTokens().getAccessToken();
+			RefreshToken refreshToken = successResponse.getTokens().getRefreshToken();	
+			return new OAuth2Token(accessToken, refreshToken, provider);
 
 		} catch (ParseException | ClassCastException e) {
 			logger.error(httpResponse.getContent());
@@ -165,7 +186,7 @@ public class OAuth2Client {
 		
 	}
 	
-    private static OAuth2Token getToken (HTTPResponse httpResponse, boolean detailCase) {
+    private static OAuth2Token getToken (HTTPResponse httpResponse, String provider, boolean detailCase) {
 	try {
 	    TokenResponse tokenResponse = TokenResponse.parse(httpResponse);
 	    if (! tokenResponse.indicatesSuccess()) {
@@ -176,13 +197,13 @@ public class OAuth2Client {
 
 	    AccessTokenResponse successResponse = (AccessTokenResponse) tokenResponse;
 	    // Get the access token, the server may also return a refresh token
-	    AccessToken accessToken = successResponse.getAccessToken();
-	    RefreshToken refreshToken = successResponse.getRefreshToken();
+	    AccessToken accessToken = successResponse.getTokens().getAccessToken();
+	    RefreshToken refreshToken = successResponse.getTokens().getRefreshToken();
 	    
 	    JacksonJsonParser parser = new JacksonJsonParser();
 	    Map<String, Object> map = parser.parseMap(httpResponse.getContent());
 	    
-	    return new OAuth2Token(accessToken, refreshToken, map);
+	    return new OAuth2Token(accessToken, refreshToken, provider, map);
 
 	} catch (ParseException | ClassCastException e) {
 	    logger.error(httpResponse.getContent());

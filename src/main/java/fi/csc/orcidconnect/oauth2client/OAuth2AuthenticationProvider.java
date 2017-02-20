@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 public class OAuth2AuthenticationProvider 
 	implements AuthenticationProvider {
 
+	// TODO: document authentication logic somewhere
+	
 	@Override
 	public Authentication authenticate(Authentication authentication)
 			throws AuthenticationException {

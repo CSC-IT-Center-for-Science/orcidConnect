@@ -1,0 +1,4 @@
+connect-dev-local						ansible_user=vagrant
+
+[connect-dev]
+connect-dev-local.tutkijatunniste.fi 	ansible_user=vagrant

@@ -5,8 +5,9 @@
 
 	<groupId>fi.csc.orcidconnect</groupId>
 	<artifactId>orcidconnect</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.3</version>
 	<packaging>jar</packaging>
+
 
 	<name>orcidconnect</name>
 	<description>Demo project for Spring Boot</description>
@@ -14,8 +15,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.3.0.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<version>1.5.1.RELEASE</version>
 	</parent>
 
 	<properties>
@@ -24,113 +24,165 @@
 	</properties>
 
 	<repositories>
-		<!--  https://github.com/vbauer/herald  -->
-		<repository>
-		    <id>jitpack.io</id>
-		    <url>https://jitpack.io</url>
-		</repository>
+    
+	  <!--  https://github.com/vbauer/herald  -->
+	  <repository>
+	    <id>jitpack.io</id>
+	    <url>https://jitpack.io</url>
+	  </repository>
+		
+		
 	</repositories>
 
 	<dependencies>
-			<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
+
+	<dependency>
+	  <groupId>org.springframework.boot</groupId>
+	  <artifactId>spring-boot-starter</artifactId>
+	</dependency>
+	  
+	<dependency>
+	  <groupId>org.springframework.boot</groupId>
+	  <artifactId>spring-boot-starter-security</artifactId>
+	</dependency>
 		
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security.oauth</groupId>
-			<artifactId>spring-security-oauth2</artifactId>
-		</dependency>
-    	<dependency>
-        	<groupId>org.springframework.boot</groupId>
-        	<artifactId>spring-boot-devtools</artifactId>
-        	<!-- <optional>true</optional> -->
-    	</dependency>
+	  <dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-test</artifactId>
+	    <scope>test</scope>
+	  </dependency>
+	  <dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-web</artifactId>
+	  </dependency>
+    	  <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+    	  </dependency>
 
-		<dependency>
-		    <groupId>com.nimbusds</groupId>
-		    <artifactId>oauth2-oidc-sdk</artifactId>
-          	<exclusions>
-              	<exclusion>
-                  	<groupId>com.nimbusds</groupId>
-                	<artifactId>nimbus-jose-jwt</artifactId>
-              	</exclusion>
-          	</exclusions>
-        </dependency>
-        <dependency>
-          <groupId>com.nimbusds</groupId>
-          <artifactId>nimbus-jose-jwt</artifactId>
-        </dependency>
+	  <dependency>
+	    <groupId>com.nimbusds</groupId>
+	    <artifactId>oauth2-oidc-sdk</artifactId>
+            <exclusions>
+              <exclusion>
+		<groupId>com.nimbusds</groupId>
+		<artifactId>nimbus-jose-jwt</artifactId>
+              </exclusion>
+            </exclusions>
+          </dependency>
+          <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+          </dependency>
 
-		<!--  https://github.com/vbauer/herald  -->
-		<dependency>
-		    <groupId>com.github.vbauer</groupId>
-		    <artifactId>herald</artifactId>
-		    <version>1.1.0</version>
-		</dependency>
+	  <!--  https://github.com/vbauer/herald  -->
+	  <dependency>
+	    <groupId>com.github.vbauer</groupId>
+	    <artifactId>herald</artifactId>
+	    <version>1.2.3</version>
+	  </dependency>
 
+	  <dependency>
+	    <groupId>org.springframework.ws</groupId>
+	    <artifactId>spring-ws-core</artifactId>
+	  </dependency>
+	  <dependency>
+	    <groupId>org.apache.httpcomponents</groupId>
+	    <artifactId>httpclient</artifactId>
+	  </dependency>
+
+	<dependency>
+	    <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
+	    <artifactId>owasp-java-html-sanitizer</artifactId>
+	    <version>20160628.1</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-thymeleaf</artifactId>
+	</dependency>
 	</dependencies>
 	
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<executable>true</executable>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.7</version>
-				<configuration>
-					<delimiters>
-					  <delimiter>${*}</delimiter>
-					</delimiters>
-				</configuration>
-			</plugin>
-		</plugins>
-   		<filters>
-   			<filter>src/main/resources/private.properties</filter>
-   		</filters>
-		<resources>
-    		<resource>
-        		<directory>src/main/resources</directory>
-        		<includes>
-                    <include>application.properties</include>
-                    <include>static/*.html</include>
-                </includes>
-        		<filtering>true</filtering>
-      		</resource>
-    	</resources>
+		
+	  <plugins>
+	    <plugin>
+	      <groupId>org.springframework.boot</groupId>
+	      <artifactId>spring-boot-maven-plugin</artifactId>
+	      <configuration>
+		<executable>true</executable>
+		<fork>true</fork>
+	      </configuration>
+	    </plugin>
+	    <plugin>
+	      <groupId>org.apache.maven.plugins</groupId>
+	      <artifactId>maven-resources-plugin</artifactId>
+	      <configuration>
+			<delimiters>
+			  <delimiter>${*}</delimiter>
+			</delimiters>
+	      </configuration>
+	    </plugin>
+
+ <!--  	    
+        <plugin>
+            <groupId>org.jvnet.jaxb2.maven2</groupId>
+            <artifactId>maven-jaxb2-plugin</artifactId>
+            <version>0.12.3</version>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>generate</goal>
+                    </goals>
+                </execution>
+            </executions>
+
+			<configuration>
+
+				<schemaDirectory>src/main/resources</schemaDirectory>
+				<schemaIncludes>
+				    <include>batchresponse.xsd</include>
+				    <include>modify.xsd</include>
+				</schemaIncludes>
+		        <generatePackage>fi.csc.orcidconnect.push.soap.schema.cscidmtest</generatePackage>
+
+
+			</configuration>
+
+        </plugin>
+-->  
+	  </plugins>
+ 
+   	  <filters>
+   	    <filter>src/main/resources/private.properties</filter>
+   	  </filters>
+
+	  <resources>
+    	    <resource>
+              <directory>src/main/resources</directory>
+              <!-- <includes>
+                <include>application.yml</include>
+                <include>application.properties</include>
+                <include></include>
+              </includes>-->
+              <filtering>true</filtering>
+      	    </resource>
+    	  </resources>
 	</build>
 	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.nimbusds</groupId>
-				<artifactId>oauth2-oidc-sdk</artifactId>
-				<version>4.17</version>
-			</dependency>
-			<dependency>
-				<groupId>com.nimbusds</groupId>
-				<artifactId>nimbus-jose-jwt</artifactId>
-				<version>4.2</version>
-			</dependency>
-		</dependencies>
+	  <dependencies>
+	    <dependency>
+	      <groupId>com.nimbusds</groupId>
+	      <artifactId>oauth2-oidc-sdk</artifactId>
+	      <version>5.22</version>
+	    </dependency>
+	    <dependency>
+	      <groupId>com.nimbusds</groupId>
+	      <artifactId>nimbus-jose-jwt</artifactId>
+	      <version>4.34</version>
+	    </dependency>
+	  </dependencies>
 	</dependencyManagement>
 	
 </project>
