@@ -143,7 +143,7 @@
 						<tr><th></th><th th:text="#{home.orcidHeader}">ORCID iD</th><th th:text="#{home.fedidHeader}">Haka eppn</th></tr>
 						<tr><th>Id</th>
 							<td id="oauthId" style='display: none;'>
-								<a href='/app/orcidSandbox/signin' 
+								<a th:href="/app/${@environment.getProperty('controllerConfig.signInUrlFragment')}/signin" 
 									class='btn btn-default btn-signin' style='white-space: normal;' id='btnOrcid'
 									th:utext='#{home.orcidBtn}'>
 								<img src="/img/orcid_24x24.png" alt="Sign in with ORCID" /> Create or Connect your ORCID SANDBOX iD</a></td>

@@ -119,3 +119,4 @@ my:
     shibAttrNameIdP: Shib-Identity-Provider
     shibAttrNameEppn: eppn 
     userMatcherString: git|google|orcidSandbox
+    signInUrlFragment: orcidSandbox
