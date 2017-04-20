@@ -15,6 +15,15 @@ connect service started around that time. The first demo service was introduced
 some time in spring 2016. First transfer of real identifiers of real people
 happened some time in fall 2016.
 
+## [0.0.4] - 2017-04-20
+### Fixed
+- #4 ORCiD signing url
+- #5 use english as default language
+- #6 Use dynamic ORCiD API link text in the template.
+
+### Changed
+- Oulu University change proposals for the language files and to the UI
+
 ## [0.0.3] - 2017-02-20
 ### Added
 - localisation feature
