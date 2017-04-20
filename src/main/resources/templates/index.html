@@ -143,10 +143,10 @@
 						<tr><th></th><th th:text="#{home.orcidHeader}">ORCID iD</th><th th:text="#{home.fedidHeader}">Haka eppn</th></tr>
 						<tr><th>Id</th>
 							<td id="oauthId" style='display: none;'>
-								<a  th:with="fragment=${@environment.getProperty('my.controllerConfig.signInUrlFragment')}"
+								<a  th:with="fragment=${@environment.getProperty('my.controllerConfig.signInUrlFragment')},profile=${fragment} == 'orcidSandbox' ? 'ORCiD SANDBOX id' : 'ORCiD'"
 									th:href="@{'/' + ${fragment} + '/signin'}" 
 									class='btn btn-default btn-signin' style='white-space: normal;' id='btnOrcid'
-									th:utext='#{home.orcidBtn}'>
+									th:utext="#{home.orcidBtn(${profile})}">
 								<img src="/img/orcid_24x24.png" alt="Sign in with ORCID" /> Create or Connect your ORCID SANDBOX iD</a></td>
 							<td id="hakaId"></td></tr>
 						<!-- <tr style='display: none;'><th>Nimi</th><td id="oauthName"></td><td id="hakaName"></td></tr> -->
